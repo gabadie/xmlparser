@@ -15,27 +15,18 @@ namespace Xml
     {
     public:
 
-        /*
-         * Gets all children nodes
-         *
-         * @return A list of all children nodes (obviously...)
-         */
-        virtual
-        std::list<Node *>
-        childrenNodes() = 0;
-
-        virtual
-        std::list<Node const *> const
-        childrenNodes() const = 0;
-
-        /*
+        /**
          * Implements standart stream operator
          */
-        virtual
+        inline
         std::ostream &
-        operator >> (std::ostream & stream) const = 0;
+        operator >> (std::ostream & stream) const
+        {
+            exportToStream(stream, "");
+            return stream;
+        }
 
-        /*
+        /**
          * Destructor
          */
         virtual
@@ -44,9 +35,32 @@ namespace Xml
 
         }
 
+
+    protected:
+
+        /**
+         * Exports to a <stream> with a given <indent>
+         *
+         * @param <stream> is the stream to export to
+         * @param <indent> is the the indentation prefix
+         */
+        virtual
+        void
+        exportToStream(std::ostream & stream, std::string const & indent) const = 0;
+
+        /**
+         * Gets the content text if is a Xml::Text
+         */
+        virtual
+        std::string
+        contentText() const
+        {
+            return "";
+        }
+
     };
 
-    /*
+    /**
      * Defines a sexier standart stream operator
      */
     inline
