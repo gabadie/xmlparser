@@ -1,16 +1,47 @@
-# Compiled Object files
-*.slo
-*.lo
+#------------------------------------------------------------------------------- General
+*~*
+.DS_Store
+*.gitignore
+*.gitignore.*
+
+#------------------------------------------------------------------------------- Binaries
 *.o
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-
-# Compiled Static libraries
-*.lai
-*.la
 *.a
 
-# PDF files
-*.pdf
+#------------------------------------------------------------------------------- Python Binaries
+*.pyc
+
+#------------------------------------------------------------------------------- Makefile Repository
+.mkrepo/
+
+#------------------------------------------------------------------------------- Build dir
+build-*/
+build/
+
+#------------------------------------------------------------------------------- Sublime text
+*.sublime-project
+*.sublime-workspace
+
+#------------------------------------------------------------------------------- LaTeX Files
+*.log
+*.aux
+*.backup
+*.toc
+*.ind
+*.idx
+*.ilg
+*.blg
+*.out
+*.bbl
+*.dvi
+*.nav
+*.pyg
+*.snm
+*.lof
+*.glg
+*.glo
+*.gls
+*.acn
+*.acr
+*.alg
+*.ist
