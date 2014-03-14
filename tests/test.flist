@@ -1,0 +1,5 @@
+#
+# List of the application's tests
+#
+
+testCompilation.cpp
