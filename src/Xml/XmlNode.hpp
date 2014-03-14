@@ -8,8 +8,6 @@
 namespace Xml
 {
 
-    class Element;
-
     /**
      * Defines the abstract class of a node for interface purpose
      */
