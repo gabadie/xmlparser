@@ -57,6 +57,9 @@ namespace Xml
 
     protected:
 
+        // Pointer to the parent node
+        Node * mParent;
+
         /**
          * Exports to a <stream> with a given <indent>
          *
@@ -87,8 +90,6 @@ namespace Xml
         return stream;
     }
 
-    // Pointer to the parent node
-    Node * mParent;
 }
 
 

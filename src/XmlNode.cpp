@@ -3,6 +3,9 @@
 namespace Xml
 {
     Node::Node(Node * parent): mParent(parent)
+    {
+
+    }
 
     Node::~Node() = default;
 
