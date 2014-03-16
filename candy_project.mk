@@ -4,7 +4,7 @@
 # ------------------------------------------------------------ default configuration
 override config=debug
 
-PROJECT_CXXFLAGS := -Wall -Wextra -g -DAPP_DEBUG -DYYDEBUG
+PROJECT_CXXFLAGS := -Wall -Wextra -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR)
 PROJECT_BISONFLAGS := --debug
 PROJECT_FLEXFLAGS := --debug
 
@@ -15,7 +15,7 @@ $(call hook_precommit_configs, debug)
 
 # ------------------------------------------------------------------------------ Flex's file
 
-APP_FLEX_FILE = src/LexicalAnalyser.lex
+APP_FLEX_FILE = src/XmlParser.lex
 APP_FLEX_TARGET = $(patsubst %,$(BUILD_SRC_GEN_DIR)%.cpp, $(notdir $(APP_FLEX_FILE)))
 
 $(APP_FLEX_TARGET): $(APP_FLEX_FILE)
@@ -26,7 +26,7 @@ $(APP_FLEX_TARGET): $(APP_FLEX_FILE)
 
 # ------------------------------------------------------------------------------ Bison's file
 
-APP_BISON_FILE = src/GrammarSpecification.y
+APP_BISON_FILE = src/XmlParser.y
 APP_BISON_TARGET = $(patsubst %,$(BUILD_SRC_GEN_DIR)%.cpp, $(notdir $(APP_BISON_FILE)))
 
 $(APP_BISON_TARGET): $(APP_BISON_FILE)
@@ -38,7 +38,7 @@ $(APP_BISON_TARGET): $(APP_BISON_FILE)
 # ------------------------------------------------------------------------------ Flex and Bison's binaries
 
 APP_FB_BINARIES := $(call bin_object_files,$(APP_FLEX_TARGET) $(APP_BISON_TARGET))
-$(APP_FB_BINARIES): CXXFLAGS = -I src/
+$(APP_FB_BINARIES): CXXFLAGS = $(filter-out -Wall -Wextra,$(PROJECT_CXXFLAGS)) -I src/
 
 # ------------------------------------------------------------------------------ Application's binaries
 
