@@ -16,6 +16,13 @@ namespace Xml
     public:
 
         /**
+         * Constructor
+         *
+         * @param parent Parent of the node
+         */
+        Node(Node * parent = nullptr);
+
+        /**
          * Implements standart stream operator
          */
         inline
@@ -32,6 +39,21 @@ namespace Xml
         virtual
         ~Node();
 
+        /**
+         * Gets the parent node (non-const version)
+         *
+         * @return The parent node
+         */
+        Node *
+        parent();
+
+        /**
+         * Gets the parent node (const version)
+         *
+         * @return The parent node
+         */
+        Node const *
+        parent() const;
 
     protected:
 
@@ -65,6 +87,8 @@ namespace Xml
         return stream;
     }
 
+    // Pointer to the parent node
+    Node * mParent;
 }
 
 
