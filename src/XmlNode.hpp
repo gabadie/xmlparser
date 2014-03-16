@@ -30,10 +30,7 @@ namespace Xml
          * Destructor
          */
         virtual
-        ~Node()
-        {
-
-        }
+        ~Node();
 
 
     protected:
@@ -53,10 +50,7 @@ namespace Xml
          */
         virtual
         std::string
-        contentText() const
-        {
-            return "";
-        }
+        contentText() const;
 
     };
 
