@@ -13,7 +13,8 @@ $(call trash_configs, debug)
 $(call hook_precommit_configs, debug)
 
 
-# ------------------------------------------------------------------------------ Flex's file
+# ------------------------------------------------------------------------------ Flex and Bison's binaries
+# ------------------------------------------------------------ Flex's file
 
 APP_FLEX_FILE = src/XmlParser.lex
 APP_FLEX_TARGET = $(patsubst %,$(BUILD_SRC_GEN_DIR)%.cpp, $(notdir $(APP_FLEX_FILE)))
@@ -24,7 +25,7 @@ $(APP_FLEX_TARGET): $(APP_FLEX_FILE)
 	$(CMD_PREFIX)flex -o $@ $(PROJECT_FLEXFLAGS) $<
 
 
-# ------------------------------------------------------------------------------ Bison's file
+# ------------------------------------------------------------ Bison's file
 
 APP_BISON_FILE = src/XmlParser.y
 APP_BISON_TARGET = $(patsubst %,$(BUILD_SRC_GEN_DIR)%.cpp, $(notdir $(APP_BISON_FILE)))
@@ -35,7 +36,7 @@ $(APP_BISON_TARGET): $(APP_BISON_FILE)
 	$(CMD_PREFIX)bison -o $@ -d $(PROJECT_BISONFLAGS) $<
 
 
-# ------------------------------------------------------------------------------ Flex and Bison's binaries
+# ------------------------------------------------------------ Flex and Bison's binaries
 
 APP_FB_BINARIES := $(call bin_object_files,$(APP_FLEX_TARGET) $(APP_BISON_TARGET))
 $(APP_FB_BINARIES): CXXFLAGS = $(filter-out -Wall -Wextra,$(PROJECT_CXXFLAGS)) -I src/
@@ -52,7 +53,7 @@ APP_OBJECT_BINARIES := $(call bin_object_files,$(APP_CPP_FILES))
 # ------------------------------------------------------------ compilation/link configuration
 $(APP_OBJECT_BINARIES): CXXFLAGS += $(PROJECT_CXXFLAGS)
 $(APP_BINARIES_TARGET): $(APP_OBJECT_BINARIES) $(APP_FB_BINARIES)
-$(APP_BINARIES_TARGET): ARFLAGS += $(APP_OBJECT_BINARIES)
+$(APP_BINARIES_TARGET): ARFLAGS += $(APP_OBJECT_BINARIES) $(APP_FB_BINARIES)
 
 
 # ------------------------------------------------------------------------------ Application's tests

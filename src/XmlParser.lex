@@ -6,19 +6,27 @@
 
 
 %}
+
+
+/* ----------------------------------------------------------------------------- Flex configuration */
+/* we don't have yywrap() */
+%option noyywrap
+
+
 /* ----------------------------------------------------------------------------- Terminals' definitions */
 
 char        [a-zA-Z]
-string      [char]+
-
+string      {char}+
 
 /* ----------------------------------------------------------------------------- Terminals' rules */
 %%
 
-{string}	{
+{string} {
     yylval.string_val = new std::string(yytext);
     return STRING_LITERAL;
 }
+
+[\n] {}
 
 . {
     std::cerr << "SCANNER ";
