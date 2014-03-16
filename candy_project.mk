@@ -15,7 +15,6 @@ $(call hook_precommit_configs, debug)
 
 # ------------------------------------------------------------------------------ Flex and Bison's binaries
 # ------------------------------------------------------------ Flex's file
-
 APP_FLEX_FILE = src/XmlParser.lex
 APP_FLEX_TARGET = $(patsubst %,$(BUILD_SRC_GEN_DIR)%.cpp, $(notdir $(APP_FLEX_FILE)))
 
@@ -26,7 +25,6 @@ $(APP_FLEX_TARGET): $(APP_FLEX_FILE)
 
 
 # ------------------------------------------------------------ Bison's file
-
 APP_BISON_FILE = src/XmlParser.y
 APP_BISON_TARGET = $(patsubst %,$(BUILD_SRC_GEN_DIR)%.cpp, $(notdir $(APP_BISON_FILE)))
 
@@ -37,9 +35,9 @@ $(APP_BISON_TARGET): $(APP_BISON_FILE)
 
 
 # ------------------------------------------------------------ Flex and Bison's binaries
-
 APP_FB_BINARIES := $(call bin_object_files,$(APP_FLEX_TARGET) $(APP_BISON_TARGET))
 $(APP_FB_BINARIES): CXXFLAGS = $(filter-out -Wall -Wextra,$(PROJECT_CXXFLAGS)) -I src/
+
 
 # ------------------------------------------------------------------------------ Application's binaries
 
@@ -54,6 +52,20 @@ APP_OBJECT_BINARIES := $(call bin_object_files,$(APP_CPP_FILES))
 $(APP_OBJECT_BINARIES): CXXFLAGS += $(PROJECT_CXXFLAGS)
 $(APP_BINARIES_TARGET): $(APP_OBJECT_BINARIES) $(APP_FB_BINARIES)
 $(APP_BINARIES_TARGET): ARFLAGS += $(APP_OBJECT_BINARIES) $(APP_FB_BINARIES)
+
+
+# ------------------------------------------------------------------------------ Application's main
+
+APP_EXEC_PRODUCT := $(call product_create,BINEXEC,xmlparser)
+APP_EXEC_TARGET := $(call product_target,$(APP_EXEC_PRODUCT))
+$(call product_public,$(APP_EXEC_PRODUCT))
+
+APP_EXEC_CPP_FILES := ./src/main.cpp
+APP_EXEC_BINARIES := $(call bin_object_files,$(APP_EXEC_CPP_FILES))
+
+$(APP_EXEC_BINARIES): CXXFLAGS += $(PROJECT_CXXFLAGS)
+$(APP_EXEC_TARGET): $(APP_BINARIES_TARGET) $(APP_EXEC_BINARIES)
+$(APP_EXEC_TARGET): LDFLAGS += $(APP_BINARIES_TARGET) $(APP_EXEC_BINARIES)
 
 
 # ------------------------------------------------------------------------------ Application's tests
