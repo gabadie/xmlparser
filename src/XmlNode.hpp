@@ -37,10 +37,7 @@ namespace Xml
          * Destructor
          */
         virtual
-        ~Node()
-        {
-
-        }
+        ~Node();
 
         /**
          * Gets the parent node (non-const version)
@@ -75,10 +72,7 @@ namespace Xml
          */
         virtual
         std::string
-        contentText() const
-        {
-            return "";
-        }
+        contentText() const;
 
     };
 

@@ -3,9 +3,8 @@
 namespace Xml
 {
     Node::Node(Node * parent): mParent(parent)
-    {
 
-    }
+    Node::~Node() = default;
 
     Node *
     Node::parent()
@@ -17,5 +16,11 @@ namespace Xml
     Node::parent() const
     {
         return mParent;
+    }
+
+    std::string
+    Node::contentText() const
+    {
+        return "";
     }
 }
