@@ -86,3 +86,11 @@ $(TEST_APP_TARGETS): CXXFLAGS += -I $(test_apis_dir)
 $(TEST_APP_TARGETS): $(APP_BINARIES_TARGET)
 $(TEST_APP_TARGETS): LDFLAGS += $(APP_BINARIES_TARGET)
 $(TEST_APP_TARGETS): LDFLAGS += $(PROJECT_LDFLAGS)
+
+
+# ------------------------------------------------------------------------------ Application's integration tests
+
+TEST_INT_SCRIPT := tests_parsing/test_parsing_script.py
+TEST_INT_TARGET := $(call test_script, $(TEST_INT_SCRIPT))
+
+$(TEST_INT_TARGET): $(APP_EXEC_TARGET)
