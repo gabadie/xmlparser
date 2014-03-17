@@ -1,4 +1,4 @@
-nifndef _H_DOCUMENT_NODE
+#ifndef _H_DOCUMENT_NODE
 #define _H_DOCUMENT_NODE
 
 #include "XmlNode.hpp"
@@ -27,6 +27,5 @@ namespace Xml
         ~DocumentNode();
     };
 }
-
 
 #endif //_H_DOCUMENT_NODE
