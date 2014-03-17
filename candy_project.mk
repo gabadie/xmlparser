@@ -4,7 +4,7 @@
 # ------------------------------------------------------------ default configuration
 override config=debug
 
-PROJECT_CXXFLAGS := -Wall -Wextra -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR)
+PROJECT_CXXFLAGS := -Wall -Wextra -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR) -Wno-c++11-extensions
 PROJECT_BISONFLAGS := --debug
 PROJECT_FLEXFLAGS := --debug
 
