@@ -29,6 +29,14 @@ namespace Xml
         virtual
         ~Text();
 
+        /**
+         * Set the text content
+         *
+         * @param text Text content to set
+         */
+        void
+        setText(std::string const & text);
+
     protected:
         /**
          * Exports to a <stream> with a given <indent>
