@@ -1,4 +1,4 @@
-#ifndef _H_DOCUMENT_NODE
+nifndef _H_DOCUMENT_NODE
 #define _H_DOCUMENT_NODE
 
 #include "XmlNode.hpp"
@@ -14,13 +14,17 @@ namespace Xml
     public:
 
         /**
+         * Constructor
+         *
+         * @param parent Parent of the node
+         */
+        DocumentNode(Node * parent = nullptr);
+
+        /**
          * Destructor
          */
         virtual
-        ~DocumentNode()
-        {
-
-        }
+        ~DocumentNode();
     };
 }
 
