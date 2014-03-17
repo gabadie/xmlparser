@@ -22,8 +22,7 @@ namespace Xml
 
         // Type aliases
         using AttributesMap = std::map<std::string, std::string>;
-        using ElementsList = std::deque<Node *>;
-        using MiscContainer = std::vector<MiscNode *>;
+        using NodeList = std::deque<Node *>;
 
         /**
          * Constructor
@@ -37,28 +36,50 @@ namespace Xml
          * Destructor
          */
         virtual
-        ~Element()
-        {
-
-        }
+        ~Element();
 
         /**
          * Gets the ordered list of the children of the element
          *
          * @return Return a list of Node *
          */
-        ElementsList const &
+        NodeList const &
         elements() const;
 
+        /**
+         * Get the parent element of the element
+         *
+         * @return The parent element if found, nullptr otherwise.
+         */
+        Element const *
+        parentElement() const;
 
-        //TODO
-        //std::string text() const; Inherited from Node ?
+        /**
+         * Get the text content of the element
+         *
+         * @return The text content of the element
+         */
+        std::string
+        text() const;
 
-        //TODO
-        //void setContent(std::string const &) -> setText() ? Inherited from Node ?
+        /**
+         * Set the content of the element
+         *
+         * Delete all children nodes and add a text node with
+         * the given content.
+         *
+         * @param content New text content
+         */
+        void
+        setContent(std::string const & content);
 
-        //TODO
-        //void clearContent() ?
+        /**
+         * Discard the content of the element.
+         *
+         * All the children are deleted.
+         */
+        void
+        clearContent();
 
         /**
          * Appends a node child
@@ -68,26 +89,29 @@ namespace Xml
         void
         append(Node * node);
 
-        //TODO
-        //void appendText(std::string const & text) -> Inherited from Node ?
+        /**
+         * Add a text node to the element.
+         *
+         * @param text Text content of the text node
+         */
+        void
+        appendText(std::string const & text);
 
-        //TODO
         /**
          * Appends a comment to the element
          *
          * @param comment Text of the comment to append
          */
-        //void
-        //appendComment(std::string const & comment);
+        void
+        appendComment(std::string const & comment);
 
-        //TODO
         /**
          * Appends a PI to the element
          *
          * @param pi Text of the PI to append
          */
-        //void
-        //appendPI(std::string const & pi);
+        void
+        appendPI(std::string const & pi);
 
         /**
          * Gets the name of the element
@@ -126,22 +150,6 @@ namespace Xml
         void
         setAttribute(std::string const & name, std::string const & value);
 
-        /**
-         * Gets the comments attached to the element
-         *
-         * @return The list of comments attached to the element
-         */
-        MiscContainer const &
-        comments();
-
-        /**
-         * Gets the PI attached to the element
-         *
-         * @return The list of PI attached to the element
-         */
-        MiscContainer const &
-        PI();
-
     protected:
 
         /**
@@ -154,13 +162,21 @@ namespace Xml
         void
         exportToStream(std::ostream & stream, std::string const & indent) const override;
 
+    private:
+
+        /**
+         * Tells whether or not the node is an Element
+         *
+         * @return True if the node is an Element, false otherwise.
+         */
+        virtual
+        bool
+        isElement() const override;
 
     protected:
         std::string nName;         ///< Name of the element
         AttributesMap mAttributes; ///< Attributes of the element
-        ElementsList mChildren;    ///< Children elements
-        MiscContainer mComments;   ///< Comments attached to the elements
-        MiscContainer mPI;         ///< PI attached to the elements
+        NodeList mChildren;        ///< Children elements
     };
 }
 
