@@ -19,23 +19,37 @@ void yyerror(std::string ** e, const char * msg);
 /* ----------------------------------------------------------------------------- C/C++ union */
 %union{
     std::string * string_val;
+    char * s;
 }
 
 
 /* ----------------------------------------------------------------------------- tokens */
 %token <string_val> STRING_LITERAL
 
+%token EGAL SLASH SUP SUPSPECIAL DOCTYPE COLON INFSPECIAL INF CDATABEGIN
+%token <string_val> VALEUR DONNEES COMMENT NOM CDATAEND
+
 
 /* ----------------------------------------------------------------------------- types */
-%start main
-%type <string_val> main
+%start document
+%type <string_val> document
 
 
 %%
 /* ----------------------------------------------------------------------------- types rules */
 
-main : STRING_LITERAL { *e = $1; }
-     ;
+document
+    : element { *e = 0; }
+    ;
+
+element
+    : INF NOM SUP content INF SLASH NOM SUP
+    ;
+
+content
+    : content element
+    | /* vide */
+    ;
 
 
 %%
@@ -50,7 +64,7 @@ yyerror(std::string const & s)
     std::cerr << "ERROR: " << s << " at symbol \"" << yytext;
     std::cerr << "\" on line " << yylineno << std::endl;
 
-    exit(1);
+    exit(3);
 }
 
 int
