@@ -5,7 +5,7 @@ import subprocess
 
 def testXmlParsing(path, success):
     test_dir = os.path.dirname(__file__) + '/'
-    xmlparser_path = os.path.abspath(os.path.join(test_dir, '../build-debug/products/xmlparser'))
+    xmlparser_path = os.path.abspath(os.path.join(test_dir, '../build-debug/products/xmltool'))
 
     xml_path = test_dir + path
 

@@ -56,7 +56,7 @@ $(APP_BINARIES_TARGET): ARFLAGS += $(APP_OBJECT_BINARIES) $(APP_FB_BINARIES)
 
 # ------------------------------------------------------------------------------ Application's main
 
-APP_EXEC_PRODUCT := $(call product_create,BINEXEC,xmlparser)
+APP_EXEC_PRODUCT := $(call product_create,BINEXEC,xmltool)
 APP_EXEC_TARGET := $(call product_target,$(APP_EXEC_PRODUCT))
 $(call product_public,$(APP_EXEC_PRODUCT))
 
