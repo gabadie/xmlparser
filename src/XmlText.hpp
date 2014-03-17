@@ -4,6 +4,8 @@
 #include <iosfwd>
 #include <string>
 
+#include "XmlNode.hpp"
+
 namespace Xml
 {
     /**
@@ -45,7 +47,7 @@ namespace Xml
          */
         virtual
         std::string const &
-        contentText() const;
+        contentText() const override;
 
     protected:
         std::string mText; ///< Text content
