@@ -12,6 +12,9 @@ PROJECT_FLEXFLAGS := --debug
 $(call trash_configs, debug)
 $(call hook_precommit_configs, debug)
 
+# ------------------------------------------------------------ 'make test'
+.PHONY: test
+test: tests
 
 # ------------------------------------------------------------------------------ Flex and Bison's binaries
 # ------------------------------------------------------------ Flex's file
