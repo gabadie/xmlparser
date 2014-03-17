@@ -6,14 +6,14 @@
 
 int yylex(void);
 
-void yyerror(std::string ** e, const char * msg);
+void yyerror(Xml::Document ** e, const char * msg);
 
 
 %}
 
 
 /* ----------------------------------------------------------------------------- parse parameter */
-%parse-param {std::string ** e}
+%parse-param {Xml::Document ** e}
 
 
 /* ----------------------------------------------------------------------------- C/C++ union */
@@ -74,14 +74,14 @@ yyerror(char const *s)
 }
 
 void
-yyerror(std::string ** e, const char * msg)
+yyerror(Xml::Document ** e, const char * msg)
 {
     yyerror(msg);
 }
 
 extern FILE * yyin;
 
-std::string *
+Xml::Document *
 Xml::parse(std::string const & path)
 {
     char const * sPath = path.c_str();
@@ -98,7 +98,7 @@ Xml::parse(std::string const & path)
         return nullptr;
     }
 
-    std::string * e = 0;
+    Xml::Document * e = 0;
 
     {
         yyin = f;

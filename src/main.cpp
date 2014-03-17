@@ -13,7 +13,7 @@ main(int argc, char const * const * argv)
 
     std::string xmlPath = argv[1];
 
-    std::string * xmlDoc = Xml::parse(xmlPath);
+    Xml::Document * xmlDoc = Xml::parse(xmlPath);
 
     if (xmlDoc == 0)
     {

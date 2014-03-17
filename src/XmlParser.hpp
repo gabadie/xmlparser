@@ -13,6 +13,9 @@
 #include "XmlParser.y.hpp"
 
 
+#include "XmlDocument.hpp"
+
+
 int yyerror(char const *s);
 int yyerror(std::string const & s);
 
@@ -23,7 +26,7 @@ namespace Xml
     /*
      * Parse a XML file
      */
-    std::string *
+    Xml::Document *
     parse(std::string const & path);
 
 }
