@@ -1,5 +1,5 @@
 /**
- * \file main.c
+ * \file template.cpp
  * \brief Programme de tests. 
  * \author Franck.H
  * \version 0.1
