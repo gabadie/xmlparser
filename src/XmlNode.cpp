@@ -21,9 +21,10 @@ namespace Xml
         return mParent;
     }
 
-    std::string
+    std::string const &
     Node::contentText() const
     {
-        return "";
+        static std::string const dummy = "";
+        return dummy;
     }
 }

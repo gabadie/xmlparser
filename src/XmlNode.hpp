@@ -74,7 +74,7 @@ namespace Xml
          * Gets the content text if is a Xml::Text
          */
         virtual
-        std::string
+        std::string const &
         contentText() const;
 
     };
