@@ -18,7 +18,8 @@ namespace Xml
 
     Element::~Element()
     {
-
+        // Free memory
+        this->clearContent();
     }
 
     NodeList const &
