@@ -27,4 +27,10 @@ namespace Xml
         static std::string const dummy = "";
         return dummy;
     }
+
+    bool
+    Node::isElement() const
+    {
+        return false;
+    }
 }

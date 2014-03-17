@@ -56,10 +56,6 @@ namespace Xml
         parent() const;
 
     protected:
-
-        // Pointer to the parent node
-        Node * mParent;
-
         /**
          * Exports to a <stream> with a given <indent>
          *
@@ -77,6 +73,21 @@ namespace Xml
         std::string const &
         contentText() const;
 
+    private:
+        friend class Element;
+
+        /**
+         * Tells whether or not the node is an Element
+         *
+         * @return True if the node is an Element, false otherwise.
+         */
+        virtual
+        bool
+        isElement() const;
+
+    protected:
+        // Pointer to the parent node
+        Node * mParent;
     };
 
     /**
