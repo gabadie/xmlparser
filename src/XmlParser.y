@@ -1,7 +1,7 @@
 
 %{
 /* ----------------------------------------------------------------------------- C/C++ prefix */
-
+#include "XmlDocument.hpp"
 #include "XmlParser.hpp"
 
 int yylex(void);
