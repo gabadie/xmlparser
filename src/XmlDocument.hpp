@@ -76,6 +76,8 @@ namespace Xml
          * Saves the XML document into a file.
          *
          * @param path File path
+         *
+         * @return True if the file has been saved, false otherwise.
          */
         bool
         saveToFile(std::string const & path) const;
