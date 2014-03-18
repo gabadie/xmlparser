@@ -1,4 +1,14 @@
+/**
+ * \file XmlElement.cpp
+ * \brief XML Element
+ * \author tcantenot
+ * \version 0.1
+ * \date 18 mars 2014
+ */
+
+#include "XmlComment.hpp"
 #include "XmlElement.hpp"
+#include "XmlText.hpp"
 
 #ifdef APP_DEBUG
 #include <algorithm>
@@ -90,20 +100,19 @@ namespace Xml
     void
     Element::appendText(std::string const & text)
     {
-        //TODO
-        //this->appendNode(new Text(content));
+        this->appendNode(new Text(text));
     }
 
     void
     Element::appendComment(std::string const & comment)
     {
-        //TODO
-        //this->appendNode(new Comment(content));
+        this->appendNode(new Comment(comment));
     }
 
     void
     Element::appendPI(std::string const & pi)
     {
+        (void) pi;
         //TODO
         //this->appendNode(new PI(content));
     }
