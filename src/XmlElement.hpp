@@ -219,7 +219,7 @@ namespace Xml
         NodeList mChildren;        ///< Children elements
 
         /**
-         * Friends ship to let the Xml parser access to the appendNove method.
+         * Friendship to let the Xml parser access to the appendNove method.
          */
         friend void Xml::appendNode(Element * element, Node * node);
     };
