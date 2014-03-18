@@ -48,6 +48,17 @@ namespace Xml
         elements() const;
 
         /**
+         * Gets the ordered list of the direct children of the element
+         * with the given tag
+         *
+         * @param tag Tag to search for
+         *
+         * @return Return a container of Element const *
+         */
+        ElementList
+        elements(std::string const & tag) const;
+
+        /**
          * Get the parent element of the element
          *
          * @return The parent element if found, nullptr otherwise.

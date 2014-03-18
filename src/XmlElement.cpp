@@ -47,6 +47,24 @@ namespace Xml
         return elements;
     }
 
+    Element::ElementList
+    Element::elements(std::string const & tag) const
+    {
+        ElementList elements;
+        for(auto const & c : mChildren)
+        {
+            if(c->isElement())
+            {
+                auto const element = static_cast<Element const *>(c);
+                if(element->mName == tag)
+                {
+                    elements.push_back(element);
+                }
+            }
+        }
+        return elements;
+    }
+
     Element const *
     Element::parentElement() const
     {
