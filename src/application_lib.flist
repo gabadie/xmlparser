@@ -2,6 +2,7 @@
 # List of the application's C++ files
 #
 
+XmlComment.cpp
 XmlDocument.cpp
 XmlDocumentNode.cpp
 XmlElement.cpp

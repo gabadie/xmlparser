@@ -3,7 +3,7 @@
 namespace Xml
 {
     Comment::Comment(std::string const & content, Node * parent):
-        Node(parent),
+        MiscNode(parent),
         mContent(content)
     {
 
@@ -15,7 +15,7 @@ namespace Xml
     }
 
     void
-    Comment::exportToStream(std::ostream & stream, std::string const & indent) const override
+    Comment::exportToStream(std::ostream & stream, std::string const & indent) const
     {
         stream << indent << mContent;
     }
