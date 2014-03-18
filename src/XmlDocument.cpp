@@ -6,9 +6,15 @@
  * \date 18 mars 2014
  */
 
+#include <algorithm>
+
 #include "XmlDocument.hpp"
 #include "XmlElement.hpp"
 #include "XmlMiscNode.hpp"
+
+#ifdef APP_DEBUG
+#include <cassert>
+#endif
 
 namespace Xml
 {
@@ -18,9 +24,34 @@ namespace Xml
 
     }
 
+    std::ostream &
+    Document::operator >> (std::ostream & stream) const
+    {
+        for(auto const & c : mChildren)
+        {
+            stream << c << "\n";
+        }
+    }
+
     Document::~Document()
     {
-        delete mRoot;
+        for(auto & c : mChildren)
+        {
+            delete c;
+        }
+    }
+
+    void
+    Document::append(DocumentNode * documentNode)
+    {
+        #ifdef APP_DEBUG
+        assert(
+            std::find(std::begin(mChildren), std::end(mChildren), documentNode)
+            != std::end(mChildren)
+        );
+        #endif
+
+        mChildren.push_back(documentNode);
     }
 
     Element *
@@ -38,9 +69,17 @@ namespace Xml
     void
     Document::setRoot(Element * root)
     {
-        if(root != mRoot)
+        if(root != nullptr && root != mRoot)
         {
+            auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
+
+            #ifdef APP_DEBUG
+            assert(it != std::end(mChildren));
+            #endif
+
             delete mRoot;
+
+            *it = root;
             mRoot = root;
         }
     }
@@ -51,21 +90,5 @@ namespace Xml
         (void) path;
         //TODO
         return false;
-    }
-
-    Document *
-    Document::loadFromFile(std::string const & path)
-    {
-        (void) path;
-        //TODO
-        return nullptr;
-    }
-
-    void
-    Document::exportToStream(std::ostream & stream, std::string const & indent) const
-    {
-        (void) stream;
-        (void) indent;
-        __builtin_trap();
     }
 }

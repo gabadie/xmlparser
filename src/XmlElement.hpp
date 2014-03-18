@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "XmlNode.hpp"
+#include "XmlDocumentNode.hpp"
 
 namespace Xml
 {
@@ -20,7 +20,7 @@ namespace Xml
     /**
      * Defines an XML element
      */
-    class Element : public Node
+    class Element : public DocumentNode
     {
     public:
 

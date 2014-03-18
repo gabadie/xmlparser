@@ -7,11 +7,10 @@
 
 #include "XmlElement.hpp"
 
-
 namespace Xml
 {
     // Forward declarations
-    class MiscNode;
+    class DocumentNode;
 
     /**
      * Defines a XML document
@@ -20,7 +19,7 @@ namespace Xml
     {
     public:
 
-        using MiscNodesList = std::vector<MiscNode *>;
+        using NodesList = std::vector<DocumentNode *>;
 
         /**
          * Constructor
@@ -32,19 +31,22 @@ namespace Xml
         /**
          * Implements standard stream operator
          */
-        inline
         std::ostream &
-        operator >> (std::ostream & stream) const
-        {
-            exportToStream(stream, "");
-            return stream;
-        }
+        operator >> (std::ostream & stream) const;
 
         /**
          * Destructor
          */
         virtual
         ~Document();
+
+        /**
+         * Appends a DocumentNode to the Document
+         *
+         * @param documentNode Document node to append
+         */
+        void
+        append(DocumentNode * documentNode);
 
         /**
          * Gets the root element of the document (non-const version)
@@ -78,36 +80,14 @@ namespace Xml
         bool
         saveToFile(std::string const & path) const;
 
-        /**
-         * Loads a document from a file
-         *
-         * @param path Path of the file to load the document from
-         *
-         * @return A new XML document if successful, nullptr otherwise.
-         */
-        static
-        Document *
-        loadFromFile(std::string const & path);
-
-    protected:
-        /**
-         * Exports to a <stream> with a given <indent>
-         *
-         * @param <stream> is the stream to export to
-         * @param <indent> is the the indentation prefix
-         */
-        virtual
-        void
-        exportToStream(std::ostream & stream, std::string const & indent) const;
-
     protected:
         Element * mRoot;     ///< Root of the XML document
-        MiscNodesList mMisc; ///< Misc nodes (comments & PI)
-        //DocType mDocType;    ///< DocType of the XML document //TODO
+        NodesList mChildren; ///< Children nodes
+        //DocType mDocType;  ///< DocType of the XML document //TODO
     };
 
     /**
-     * Defines a sexier standart stream operator
+     * Defines a sexier standard stream operator
      */
     inline
     std::ostream &

@@ -20,7 +20,7 @@
 namespace Xml
 {
     Element::Element(std::string const & name):
-        Node(),
+        DocumentNode(),
         mName(name),
         mAttributes(),
         mChildren()
