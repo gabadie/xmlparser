@@ -4,3 +4,4 @@
 
 testCompilation.cpp
 testElement.cpp
+testParsing.cpp

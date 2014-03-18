@@ -3,6 +3,7 @@
 /* ----------------------------------------------------------------------------- C/C++ prefix */
 
 #include <fstream>
+#include <sstream>
 
 #include "XmlParser.hpp"
 #include "XmlText.hpp"
@@ -257,12 +258,7 @@ Xml::load(std::string const & path, Xml::Log * log)
 Xml::Document *
 Xml::parse(std::string const & xmlContent, Xml::Log * log)
 {
-    std::ifstream f (xmlContent, std::ios::in | std::ios::binary);
-
-    if (!f.is_open())
-    {
-        return nullptr;
-    }
+    std::istringstream f (xmlContent);
 
     Xml::Document * e = 0;
 

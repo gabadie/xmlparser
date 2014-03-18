@@ -105,6 +105,17 @@ namespace Xml
         MiscNodesList mMisc; ///< Misc nodes (comments & PI)
         //DocType mDocType;    ///< DocType of the XML document //TODO
     };
+
+    /**
+     * Defines a sexier standart stream operator
+     */
+    inline
+    std::ostream &
+    operator << (std::ostream & stream, Document const & doc)
+    {
+        return doc >> stream;
+    }
+
 }
 
 
