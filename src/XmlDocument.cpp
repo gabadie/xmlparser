@@ -7,10 +7,12 @@
  */
 
 #include <algorithm>
+#include <iostream>
+#include <fstream>
 
 #include "XmlDocument.hpp"
+#include "XmlDocumentNode.hpp"
 #include "XmlElement.hpp"
-#include "XmlMiscNode.hpp"
 
 #ifdef APP_DEBUG
 #include <cassert>
@@ -87,8 +89,16 @@ namespace Xml
     bool
     Document::saveToFile(std::string const & path) const
     {
-        (void) path;
-        //TODO
-        return false;
+        std::ofstream file(path);
+
+        if(!file.good())
+        {
+            std::cerr << "Failed to open file: \"" << path << "\"" << std::endl;
+            return false;
+        }
+
+        file << *this;
+
+        return true;
     }
 }
