@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "XmlComment.hpp"
 #include "XmlDocument.hpp"
 #include "XmlDocumentNode.hpp"
 #include "XmlElement.hpp"
@@ -52,19 +53,6 @@ namespace Xml
         }
     }
 
-    void
-    Document::append(DocumentNode * documentNode)
-    {
-        #ifdef APP_DEBUG
-        assert(
-            std::find(std::begin(mChildren), std::end(mChildren), documentNode)
-            == std::end(mChildren)
-        );
-        #endif
-
-        mChildren.push_back(documentNode);
-    }
-
     Element *
     Document::root()
     {
@@ -75,6 +63,12 @@ namespace Xml
     Document::root() const
     {
         return mRoot;
+    }
+
+    void
+    Document::appendComment(std::string const & comment)
+    {
+        this->appendNode(new Comment(comment));
     }
 
     Document::NodesList const &
@@ -105,7 +99,7 @@ namespace Xml
             }
             else
             {
-                this->append(root);
+                this->appendNode(root);
             }
 
             mRoot = root;
@@ -127,4 +121,18 @@ namespace Xml
 
         return true;
     }
+
+    void
+    Document::appendNode(DocumentNode * documentNode)
+    {
+        #ifdef APP_DEBUG
+        assert(
+            std::find(std::begin(mChildren), std::end(mChildren), documentNode)
+            == std::end(mChildren)
+        );
+        #endif
+
+        mChildren.push_back(documentNode);
+    }
+
 }

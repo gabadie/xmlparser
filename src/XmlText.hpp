@@ -8,19 +8,19 @@
 
 namespace Xml
 {
+    // Forward declarations
+    class Element;
+    class Text;
+    inline
+    Text *
+    parserText(std::string const & content);
+
     /**
      * Defines a text node
      */
     class Text : public Node
     {
     public:
-
-        /**
-         * Constructor
-         *
-         * @param content Text content
-         */
-        Text(std::string const & content = "");
 
         /**
          * Destructor
@@ -37,6 +37,13 @@ namespace Xml
         setText(std::string const & text);
 
     protected:
+        /**
+         * Constructor
+         *
+         * @param content Text content
+         */
+        Text(std::string const & content = "");
+
         /**
          * Exports to a <stream> with a given <indent>
          *
@@ -61,6 +68,11 @@ namespace Xml
 
     protected:
         std::string mText; ///< Text content
+
+        friend class Xml::Element;
+        friend
+        Text *
+        parserText(std::string const & content);
     };
 }
 

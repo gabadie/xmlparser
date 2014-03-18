@@ -8,6 +8,10 @@
 
 namespace Xml
 {
+    // Forward declarations
+    class Document;
+    class Element;
+
     /**
      * Defines a comment
      */
@@ -16,19 +20,19 @@ namespace Xml
     public:
 
         /**
-         * Constructor
-         *
-         * @param content Content of the comment
-         */
-        Comment(std::string const & content = "");
-
-        /**
          * Destructor
          */
         virtual
         ~Comment();
 
     protected:
+        /**
+         * Constructor
+         *
+         * @param content Content of the comment
+         */
+        Comment(std::string const & content = "");
+
         /**
          * Exports to a <stream> with a given <indent>
          *
@@ -49,6 +53,9 @@ namespace Xml
 
     protected:
         std::string mContent;
+
+        friend class Xml::Document;
+        friend class Xml::Element;
     };
 }
 

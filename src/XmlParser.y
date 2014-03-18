@@ -23,6 +23,13 @@ namespace Xml
     {
         element->appendNode(node);
     }
+
+    inline
+    Text *
+    parserText(std::string const & content)
+    {
+        return new Xml::Text(content);
+    }
 }
 
 %}
@@ -179,7 +186,7 @@ item:
     DONNEES
     {
         /* ---------------------------------------------------- text in an element */
-        $$ = (Xml::Node *) new Xml::Text(std::string($1));
+        $$ = (Xml::Node *) Xml::parserText(std::string($1));
 
         /*
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.

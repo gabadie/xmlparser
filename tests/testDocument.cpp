@@ -23,11 +23,11 @@ main()
     test_assert(root->name() == tag);
 
 
-    doc.append(new Comment("This is a comment at the beginning of the XML document."));
+    doc.appendComment("This is a comment at the beginning of the XML document.");
 
     doc.setRoot(root);
 
-    doc.append(new Comment("This is a comment at the end of the XML document."));
+    doc.appendComment("This is a comment at the end of the XML document.");
 
     test_assert(doc.root() == root);
 
