@@ -6,6 +6,9 @@ XmlComment.cpp
 XmlDocument.cpp
 XmlDocumentNode.cpp
 XmlElement.cpp
+XmlLog.cpp
 XmlMiscNode.cpp
 XmlNode.cpp
+XmlParserError.cpp
+XmlParserInput.cpp
 XmlText.cpp

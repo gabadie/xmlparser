@@ -2,8 +2,12 @@
 %{
 /* ----------------------------------------------------------------------------- C/C++ prefix */
 
+#include <fstream>
+
 #include "XmlParser.hpp"
 #include "XmlText.hpp"
+#include "XmlParserError.hpp"
+#include "XmlParserInput.hpp"
 
 int yylex(void);
 
@@ -213,19 +217,12 @@ yyerror(void ** e, const char * msg)
     yyerror(msg);
 }
 
-extern FILE * yyin;
-
 Xml::Document *
-Xml::parse(char const * path)
+Xml::load(std::string const & path, Xml::Log * log)
 {
-    if (path == 0)
-    {
-        return nullptr;
-    }
+    std::ifstream f (path, std::ios::in | std::ios::binary);
 
-    FILE * f = fopen(path, "rb");
-
-    if (f == 0)
+    if (!f.is_open())
     {
         return nullptr;
     }
@@ -233,14 +230,63 @@ Xml::parse(char const * path)
     Xml::Document * e = 0;
 
     {
-        yyin = f;
+        Xml::Log tmpLog;
+
+        if (log)
+        {
+            Xml::parserBindLog(*log);
+        }
+        else
+        {
+            Xml::parserBindLog(tmpLog);
+        }
+
+        Xml::flexSetInput(f);
 
         yyparse((void **) &e);
 
-        yyin = 0;
+        if (!log)
+        {
+            std::cout << tmpLog;
+        }
     }
 
-    fclose(f);
+    return e;
+}
+
+Xml::Document *
+Xml::parse(std::string const & xmlContent, Xml::Log * log)
+{
+    std::ifstream f (xmlContent, std::ios::in | std::ios::binary);
+
+    if (!f.is_open())
+    {
+        return nullptr;
+    }
+
+    Xml::Document * e = 0;
+
+    {
+        Xml::Log tmpLog;
+
+        if (log)
+        {
+            Xml::parserBindLog(*log);
+        }
+        else
+        {
+            Xml::parserBindLog(tmpLog);
+        }
+
+        Xml::flexSetInput(f);
+
+        yyparse((void **) &e);
+
+        if (!log)
+        {
+            std::cout << tmpLog;
+        }
+    }
 
     return e;
 }
