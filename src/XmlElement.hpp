@@ -82,12 +82,12 @@ namespace Xml
         clearContent();
 
         /**
-         * Appends a node child
+         * Appends an element child
          *
-         * @param node Child node to append
+         * @param element Child element to append
          */
         void
-        append(Node * node);
+        append(Element * element);
 
         /**
          * Add a text node to the element.
@@ -173,8 +173,16 @@ namespace Xml
         bool
         isElement() const override;
 
+        /**
+         * Appends a node
+         *
+         * @param node Node to append
+         */
+        void
+        appendNode(Node * node);
+
     protected:
-        std::string nName;         ///< Name of the element
+        std::string mName;         ///< Name of the element
         AttributesMap mAttributes; ///< Attributes of the element
         NodeList mChildren;        ///< Children elements
     };

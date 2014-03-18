@@ -2,16 +2,16 @@
 
 #ifdef APP_DEBUG
 #include <algorithm>
+#include <cassert>
 #endif
 
 namespace Xml
 {
     Element::Element(std::string const & name, Node * parent):
         Node(parent),
-        mParent(parent),
-        mchildren(),
-        mComments(),
-        mPI()
+        mName(name),
+        mAttributes(),
+        mChildren()
     {
 
     }
@@ -22,7 +22,7 @@ namespace Xml
         this->clearContent();
     }
 
-    NodeList const &
+    Element::NodeList const &
     Element::elements() const
     {
         return mChildren;
@@ -34,11 +34,14 @@ namespace Xml
         Node * parent = mParent;
         do
         {
-            if(parent->isElement()) break;
+            if(parent->isElement())
+            {
+                return static_cast<Element const *>(parent);
+            }
         }
         while((parent = mParent->parent()) != nullptr);
 
-        return parent;
+        return nullptr;
     }
 
     std::string
@@ -48,7 +51,10 @@ namespace Xml
 
         for(auto const & c : mChildren)
         {
-            content += contentText();
+            if(c != nullptr)
+            {
+                content += c->contentText();
+            }
         }
 
         return content;
@@ -68,7 +74,7 @@ namespace Xml
         {
             if(c->isElement())
             {
-                c->clearContent();
+                static_cast<Element *>(c)->clearContent();
             }
 
             delete c;
@@ -76,37 +82,30 @@ namespace Xml
     }
 
     void
-    Element::append(Node * node)
+    Element::append(Element * element)
     {
-        #ifdef APP_DEBUG
-        assert(node != this);
-
-        assert(
-            std::find(std::begin(mChildren), std::end(mChildren), node)
-            != std::end(mChildren)
-        );
-        #endif
-
-        mChildren.append(node);
+        this->appendNode(element);
     }
-
 
     void
     Element::appendText(std::string const & text)
     {
-        this->appendNode(new Text(content));
+        //TODO
+        //this->appendNode(new Text(content));
     }
 
     void
     Element::appendComment(std::string const & comment)
     {
-        this->appendNode(new Comment(content));
+        //TODO
+        //this->appendNode(new Comment(content));
     }
 
     void
     Element::appendPI(std::string const & pi)
     {
-        this->appendNode(new PI(content));
+        //TODO
+        //this->appendNode(new PI(content));
     }
 
     std::string const &
@@ -128,13 +127,13 @@ namespace Xml
 
         auto it = mAttributes.find(name);
 
-        return it != std::end(mAttributes) ? *it : notFound;
+        return (it != std::end(mAttributes)) ? it->second : notFound;
     }
 
     void
     Element::setAttribute(std::string const & name, std::string const & value)
     {
-        m_attributes[name] = value;
+        mAttributes[name] = value;
     }
 
     //TODO
@@ -152,4 +151,20 @@ namespace Xml
     {
         return true;
     }
+
+    void
+    Element::appendNode(Node * node)
+    {
+        #ifdef APP_DEBUG
+        assert(node != this);
+
+        assert(
+            std::find(std::begin(mChildren), std::end(mChildren), node)
+            != std::end(mChildren)
+        );
+        #endif
+
+        mChildren.push_back(node);
+    }
 }
+
