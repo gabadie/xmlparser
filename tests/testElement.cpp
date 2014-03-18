@@ -28,10 +28,6 @@ main()
     test_assert(c2->parent() == &e);
     test_assert(c2->parentElement() == &e);
 
-    test_assert(e.isElement());
-    test_assert(c1->isElement());
-    test_assert(c2->isElement());
-
     test_assert(e.elements().size() == 2);
     test_assert(e.elements()[0] == c1);
     test_assert(e.elements()[1] == c2);
