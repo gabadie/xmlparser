@@ -36,6 +36,8 @@ $(APP_BISON_TARGET): $(APP_BISON_FILE)
 	$(CMD_MKDIR_ALL) $(dir $@)
 	$(CMD_PREFIX)bison -o $@ -d $(PROJECT_BISONFLAGS) $<
 
+$(APP_FLEX_TARGET): $(APP_BISON_TARGET)
+
 
 # ------------------------------------------------------------ Flex and Bison's binaries
 APP_FB_BINARIES := $(call bin_object_files,$(APP_FLEX_TARGET) $(APP_BISON_TARGET))
