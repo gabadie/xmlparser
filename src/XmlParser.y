@@ -110,16 +110,14 @@ yyerror(void ** e, const char * msg)
 extern FILE * yyin;
 
 Xml::Document *
-Xml::parse(std::string const & path)
+Xml::parse(char const * path)
 {
-    char const * sPath = path.c_str();
-
-    if (sPath == 0)
+    if (path == 0)
     {
         return nullptr;
     }
 
-    FILE * f = fopen(sPath, "rb");
+    FILE * f = fopen(path, "rb");
 
     if (f == 0)
     {

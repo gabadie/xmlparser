@@ -27,7 +27,7 @@ namespace Xml
      * Parse a XML file
      */
     Document *
-    parse(std::string const & path);
+    parse(char const * path);
 
 }
 
