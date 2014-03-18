@@ -3,5 +3,5 @@
 #
 
 testCompilation.cpp
-testElement.cpp
+testDocument.cpp
 testParsing.cpp

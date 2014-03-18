@@ -21,7 +21,8 @@
 namespace Xml
 {
     Document::Document(Element * root):
-        mRoot(root)
+        mRoot(root),
+        mChildren()
     {
 
     }
@@ -29,10 +30,18 @@ namespace Xml
     std::ostream &
     Document::operator >> (std::ostream & stream) const
     {
-        for(auto const & c : mChildren)
+        for(auto i = 0u; i < mChildren.size(); ++i)
         {
-            stream << c << "\n";
+            auto const & c = mChildren[i];
+
+            #ifdef APP_DEBUG
+            assert(c != nullptr);
+            #endif
+
+            stream << (*c) << (i == mChildren.size() - 1 ? "" : "\n");
         }
+
+        return stream;
     }
 
     Document::~Document()
@@ -49,7 +58,7 @@ namespace Xml
         #ifdef APP_DEBUG
         assert(
             std::find(std::begin(mChildren), std::end(mChildren), documentNode)
-            != std::end(mChildren)
+            == std::end(mChildren)
         );
         #endif
 
@@ -68,20 +77,37 @@ namespace Xml
         return mRoot;
     }
 
+    Document::NodesList const &
+    Document::children() const
+    {
+        return mChildren;
+    }
+
     void
     Document::setRoot(Element * root)
     {
         if(root != nullptr && root != mRoot)
         {
-            auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
+            // If there is already a root node...
+            if(mRoot != nullptr)
+            {
+                auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
 
-            #ifdef APP_DEBUG
-            assert(it != std::end(mChildren));
-            #endif
+                #ifdef APP_DEBUG
+                assert(it != std::end(mChildren));
+                #endif
 
-            delete mRoot;
+                // ...we delete it
+                delete mRoot;
 
-            *it = root;
+                // and replaces it by the new one
+                *it = root;
+            }
+            else
+            {
+                this->append(root);
+            }
+
             mRoot = root;
         }
     }

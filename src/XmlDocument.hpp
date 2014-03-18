@@ -73,9 +73,19 @@ namespace Xml
         setRoot(Element * root);
 
         /**
+         * Gets the children nodes of the document
+         *
+         * @return The children nodes of the document
+         */
+        NodesList const &
+        children() const;
+
+        /**
          * Saves the XML document into a file.
          *
          * @param path File path
+         *
+         * @return True if the file has been saved, false otherwise.
          */
         bool
         saveToFile(std::string const & path) const;
