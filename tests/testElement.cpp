@@ -1,5 +1,6 @@
 #include <mk_test.h>
 
+#include <algorithm>
 #include "../src/XmlElement.hpp"
 
 using namespace Xml;
@@ -26,6 +27,10 @@ main()
     test_assert(c1->parentElement() == &e);
     test_assert(c2->parent() == &e);
     test_assert(c2->parentElement() == &e);
+
+    test_assert(e.isElement());
+    test_assert(c1->isElement());
+    test_assert(c2->isElement());
 
     test_assert(e.elements().size() == 2);
     test_assert(e.elements()[0] == c1);
@@ -65,6 +70,12 @@ main()
     c1->append(c3);
 
     std::cerr << e << std::endl;
+
+    auto const children = e.children();
+    test_assert(std::find(std::begin(children), std::end(children), c1) != std::end(children));
+    e.remove(c1);
+    auto const children2 = e.children();
+    test_assert(std::find(std::begin(children2), std::end(children2), c1) == std::end(children2));
 
     e.setContent("Foo");
     test_assert(e.text() == "Foo");
