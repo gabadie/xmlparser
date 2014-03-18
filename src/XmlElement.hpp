@@ -11,8 +11,10 @@
 namespace Xml
 {
     //Forward declarations
-    class MiscNode;
     class Element;
+    class MiscNode;
+    class ProcessingInstruction;
+
     inline
     void
     appendNode(Element * element, Node * node);
@@ -129,12 +131,22 @@ namespace Xml
         appendComment(std::string const & comment);
 
         /**
-         * Appends a PI to the element
+         * Appends a processing instruction (PI) to the element
          *
-         * @param pi Text of the PI to append
+         * @param pi Name of the PI to append
+         * @param ...keyValues Key and values parameters of the PI
+         */
+        //template <typename ...KeyValues>
+        //void
+        //appendProcessingInstruction(std::string const & pi, KeyValues && ...keyValues);
+
+        /**
+         * Appends a processing instrcution (PI) to the document
+         *
+         * @param pi The PI to append
          */
         void
-        appendPI(std::string const & pi);
+        appendProcessingInstruction(ProcessingInstruction * pi);
 
         /**
          * Deletes a child node.

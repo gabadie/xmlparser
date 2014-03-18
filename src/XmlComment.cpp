@@ -20,10 +20,4 @@ namespace Xml
     {
         stream << Utils::repeat(indent, level) << "<!-- " << mContent << " -->";
     }
-
-    std::string const &
-    Comment::contentText() const
-    {
-        return mContent;
-    }
 }

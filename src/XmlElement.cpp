@@ -11,6 +11,7 @@
 #include "Utils.hpp"
 #include "XmlComment.hpp"
 #include "XmlElement.hpp"
+#include "XmlProcessingInstruction.hpp"
 #include "XmlText.hpp"
 
 #ifdef APP_DEBUG
@@ -148,11 +149,9 @@ namespace Xml
     }
 
     void
-    Element::appendPI(std::string const & pi)
+    Element::appendProcessingInstruction(ProcessingInstruction * pi)
     {
-        (void) pi;
-        //TODO
-        //this->appendNode(new PI(content));
+        this->appendNode(pi);
     }
 
     bool

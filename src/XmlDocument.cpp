@@ -14,6 +14,7 @@
 #include "XmlDocument.hpp"
 #include "XmlDocumentNode.hpp"
 #include "XmlElement.hpp"
+#include "XmlProcessingInstruction.hpp"
 
 #ifdef APP_DEBUG
 #include <cassert>
@@ -69,6 +70,12 @@ namespace Xml
     Document::appendComment(std::string const & comment)
     {
         this->appendNode(new Comment(comment));
+    }
+
+    void
+    Document::appendProcessingInstruction(ProcessingInstruction * pi)
+    {
+        this->appendNode(pi);
     }
 
     Document::NodesList const &

@@ -11,4 +11,5 @@ XmlMiscNode.cpp
 XmlNode.cpp
 XmlParserError.cpp
 XmlParserInput.cpp
+XmlProcessingInstruction.cpp
 XmlText.cpp

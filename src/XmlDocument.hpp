@@ -11,6 +11,7 @@ namespace Xml
 {
     // Forward declarations
     class DocumentNode;
+    class ProcessingInstruction;
 
     /**
      * Defines a XML document
@@ -63,6 +64,14 @@ namespace Xml
          */
         void
         appendComment(std::string const & comment);
+
+        /**
+         * Appends a processing instruction (PI) to the document
+         *
+         * @param pi The PI to append
+         */
+        void
+        appendProcessingInstruction(ProcessingInstruction * pi);
 
         /**
          * Sets the root element of the document
