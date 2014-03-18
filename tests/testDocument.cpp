@@ -5,6 +5,7 @@
 #include "../src/XmlComment.hpp"
 #include "../src/XmlDocument.hpp"
 #include "../src/XmlElement.hpp"
+#include "../src/XmlProcessingInstruction.hpp"
 
 using namespace Xml;
 
@@ -23,6 +24,15 @@ main()
     test_assert(root->name() == tag);
 
 
+    auto pi = new ProcessingInstruction("xml");
+    pi->setAttribute("version", "1.0");
+    pi->setAttribute("encoding", "UTF-8");
+
+    test_assert(pi->attribute("version")  == "1.0");
+    test_assert(pi->attribute("encoding") == "UTF-8");
+
+    doc.appendProcessingInstruction(pi);
+
     doc.appendComment("This is a comment at the beginning of the XML document.");
 
     doc.setRoot(root);
@@ -31,7 +41,7 @@ main()
 
     test_assert(doc.root() == root);
 
-    test_assert(doc.children().size() == 3);
+    test_assert(doc.children().size() == 4);
 
     auto c1 = new Element("child1");
     auto c2 = new Element("child2");
