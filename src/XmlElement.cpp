@@ -181,8 +181,8 @@ namespace Xml
     Element::appendNode(Node * node)
     {
         #ifdef APP_DEBUG
+        assert(node != nullptr);
         assert(node != this);
-
         assert(
             std::find(std::begin(mChildren), std::end(mChildren), node)
             == std::end(mChildren)
