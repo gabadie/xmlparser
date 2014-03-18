@@ -164,7 +164,7 @@ namespace Xml
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
 
-    private:
+    public:
 
         /**
          * Tells whether or not the node is an Element
