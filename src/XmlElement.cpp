@@ -213,6 +213,10 @@ namespace Xml
 
         for(auto const & c : mChildren)
         {
+            #ifdef APP_DEBUG
+            assert(c != nullptr);
+            #endif
+
             c->exportToStream(stream, level + 1, indent);
         }
 
