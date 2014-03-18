@@ -210,6 +210,10 @@ yyerror(void ** e, const char * msg)
     Xml::parserSyntaxError(msg);
 }
 
+extern
+int
+yy_flex_debug;
+
 void
 yyrestart(FILE * input_file);
 
@@ -239,6 +243,7 @@ Xml::load(std::string const & path, Xml::Log * log)
 
         Xml::flexSetInput(f);
 
+        yy_flex_debug = 0;
         yyparse((void **) &e);
         yyrestart(stdin);
 
@@ -272,6 +277,7 @@ Xml::parse(std::string const & xmlContent, Xml::Log * log)
 
         Xml::flexSetInput(f);
 
+        yy_flex_debug = 0;
         yyparse((void **) &e);
         yyrestart(stdin);
 
