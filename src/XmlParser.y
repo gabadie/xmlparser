@@ -44,7 +44,7 @@ document
 
 element
     : emptytag {}
-    | STAG content ETAG {}
+    | stag content etag {}
     ;
 
 emptytag
@@ -53,7 +53,7 @@ emptytag
 
 stag
     : INF NOM atts SUP {}
-    | INF NOM COLON NOM atts SUP {}
+    | INF NOM COLON NOM atts SUP {}
     ;
 
 etag
@@ -66,12 +66,12 @@ att
 
 atts
     : atts att {}
-    | /* vide */ {}
+    | /* vide */ {}
     ;
 
 item
     : element {}
-    | DONNEES {}
+    | DONNEES {}
     ;
 
 content
