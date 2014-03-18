@@ -4,9 +4,11 @@
 # ------------------------------------------------------------ default configuration
 override config=debug
 
-PROJECT_CXXFLAGS := -Wall -Wextra -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR) -std=c++11
+PROJECT_CXXFLAGS := -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR) -std=c++11 -I src/
 PROJECT_BISONFLAGS := --debug
 PROJECT_FLEXFLAGS := --debug
+
+CMD_PREFIX=
 
 # ------------------------------------------------------------ debug configuration
 $(call trash_configs, debug)
@@ -41,7 +43,7 @@ $(APP_FLEX_TARGET): $(APP_BISON_TARGET)
 
 # ------------------------------------------------------------ Flex and Bison's binaries
 APP_FB_BINARIES := $(call bin_object_files,$(APP_FLEX_TARGET) $(APP_BISON_TARGET))
-$(APP_FB_BINARIES): CXXFLAGS = $(filter-out -Wall -Wextra,$(PROJECT_CXXFLAGS)) -I src/
+$(APP_FB_BINARIES): CXXFLAGS = $(PROJECT_CXXFLAGS)
 
 
 # ------------------------------------------------------------------------------ Application's binaries
@@ -51,12 +53,12 @@ APP_BINARIES_TARGET := $(call product_target,$(APP_BINARIES_PRODUCT))
 $(call product_public,$(APP_BINARIES_PRODUCT))
 
 APP_CPP_FILES := $(call filelist,./src/application_lib.flist)
-APP_OBJECT_BINARIES := $(call bin_object_files,$(APP_CPP_FILES))
+APP_OBJECT_BINARIES := $(call bin_object_files,$(APP_CPP_FILES)) $(APP_FB_BINARIES)
 
 # ------------------------------------------------------------ compilation/link configuration
 $(APP_OBJECT_BINARIES): CXXFLAGS += $(PROJECT_CXXFLAGS)
-$(APP_BINARIES_TARGET): $(APP_OBJECT_BINARIES) $(APP_FB_BINARIES)
-$(APP_BINARIES_TARGET): ARFLAGS += $(APP_OBJECT_BINARIES) $(APP_FB_BINARIES)
+$(APP_BINARIES_TARGET): $(APP_OBJECT_BINARIES)
+$(APP_BINARIES_TARGET): ARFLAGS += $(APP_OBJECT_BINARIES)
 
 
 # ------------------------------------------------------------------------------ Application's main
@@ -69,8 +71,8 @@ APP_EXEC_CPP_FILES := ./src/main.cpp
 APP_EXEC_BINARIES := $(call bin_object_files,$(APP_EXEC_CPP_FILES))
 
 $(APP_EXEC_BINARIES): CXXFLAGS += $(PROJECT_CXXFLAGS)
-$(APP_EXEC_TARGET): $(APP_BINARIES_TARGET) $(APP_EXEC_BINARIES)
-$(APP_EXEC_TARGET): LDFLAGS += $(APP_BINARIES_TARGET) $(APP_EXEC_BINARIES)
+$(APP_EXEC_TARGET): $(APP_OBJECT_BINARIES) $(APP_EXEC_BINARIES)
+$(APP_EXEC_TARGET): LDFLAGS += $(APP_OBJECT_BINARIES) $(APP_EXEC_BINARIES)
 
 
 # ------------------------------------------------------------------------------ Application's tests
