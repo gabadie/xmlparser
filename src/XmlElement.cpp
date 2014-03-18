@@ -188,7 +188,7 @@ namespace Xml
 
         assert(
             std::find(std::begin(mChildren), std::end(mChildren), node)
-            != std::end(mChildren)
+            == std::end(mChildren)
         );
         #endif
 
