@@ -218,10 +218,10 @@ namespace Xml
             #endif
 
             c->exportToStream(stream, level + 1, indent);
+            stream << "\n";
         }
 
         stream << Utils::repeat(indent, level) << "</" << mName << ">";
-        stream << (level == 0 ? "" : "\n");
     }
 
     bool

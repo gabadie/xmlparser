@@ -25,7 +25,7 @@ namespace Xml
     Text::exportToStream(std::ostream & stream, std::size_t level,
         std::string const & indent) const
     {
-        stream << Utils::repeat(indent, level) << mText << "\n";
+        stream << Utils::repeat(indent, level) << mText;
     }
 
     std::string const &
