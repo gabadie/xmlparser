@@ -4,9 +4,10 @@
 
 #include <fstream>
 
-#include "XmlParserInput.hpp"
 #include "XmlParser.hpp"
 #include "XmlText.hpp"
+#include "XmlParserError.hpp"
+#include "XmlParserInput.hpp"
 
 int yylex(void);
 
