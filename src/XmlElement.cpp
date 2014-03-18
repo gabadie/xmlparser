@@ -18,8 +18,8 @@
 
 namespace Xml
 {
-    Element::Element(std::string const & name, Node * parent):
-        Node(parent),
+    Element::Element(std::string const & name):
+        Node(),
         mName(name),
         mAttributes(),
         mChildren()
@@ -210,7 +210,7 @@ namespace Xml
         #endif
 
         mChildren.push_back(node);
-        node->setParent(this);
+        node->mParent = this;
     }
 }
 

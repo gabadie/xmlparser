@@ -3,8 +3,8 @@
 
 namespace Xml
 {
-    Text::Text(std::string const & content, Node * parent):
-        Node(parent),
+    Text::Text(std::string const & content):
+        Node(),
         mText(content)
     {
 

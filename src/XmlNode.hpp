@@ -17,10 +17,8 @@ namespace Xml
 
         /**
          * Constructor
-         *
-         * @param parent Parent of the node
          */
-        Node(Node * parent = nullptr);
+        Node();
 
         /**
          * Implements standart stream operator
@@ -54,14 +52,6 @@ namespace Xml
          */
         Node const *
         parent() const;
-
-        /**
-         * Sets the parent node
-         *
-         * @param parent The parent node to set
-         */
-        void
-        setParent(Node * parent);
 
     protected:
         /**

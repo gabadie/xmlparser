@@ -1,12 +1,8 @@
 #include "XmlNode.hpp"
 
-#ifdef APP_DEBUG
-#include <cassert>
-#endif
-
 namespace Xml
 {
-    Node::Node(Node * parent): mParent(parent)
+    Node::Node(): mParent(nullptr)
     {
 
     }
@@ -23,16 +19,6 @@ namespace Xml
     Node::parent() const
     {
         return mParent;
-    }
-
-    void
-    Node::setParent(Node * parent)
-    {
-        #ifdef APP_DEBUG
-        assert(parent != nullptr);
-        #endif
-
-        mParent = parent;
     }
 
     std::string const &

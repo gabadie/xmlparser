@@ -2,8 +2,7 @@
 
 namespace Xml
 {
-    MiscNode::MiscNode(Node * parent):
-        DocumentNode(parent)
+    MiscNode::MiscNode(): DocumentNode()
     {
 
     }

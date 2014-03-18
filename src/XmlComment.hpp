@@ -18,9 +18,8 @@ namespace Xml
          * Constructor
          *
          * @param content Content of the comment
-         * @param parent Parent of the node
          */
-        Comment(std::string const & content = "", Node * parent = nullptr);
+        Comment(std::string const & content = "");
 
         /**
          * Destructor

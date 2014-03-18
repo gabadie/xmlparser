@@ -3,8 +3,8 @@
 
 namespace Xml
 {
-    Comment::Comment(std::string const & content, Node * parent):
-        MiscNode(parent),
+    Comment::Comment(std::string const & content):
+        MiscNode(),
         mContent(content)
     {
 

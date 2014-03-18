@@ -17,10 +17,8 @@ namespace Xml
 
         /**
          * Constructor
-         *
-         * @param parent Parent of the node
          */
-        MiscNode(Node * parent = nullptr);
+        MiscNode();
 
         /**
          * Destructor

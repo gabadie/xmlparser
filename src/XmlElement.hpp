@@ -29,9 +29,8 @@ namespace Xml
          * Constructor
          *
          * @param name Name of the element
-         * @param parent Parent of the element
          */
-        Element(std::string const & name, Node * parent = nullptr);
+        Element(std::string const & name);
 
         /**
          * Destructor

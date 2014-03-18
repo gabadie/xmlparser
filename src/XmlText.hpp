@@ -19,9 +19,8 @@ namespace Xml
          * Constructor
          *
          * @param content Text content
-         * @param parent Parent of the node
          */
-        Text(std::string const & content = "", Node * parent = nullptr);
+        Text(std::string const & content = "");
 
         /**
          * Destructor

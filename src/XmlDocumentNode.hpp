@@ -15,10 +15,8 @@ namespace Xml
 
         /**
          * Constructor
-         *
-         * @param parent Parent of the node
          */
-        DocumentNode(Node * parent = nullptr);
+        DocumentNode();
 
         /**
          * Destructor
