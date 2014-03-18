@@ -1,10 +1,10 @@
-
 # ------------------------------------------------------------------------------ Application's configuration
+
 
 # ------------------------------------------------------------ default configuration
 override config=debug
 
-PROJECT_CXXFLAGS := -Wall -Wextra -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR)
+PROJECT_CXXFLAGS := -Wall -Wextra -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR) -std=c++11
 PROJECT_BISONFLAGS := --debug
 PROJECT_FLEXFLAGS := --debug
 
