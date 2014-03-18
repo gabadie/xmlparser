@@ -65,7 +65,7 @@ namespace Xml
         void
         appendComment(std::string const & comment);
 
-       /**
+        /**
          * Appends a processing instruction (PI) to the element
          *
          * @param name Name of the PI to append
