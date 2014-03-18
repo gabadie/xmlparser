@@ -29,7 +29,7 @@ namespace Xml
         std::ostream &
         operator >> (std::ostream & stream) const
         {
-            exportToStream(stream, 0, "");
+            exportToStream(stream, 0, "  ");
             return stream;
         }
 
@@ -58,7 +58,7 @@ namespace Xml
         /**
          * Sets the parent node
          *
-         * @param The parent node to set
+         * @param parent The parent node to set
          */
         void
         setParent(Node * parent);

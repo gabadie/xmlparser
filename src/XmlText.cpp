@@ -1,4 +1,5 @@
 #include "XmlText.hpp"
+#include "Utils.hpp"
 
 namespace Xml
 {
@@ -24,8 +25,7 @@ namespace Xml
     Text::exportToStream(std::ostream & stream, std::size_t level,
         std::string const & indent) const
     {
-        //std::string
-        stream << indent << mText;
+        stream << Utils::repeat(indent, level) << mText << "\n";
     }
 
     std::string const &

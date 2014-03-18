@@ -95,6 +95,7 @@ namespace Xml
         {
             delete c;
         }
+        mChildren.clear();
     }
 
     void
@@ -154,21 +155,22 @@ namespace Xml
     void
     Element::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
     {
-        stream << Utils::repeat(indent, level) << "<" << mName << " ";
+        stream << Utils::repeat(indent, level) << "<" << mName;
 
         for(auto const & a : mAttributes)
         {
-            stream << a.first << "=\"" << a.second << "\" ";
+            stream << " " << a.first << "=\"" << a.second << "\"";
         }
 
         stream << ">\n";
 
         for(auto const & c : mChildren)
         {
-            exportToStream(stream, level + 1, indent);
+            c->exportToStream(stream, level + 1, indent);
         }
 
-        stream << Utils::repeat(indent, level) << "</" << mName << ">\n";
+        stream << Utils::repeat(indent, level) << "</" << mName << ">";
+        stream << (level == 0 ? "" : "\n");
     }
 
     bool

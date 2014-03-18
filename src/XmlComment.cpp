@@ -18,7 +18,7 @@ namespace Xml
     void
     Comment::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
     {
-        stream << Utils::repeat(indent, level) << mContent;
+        stream << Utils::repeat(indent, level) << "<!-- " << mContent << " -->\n";
     }
 
     std::string const &
