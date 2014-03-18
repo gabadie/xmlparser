@@ -16,6 +16,14 @@ namespace Xml
     parserBindLog(Xml::Log & log);
 
     /**
+     * Output a lexical error in the bound log
+     *
+     * @param msg is the error message to log
+     */
+    void
+    parserLexicalError(std::string const & msg);
+
+    /**
      * Output a syntax error in the bound log
      *
      * @param msg is the error message to log
@@ -24,12 +32,12 @@ namespace Xml
     parserSyntaxError(std::string const & msg);
 
     /**
-     * Output a lexical error in the bound log
+     * Output a semantic error in the bound log
      *
      * @param msg is the error message to log
      */
     void
-    parserLexicalError(std::string const & msg);
+    parserSemanticError(std::string const & msg);
 
     /**
      * Check if parsing has defenetly failed

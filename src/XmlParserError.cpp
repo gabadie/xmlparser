@@ -19,6 +19,12 @@ namespace Xml
     }
 
     void
+    parserLexicalError(std::string const & msg)
+    {
+        logTarget->append("lexical error: " + msg);
+    }
+
+    void
     parserSyntaxError(std::string const & msg)
     {
         logTarget->append("syntax error: " + msg);
@@ -26,9 +32,9 @@ namespace Xml
     }
 
     void
-    parserLexicalError(std::string const & msg)
+    parserSemanticError(std::string const & msg)
     {
-        logTarget->append("lexical error: " + msg);
+        logTarget->append("semantic error: " + msg);
     }
 
     bool

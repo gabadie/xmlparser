@@ -6,7 +6,7 @@
     ((const char *) #code)
 
 void
-test_nodes()
+test_elements_basic()
 {
     std::string content (xml_code(
         <hello>
@@ -43,11 +43,97 @@ test_nodes()
     delete doc;
 }
 
+void
+test_elements_errors()
+{
+    {
+        std::string content (xml_code(
+            <hello>
+                <balise1>
+                <balise1>
+                <balise2>
+                </balise2>
+            </hello>
+        ));
+        Xml::Log log;
+
+        Xml::Document * doc = Xml::parse(content, &log);
+
+        test_assert(doc == 0);
+    }
+
+    {
+        std::string content (xml_code(
+            <hello>
+                <balise1>
+                <balise2>
+                </balise2>
+            </hello>
+        ));
+        Xml::Log log;
+
+        Xml::Document * doc = Xml::parse(content, &log);
+
+        test_assert(doc == 0);
+    }
+
+    {
+        std::string content (xml_code(
+            <hello>
+                <balise1>
+                </balise3>
+                <balise2>
+                </balise2>
+            </hello>
+        ));
+        Xml::Log log;
+
+        Xml::Document * doc = Xml::parse(content, &log);
+
+        test_assert(doc != 0);
+        test_assert(doc->root()->elements("balise1").size() == 0);
+        test_assert(doc->root()->elements("balise2").size() == 1);
+    }
+}
+
+void
+test_text()
+{
+    std::string content (xml_code(
+        <hello>
+            Hello
+            <balise1>
+            </balise1>
+            World
+            <balise2>
+            </balise2>
+        </hello>
+    ));
+    Xml::Log log;
+
+    Xml::Document * doc = Xml::parse(content, &log);
+
+    test_assert(doc != 0);
+
+    if (doc == 0)
+    {
+        return;
+    }
+
+    std::cerr << doc->root()->text() << "\n";
+
+    //test_assert(doc->root()->text() == "Hello World");
+
+    delete doc;
+}
+
 
 int
 main()
 {
-    test_nodes();
+    test_elements_basic();
+    test_elements_errors();
+    test_text();
 
     return 0;
 }

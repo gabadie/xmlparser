@@ -104,7 +104,7 @@ element:
          */
         if ($1->name() != *$3)
         {
-            // TODO: sematique error
+            Xml::parserSemanticError("unexpected </" + *$3 + "> (it should have been </" + $1->name() + ">)");
 
             delete $$;
             $$ = 0;
@@ -204,28 +204,10 @@ content:
 %%
 /* ----------------------------------------------------------------------------- C/C++ suffix */
 
-int
-yyerror(std::string const & s)
-{
-    extern int yylineno;	// defined and maintained in lex.c
-    extern char *yytext;	// defined and maintained in lex.c
-
-    std::cerr << "ERROR: " << s << " at symbol \"" << yytext;
-    std::cerr << "\" on line " << yylineno << std::endl;
-
-    exit(3);
-}
-
-int
-yyerror(char const *s)
-{
-    return yyerror(std::string(s));
-}
-
 void
 yyerror(void ** e, const char * msg)
 {
-    yyerror(msg);
+    Xml::parserSyntaxError(msg);
 }
 
 void
