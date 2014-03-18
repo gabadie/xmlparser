@@ -46,18 +46,9 @@ $(APP_FB_BINARIES): CXXFLAGS = $(PROJECT_CXXFLAGS)
 
 # ------------------------------------------------------------------------------ Application's binaries
 
-APP_BINARIES_PRODUCT := $(call product_create,BINLIBSTATIC,application_lib)
-APP_BINARIES_TARGET := $(call product_target,$(APP_BINARIES_PRODUCT))
-$(call product_public,$(APP_BINARIES_PRODUCT))
-
 APP_CPP_FILES := $(call filelist,./src/application_lib.flist)
 APP_OBJECT_BINARIES := $(call bin_object_files,$(APP_CPP_FILES)) $(APP_FB_BINARIES)
-
-# ------------------------------------------------------------ compilation/link configuration
 $(APP_OBJECT_BINARIES): CXXFLAGS += $(PROJECT_CXXFLAGS)
-$(APP_BINARIES_TARGET): $(APP_OBJECT_BINARIES)
-$(APP_BINARIES_TARGET): ARFLAGS += $(APP_OBJECT_BINARIES)
-
 
 # ------------------------------------------------------------------------------ Application's main
 
@@ -88,8 +79,8 @@ $(TEST_APP_TARGETS): CXXFLAGS += $(PROJECT_CXXFLAGS)
 $(TEST_APP_TARGETS): CXXFLAGS += -I $(test_apis_dir)
 
 # ------------------------------------------------------------ link configuration
-$(TEST_APP_TARGETS): $(APP_BINARIES_TARGET)
-$(TEST_APP_TARGETS): LDFLAGS += $(APP_BINARIES_TARGET)
+$(TEST_APP_TARGETS): $(APP_OBJECT_BINARIES)
+$(TEST_APP_TARGETS): LDFLAGS += $(APP_OBJECT_BINARIES)
 $(TEST_APP_TARGETS): LDFLAGS += $(PROJECT_LDFLAGS)
 
 
