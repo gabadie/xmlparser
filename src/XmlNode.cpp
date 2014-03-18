@@ -1,5 +1,9 @@
 #include "XmlNode.hpp"
 
+#ifdef APP_DEBUG
+#include <cassert>
+#endif
+
 namespace Xml
 {
     Node::Node(Node * parent): mParent(parent)
@@ -24,6 +28,10 @@ namespace Xml
     void
     Node::setParent(Node * parent)
     {
+        #ifdef APP_DEBUG
+        assert(parent != nullptr);
+        #endif
+
         mParent = parent;
     }
 
