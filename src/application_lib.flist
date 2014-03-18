@@ -8,4 +8,5 @@ XmlDocumentNode.cpp
 XmlElement.cpp
 XmlMiscNode.cpp
 XmlNode.cpp
+XmlParserInput.cpp
 XmlText.cpp

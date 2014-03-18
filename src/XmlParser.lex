@@ -1,6 +1,8 @@
 
 %{
 /* ----------------------------------------------------------------------------- C/C++ prefix */
+
+#include "XmlParserInput.hpp"
 #include "XmlDocument.hpp"
 #include "XmlParser.hpp"
 

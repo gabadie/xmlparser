@@ -2,6 +2,9 @@
 %{
 /* ----------------------------------------------------------------------------- C/C++ prefix */
 
+#include <fstream>
+
+#include "XmlParserInput.hpp"
 #include "XmlParser.hpp"
 #include "XmlText.hpp"
 
@@ -223,9 +226,9 @@ Xml::parse(char const * path)
         return nullptr;
     }
 
-    FILE * f = fopen(path, "rb");
+    std::ifstream f (path, std::ios::in | std::ios::binary);
 
-    if (f == 0)
+    if (!f.is_open())
     {
         return nullptr;
     }
@@ -233,14 +236,10 @@ Xml::parse(char const * path)
     Xml::Document * e = 0;
 
     {
-        yyin = f;
+        Xml::flexSetInput(f);
 
         yyparse((void **) &e);
-
-        yyin = 0;
     }
-
-    fclose(f);
 
     return e;
 }
