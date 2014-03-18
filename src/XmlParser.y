@@ -14,6 +14,15 @@ int yylex(void);
 
 void yyerror(void ** e, const char * msg);
 
+namespace Xml
+{
+    inline
+    void
+    appendNode(Element * element, Node * node)
+    {
+        element->appendNode(node);
+    }
+}
 
 %}
 
@@ -74,14 +83,14 @@ element:
          */
         $$ = $1;
 
-        for(Xml::Node * c : *$2)
+        for(Xml::Node * node : *$2)
         {
-            if (c == 0)
+            if (node == 0)
             {
                 continue;
             }
 
-            $1->appendNode(c);
+            Xml::appendNode($1, node);
         }
 
         /*
