@@ -43,12 +43,40 @@ document
     ;
 
 element
-    : INF NOM SUP content INF SLASH NOM SUP
+    : emptytag {}
+    | STAG content ETAG {}
+    ;
+
+emptytag
+    : INF NOM atts SLASH SUP {}
+    ;
+
+stag
+    : INF NOM atts SUP {}
+    | INF NOM COLON NOM atts SUP {}
+    ;
+
+etag
+    : INF SLASH NOM SUP {}
+    ;
+
+att
+    : NOM EGAL VALEUR {}
+    ;
+
+atts
+    : atts att {}
+    | /* vide */ {}
+    ;
+
+item
+    : element {}
+    | DONNEES {}
     ;
 
 content
-    : content element
-    | /* vide */
+    : content item {}
+    | /* vide */ {}
     ;
 
 
