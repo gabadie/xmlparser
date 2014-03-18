@@ -12,6 +12,10 @@ namespace Xml
 {
     //Forward declarations
     class MiscNode;
+    class Element;
+    inline
+    void
+    appendNode(Element * element, Node * node);
 
     /**
      * Defines an XML element
@@ -190,7 +194,7 @@ namespace Xml
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
 
-    public:
+    private:
 
         /**
          * Tells whether or not the node is an Element
@@ -213,6 +217,11 @@ namespace Xml
         std::string mName;         ///< Name of the element
         AttributesMap mAttributes; ///< Attributes of the element
         NodeList mChildren;        ///< Children elements
+
+        /**
+         * Friends ship to let the Xml parser access to the appendNove method.
+         */
+        friend void Xml::appendNode(Element * element, Node * node);
     };
 }
 
