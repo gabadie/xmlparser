@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <stdio.h>
 
 #include "XmlParser.hpp"
 #include "XmlText.hpp"
@@ -227,6 +228,9 @@ yyerror(void ** e, const char * msg)
     yyerror(msg);
 }
 
+void
+yyrestart(FILE * input_file);
+
 Xml::Document *
 Xml::load(std::string const & path, Xml::Log * log)
 {
@@ -254,6 +258,7 @@ Xml::load(std::string const & path, Xml::Log * log)
         Xml::flexSetInput(f);
 
         yyparse((void **) &e);
+        yyrestart(stdin);
 
         if (!log)
         {
@@ -286,6 +291,7 @@ Xml::parse(std::string const & xmlContent, Xml::Log * log)
         Xml::flexSetInput(f);
 
         yyparse((void **) &e);
+        yyrestart(stdin);
 
         if (!log)
         {
