@@ -1,6 +1,9 @@
 #include <mk_test.h>
 
 #include <algorithm>
+
+#include "../src/XmlComment.hpp"
+#include "../src/XmlDocument.hpp"
 #include "../src/XmlElement.hpp"
 
 using namespace Xml;
@@ -8,34 +11,47 @@ using namespace Xml;
 int
 main()
 {
+    Document doc;
+
     std::string name = "test";
     std::string tag  = "root";
 
-    Element e(name);
+    auto root = new Element(name);
 
-    test_assert(e.name() == name);
-    e.setName(tag);
-    test_assert(e.name() == tag);
+    test_assert(root->name() == name);
+    root->setName(tag);
+    test_assert(root->name() == tag);
+
+
+    doc.append(new Comment("This is a comment at the beginning of the XML document."));
+
+    doc.setRoot(root);
+
+    doc.append(new Comment("This is a comment at the end of the XML document."));
+
+    test_assert(doc.root() == root);
+
+    test_assert(doc.children().size() == 3);
 
     auto c1 = new Element("child1");
     auto c2 = new Element("child2");
 
-    e.append(c1);
-    e.append(c2);
+    root->append(c1);
+    root->append(c2);
 
-    test_assert(c1->parent() == &e);
-    test_assert(c1->parentElement() == &e);
-    test_assert(c2->parent() == &e);
-    test_assert(c2->parentElement() == &e);
+    test_assert(c1->parent() == root);
+    test_assert(c1->parentElement() == root);
+    test_assert(c2->parent() == root);
+    test_assert(c2->parentElement() == root);
 
-    test_assert(e.elements().size() == 2);
-    test_assert(e.elements()[0] == c1);
-    test_assert(e.elements()[1] == c2);
+    test_assert(root->elements().size() == 2);
+    test_assert(root->elements()[0] == c1);
+    test_assert(root->elements()[1] == c2);
 
     std::string text = "This is a text in root.";
 
-    e.appendText(text);
-    test_assert(e.text() == text);
+    root->appendText(text);
+    test_assert(root->text() == text);
 
     std::string attr1 = "attr1";
     std::string attr2 = "attr2";
@@ -65,20 +81,22 @@ main()
     c3->appendComment("Yet another comment.");
     c1->append(c3);
 
-    std::cerr << e << std::endl;
+    std::cerr << doc << std::endl;
 
-    auto const children = e.children();
+    //doc.saveToFile("test.xml");
+
+    auto const children = root->children();
     test_assert(std::find(std::begin(children), std::end(children), c1) != std::end(children));
-    e.remove(c1);
-    auto const children2 = e.children();
+    root->remove(c1);
+    auto const children2 = root->children();
     test_assert(std::find(std::begin(children2), std::end(children2), c1) == std::end(children2));
 
-    e.setContent("Foo");
-    test_assert(e.text() == "Foo");
+    root->setContent("Foo");
+    test_assert(root->text() == "Foo");
 
-    e.clearContent();
-    test_assert(e.text() == "");
-    test_assert(e.elements().size() == 0);
+    root->clearContent();
+    test_assert(root->text() == "");
+    test_assert(root->elements().size() == 0);
 
     return 0;
 }
