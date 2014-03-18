@@ -8,8 +8,6 @@ PROJECT_CXXFLAGS := -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR) -std=c++11 
 PROJECT_BISONFLAGS := --debug
 PROJECT_FLEXFLAGS := --debug
 
-CMD_PREFIX=
-
 # ------------------------------------------------------------ debug configuration
 $(call trash_configs, debug)
 $(call hook_precommit_configs, debug)
