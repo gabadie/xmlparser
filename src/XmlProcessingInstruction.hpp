@@ -23,13 +23,6 @@ namespace Xml
         using AttributesMap = std::map<std::string, std::string>;
 
         /**
-         * Constructor
-         *
-         * @param content Content of the comment
-         */
-        ProcessingInstruction(std::string const & name = "");
-
-        /**
          * Destructor
          */
         virtual
@@ -45,6 +38,16 @@ namespace Xml
         std::string const &
         attribute(std::string const & name) const;
 
+    protected:
+        /**
+         * Variadic constructor
+         *
+         * @param name Name of the PI to append
+         * @param ...keyValues Key and values parameters of the PI
+         */
+        template <typename ...KeyValues>
+        ProcessingInstruction(std::string const & name, KeyValues && ...keyValues);
+
         /**
          * Sets the value of an attribute.
          *
@@ -56,7 +59,6 @@ namespace Xml
         void
         setAttribute(std::string const & name, std::string const & value);
 
-    protected:
         /**
          * Exports to a <stream> with a given <indent>
          *
@@ -68,6 +70,21 @@ namespace Xml
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
 
+    private:
+        /**
+         * Sets the value of an attribute (variadic version)
+         *
+         * If the attribute does not exist, it is created.
+         *
+         * @param name  Name of the attribute to set
+         * @param value Value to set
+         * @param ...keyValues Other key values to set
+         */
+        template <typename ...KeyValues>
+        void
+        setAttribute(std::string const & name, std::string const & value,
+            KeyValues && ...keyValues);
+
     protected:
         std::string mName;         ///< Name of the PI
         AttributesMap mAttributes; ///< Attributes of the element
@@ -77,5 +94,6 @@ namespace Xml
     };
 }
 
+#include "XmlProcessingInstruction.inl"
 
 #endif //_H_XML_PROCESSING_INSTRUCTION

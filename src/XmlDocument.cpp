@@ -72,12 +72,6 @@ namespace Xml
         this->appendNode(new Comment(comment));
     }
 
-    void
-    Document::appendProcessingInstruction(ProcessingInstruction * pi)
-    {
-        this->appendNode(pi);
-    }
-
     Document::NodesList const &
     Document::children() const
     {

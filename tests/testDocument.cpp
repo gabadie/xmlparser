@@ -24,14 +24,10 @@ main()
     test_assert(root->name() == tag);
 
 
-    auto pi = new ProcessingInstruction("xml");
-    pi->setAttribute("version", "1.0");
-    pi->setAttribute("encoding", "UTF-8");
+    doc.appendProcessingInstruction("xml", "version", "1.0", "encoding", "UTF-8");
 
-    test_assert(pi->attribute("version")  == "1.0");
-    test_assert(pi->attribute("encoding") == "UTF-8");
-
-    doc.appendProcessingInstruction(pi);
+    test_assert(static_cast<ProcessingInstruction *>(doc.children()[0])->attribute("version")  == "1.0");
+    test_assert(static_cast<ProcessingInstruction *>(doc.children()[0])->attribute("encoding") == "UTF-8");
 
     doc.appendComment("This is a comment at the beginning of the XML document.");
 

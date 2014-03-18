@@ -136,9 +136,9 @@ namespace Xml
          * @param pi Name of the PI to append
          * @param ...keyValues Key and values parameters of the PI
          */
-        //template <typename ...KeyValues>
-        //void
-        //appendProcessingInstruction(std::string const & pi, KeyValues && ...keyValues);
+        template <typename ...KeyValues>
+        void
+        appendProcessingInstruction(std::string const & pi, KeyValues && ...keyValues);
 
         /**
          * Appends a processing instrcution (PI) to the document

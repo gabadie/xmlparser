@@ -65,13 +65,15 @@ namespace Xml
         void
         appendComment(std::string const & comment);
 
-        /**
-         * Appends a processing instruction (PI) to the document
+       /**
+         * Appends a processing instruction (PI) to the element
          *
-         * @param pi The PI to append
+         * @param name Name of the PI to append
+         * @param ...keyValues Key and values parameters of the PI
          */
+        template <typename ...KeyValues>
         void
-        appendProcessingInstruction(ProcessingInstruction * pi);
+        appendProcessingInstruction(std::string const & name, KeyValues && ...keyValues);
 
         /**
          * Sets the root element of the document
@@ -123,8 +125,8 @@ namespace Xml
     {
         return doc >> stream;
     }
-
 }
 
+#include "XmlDocument.inl"
 
 #endif //_H_XML_DOCUMENT

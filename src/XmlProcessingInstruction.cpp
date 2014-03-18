@@ -19,14 +19,6 @@ namespace Xml
 
     }
 
-    ProcessingInstruction::ProcessingInstruction(std::string const & name):
-        DocumentNode(),
-        mName(name),
-        mAttributes()
-    {
-
-    }
-
     std::string const &
     ProcessingInstruction::attribute(std::string const & name) const
     {
