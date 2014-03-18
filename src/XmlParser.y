@@ -20,6 +20,7 @@ void yyerror(void ** e, const char * msg);
 %union{
     std::string * string_val;
     char * s;
+    Xml::Element * e;
 }
 
 
@@ -33,51 +34,99 @@ void yyerror(void ** e, const char * msg);
 /* ----------------------------------------------------------------------------- types */
 %start document
 %type <string_val> document
+%type <e> element
 
 
 %%
 /* ----------------------------------------------------------------------------- types rules */
 
-document
-    : element { *((Xml::Document **) e) = 0; }
-    ;
+document:
+    element
+    {
+        /* ---------------------------------------------------- root */
+        *e = new Xml::Document($1);
+    };
 
-element
-    : emptytag {}
-    | stag content etag {}
-    ;
+element:
+    emptytag
+    {
+        /* ---------------------------------------------------- empty element */
+        /* TODO */
+    } |
+    stag content etag
+    {
+        /* ---------------------------------------------------- element with children */
 
-emptytag
-    : INF NOM atts SLASH SUP {}
-    ;
+    };
 
-stag
-    : INF NOM atts SUP {}
-    | INF NOM COLON NOM atts SUP {}
-    ;
+emptytag:
+    INF NOM atts SLASH SUP
+    {
+        /* ---------------------------------------------------- empty element tag */
 
-etag
-    : INF SLASH NOM SUP {}
-    ;
+    };
 
-att
-    : NOM EGAL VALEUR {}
-    ;
+stag:
+    INF NOM atts SUP
+    {
+        /* ---------------------------------------------------- nonempty element start tag */
 
-atts
-    : atts att {}
-    | /* vide */ {}
-    ;
+    } |
+    INF NOM COLON NOM atts SUP
+    {
+        /* ---------------------------------------------------- nonempty element start tag */
 
-item
-    : element {}
-    | DONNEES {}
-    ;
+    };
 
-content
-    : content item {}
-    | /* vide */ {}
-    ;
+etag:
+    INF SLASH NOM SUP
+    {
+        /* ---------------------------------------------------- nonempty element end tag */
+
+    };
+
+att:
+    NOM EGAL VALEUR
+    {
+        /* ---------------------------------------------------- element's attribute */
+
+    };
+
+atts:
+    atts att
+    {
+        /* ---------------------------------------------------- element's attributes */
+
+    } |
+    /* vide */
+    {
+        /* ---------------------------------------------------- element with children */
+
+    };
+
+item:
+    element
+    {
+        /* ---------------------------------------------------- element in another element */
+
+    } |
+    DONNEES
+    {
+        /* ---------------------------------------------------- text in an element */
+
+    };
+
+content:
+    content item
+    {
+        /* ---------------------------------------------------- element's content */
+
+    } |
+    /* vide */
+    {
+        /* ---------------------------------------------------- element's content end */
+
+    };
 
 
 %%
