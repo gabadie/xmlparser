@@ -29,7 +29,7 @@ namespace Xml
         std::ostream &
         operator >> (std::ostream & stream) const
         {
-            exportToStream(stream, "");
+            exportToStream(stream, 0, "");
             return stream;
         }
 
@@ -59,12 +59,14 @@ namespace Xml
         /**
          * Exports to a <stream> with a given <indent>
          *
-         * @param <stream> is the stream to export to
-         * @param <indent> is the the indentation prefix
+         * @param stream The stream to export to
+         * @param level  Level of the token
+         * @param indent The indentation prefix
          */
         virtual
         void
-        exportToStream(std::ostream & stream, std::string const & indent) const = 0;
+        exportToStream(std::ostream & stream, std::size_t level,
+            std::string const & indent) const = 0;
 
         /**
          * Gets the content text if is a Xml::Text

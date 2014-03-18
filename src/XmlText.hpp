@@ -41,12 +41,15 @@ namespace Xml
         /**
          * Exports to a <stream> with a given <indent>
          *
-         * @param <stream> is the stream to export to
-         * @param <indent> is the the indentation prefix
+         * @param stream The stream to export to
+         * @param level  Level of the token
+         * @param indent The indentation prefix
          */
         virtual
         void
-        exportToStream(std::ostream & stream, std::string const & indent) const override;
+        exportToStream(std::ostream & stream, std::size_t level,
+            std::string const & indent) const override;
+
 
         /**
          * Gets the content text

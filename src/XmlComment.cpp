@@ -1,4 +1,5 @@
 #include "XmlComment.hpp"
+#include "Utils.hpp"
 
 namespace Xml
 {
@@ -15,9 +16,9 @@ namespace Xml
     }
 
     void
-    Comment::exportToStream(std::ostream & stream, std::string const & indent) const
+    Comment::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
     {
-        stream << indent << mContent;
+        stream << Utils::repeat(indent, level) << mContent;
     }
 
     std::string const &

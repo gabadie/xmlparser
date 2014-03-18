@@ -8,7 +8,6 @@
 namespace Xml
 {
     /**
-
      * Defines a comment
      */
     class Comment : public MiscNode
@@ -38,7 +37,8 @@ namespace Xml
          */
         virtual
         void
-        exportToStream(std::ostream & stream, std::string const & indent) const override;
+        exportToStream(std::ostream & stream, std::size_t level,
+            std::string const & indent) const override;
 
         /**
          * Gets the content text if is a Xml::Text

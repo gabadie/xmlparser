@@ -6,6 +6,7 @@
  * \date 18 mars 2014
  */
 
+#include "Utils.hpp"
 #include "XmlComment.hpp"
 #include "XmlElement.hpp"
 #include "XmlText.hpp"
@@ -145,14 +146,24 @@ namespace Xml
         mAttributes[name] = value;
     }
 
-    //TODO
     void
-    Element::exportToStream(std::ostream & stream, std::string const & indent) const
+    Element::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
     {
+        stream << Utils::repeat(indent, level) << "<" << mName << " ";
+
+        for(auto const & a : mAttributes)
+        {
+            stream << a.first << "=\"" << a.second << "\" ";
+        }
+
+        stream << ">\n";
+
         for(auto const & c : mChildren)
         {
-            stream << indent << c->contentText();
+            exportToStream(stream, level + 1, indent);
         }
+
+        stream << Utils::repeat(indent, level) << "</" << mName << ">\n";
     }
 
     bool
