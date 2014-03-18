@@ -7,7 +7,10 @@ namespace Xml
 
     }
 
-    Node::~Node() = default;
+    Node::~Node()
+    {
+
+    }
 
     Node *
     Node::parent()

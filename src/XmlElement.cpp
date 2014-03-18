@@ -6,13 +6,14 @@
  * \date 18 mars 2014
  */
 
+#include <algorithm>
+
 #include "Utils.hpp"
 #include "XmlComment.hpp"
 #include "XmlElement.hpp"
 #include "XmlText.hpp"
 
 #ifdef APP_DEBUG
-#include <algorithm>
 #include <cassert>
 #endif
 
@@ -31,6 +32,18 @@ namespace Xml
     {
         // Free memory
         this->clearContent();
+
+        // Remove the element from its parent
+        if(mParent != nullptr && mParent->isElement())
+        {
+            static_cast<Element *>(mParent)->remove(this);
+        }
+    }
+
+    Element::NodeList const  &
+    Element::children() const
+    {
+        return mChildren;
     }
 
     Element::ElementList
@@ -111,7 +124,7 @@ namespace Xml
     {
         for(auto & c : mChildren)
         {
-            delete c;
+            this->remove(c);
         }
         mChildren.clear();
     }
@@ -140,6 +153,22 @@ namespace Xml
         (void) pi;
         //TODO
         //this->appendNode(new PI(content));
+    }
+
+    bool
+    Element::remove(Node * node)
+    {
+        auto it = std::find(std::begin(mChildren), std::end(mChildren), node);
+
+        if(it != std::end(mChildren))
+        {
+            node->mParent = nullptr;
+            delete node;
+            mChildren.erase(it);
+            return true;
+        }
+
+        return false;
     }
 
     std::string const &

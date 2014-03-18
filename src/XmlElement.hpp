@@ -39,6 +39,14 @@ namespace Xml
         ~Element();
 
         /**
+         * Gets the children nodes of the element.
+         *
+         * @return The children nodes of the element
+         */
+        NodeList const  &
+        children() const;
+
+        /**
          * Gets the ordered list of the children of the element
          *
          * @return Return a container of Element const *
@@ -123,6 +131,14 @@ namespace Xml
          */
         void
         appendPI(std::string const & pi);
+
+        /**
+         * Deletes a child node.
+         *
+         * @return True is the element has been removed, false otherwise.
+         */
+        bool
+        remove(Node * node);
 
         /**
          * Gets the name of the element
