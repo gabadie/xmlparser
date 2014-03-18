@@ -6,14 +6,14 @@
 
 int yylex(void);
 
-void yyerror(Xml::Document ** e, const char * msg);
+void yyerror(void ** e, const char * msg);
 
 
 %}
 
 
 /* ----------------------------------------------------------------------------- parse parameter */
-%parse-param {Xml::Document ** e}
+%parse-param {void ** e}
 
 
 /* ----------------------------------------------------------------------------- C/C++ union */
@@ -39,7 +39,7 @@ void yyerror(Xml::Document ** e, const char * msg);
 /* ----------------------------------------------------------------------------- types rules */
 
 document
-    : element { *e = 0; }
+    : element { *((Xml::Document **) e) = 0; }
     ;
 
 element
@@ -102,7 +102,7 @@ yyerror(char const *s)
 }
 
 void
-yyerror(Xml::Document ** e, const char * msg)
+yyerror(void ** e, const char * msg)
 {
     yyerror(msg);
 }
@@ -131,7 +131,7 @@ Xml::parse(std::string const & path)
     {
         yyin = f;
 
-        yyparse(&e);
+        yyparse((void **) &e);
 
         yyin = 0;
     }
