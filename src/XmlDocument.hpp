@@ -5,10 +5,12 @@
 #include <string>
 #include <vector>
 
+#include "XmlElement.hpp"
+
+
 namespace Xml
 {
     // Forward declarations
-    class Element;
     class MiscNode;
 
     /**
