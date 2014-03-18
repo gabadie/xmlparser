@@ -11,7 +11,7 @@ main(int argc, char const * const * argv)
         return 1;
     }
 
-    Xml::Document * xmlDoc = Xml::parse(argv[1]);
+    Xml::Document * xmlDoc = Xml::load(std::string(argv[1]));
 
     if (xmlDoc == 0)
     {
