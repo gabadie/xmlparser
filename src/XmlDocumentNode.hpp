@@ -1,5 +1,5 @@
-#ifndef _H_DOCUMENT_NODE
-#define _H_DOCUMENT_NODE
+#ifndef _H_XML_DOCUMENT_NODE
+#define _H_XML_DOCUMENT_NODE
 
 #include "XmlNode.hpp"
 
@@ -28,4 +28,4 @@ namespace Xml
     };
 }
 
-#endif //_H_DOCUMENT_NODE
+#endif //_H_XML_DOCUMENT_NODE
