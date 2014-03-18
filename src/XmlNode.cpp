@@ -21,6 +21,12 @@ namespace Xml
         return mParent;
     }
 
+    void
+    Node::setParent(Node * parent)
+    {
+        mParent = parent;
+    }
+
     std::string const &
     Node::contentText() const
     {

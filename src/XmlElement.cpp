@@ -51,14 +51,16 @@ namespace Xml
     Element::parentElement() const
     {
         Node * parent = mParent;
-        do
+
+        while(parent != nullptr)
         {
             if(parent->isElement())
             {
                 return static_cast<Element const *>(parent);
             }
+
+            parent = parent->parent();
         }
-        while((parent = mParent->parent()) != nullptr);
 
         return nullptr;
     }
@@ -91,11 +93,6 @@ namespace Xml
     {
         for(auto & c : mChildren)
         {
-            if(c->isElement())
-            {
-                static_cast<Element *>(c)->clearContent();
-            }
-
             delete c;
         }
     }
@@ -193,6 +190,7 @@ namespace Xml
         #endif
 
         mChildren.push_back(node);
+        node->setParent(this);
     }
 }
 

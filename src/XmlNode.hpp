@@ -55,6 +55,14 @@ namespace Xml
         Node const *
         parent() const;
 
+        /**
+         * Sets the parent node
+         *
+         * @param The parent node to set
+         */
+        void
+        setParent(Node * parent);
+
     protected:
         /**
          * Exports to a <stream> with a given <indent>
