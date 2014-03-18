@@ -4,7 +4,7 @@
 namespace Xml
 {
     Comment::Comment(std::string const & content):
-        MiscNode(),
+        DocumentNode(),
         mContent(content)
     {
 

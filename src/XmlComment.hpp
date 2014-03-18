@@ -4,13 +4,14 @@
 #include <iosfwd>
 #include <string>
 
-#include "XmlMiscNode.hpp"
+#include "XmlDocumentNode.hpp"
+
 namespace Xml
 {
     /**
      * Defines a comment
      */
-    class Comment : public MiscNode
+    class Comment : public DocumentNode
     {
     public:
 
