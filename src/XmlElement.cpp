@@ -33,10 +33,18 @@ namespace Xml
         this->clearContent();
     }
 
-    Element::NodeList const &
+    Element::ElementList
     Element::elements() const
     {
-        return mChildren;
+        ElementList elements;
+        for(auto const & c : mChildren)
+        {
+            if(c->isElement())
+            {
+                elements.push_back(static_cast<Element const *>(c));
+            }
+        }
+        return elements;
     }
 
     Element const *

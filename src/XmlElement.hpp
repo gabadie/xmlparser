@@ -22,7 +22,8 @@ namespace Xml
 
         // Type aliases
         using AttributesMap = std::map<std::string, std::string>;
-        using NodeList = std::deque<Node *>;
+        using NodeList      = std::deque<Node *>;
+        using ElementList   = std::vector<Element const *>;
 
         /**
          * Constructor
@@ -41,9 +42,9 @@ namespace Xml
         /**
          * Gets the ordered list of the children of the element
          *
-         * @return Return a list of Node *
+         * @return Return a container of Element const *
          */
-        NodeList const &
+        ElementList
         elements() const;
 
         /**
