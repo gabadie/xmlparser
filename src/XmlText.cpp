@@ -21,8 +21,10 @@ namespace Xml
     }
 
     void
-    Text::exportToStream(std::ostream & stream, std::string const & indent) const
+    Text::exportToStream(std::ostream & stream, std::size_t level,
+        std::string const & indent) const
     {
+        //std::string
         stream << indent << mText;
     }
 

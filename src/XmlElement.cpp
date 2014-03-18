@@ -6,6 +6,7 @@
  * \date 18 mars 2014
  */
 
+#include "Utils.hpp"
 #include "XmlComment.hpp"
 #include "XmlElement.hpp"
 #include "XmlText.hpp"
@@ -32,24 +33,34 @@ namespace Xml
         this->clearContent();
     }
 
-    Element::NodeList const &
+    Element::ElementList
     Element::elements() const
     {
-        return mChildren;
+        ElementList elements;
+        for(auto const & c : mChildren)
+        {
+            if(c->isElement())
+            {
+                elements.push_back(static_cast<Element const *>(c));
+            }
+        }
+        return elements;
     }
 
     Element const *
     Element::parentElement() const
     {
         Node * parent = mParent;
-        do
+
+        while(parent != nullptr)
         {
             if(parent->isElement())
             {
                 return static_cast<Element const *>(parent);
             }
+
+            parent = parent->parent();
         }
-        while((parent = mParent->parent()) != nullptr);
 
         return nullptr;
     }
@@ -82,11 +93,6 @@ namespace Xml
     {
         for(auto & c : mChildren)
         {
-            if(c->isElement())
-            {
-                static_cast<Element *>(c)->clearContent();
-            }
-
             delete c;
         }
     }
@@ -145,14 +151,24 @@ namespace Xml
         mAttributes[name] = value;
     }
 
-    //TODO
     void
-    Element::exportToStream(std::ostream & stream, std::string const & indent) const
+    Element::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
     {
+        stream << Utils::repeat(indent, level) << "<" << mName << " ";
+
+        for(auto const & a : mAttributes)
+        {
+            stream << a.first << "=\"" << a.second << "\" ";
+        }
+
+        stream << ">\n";
+
         for(auto const & c : mChildren)
         {
-            stream << indent << c->contentText();
+            exportToStream(stream, level + 1, indent);
         }
+
+        stream << Utils::repeat(indent, level) << "</" << mName << ">\n";
     }
 
     bool
@@ -169,11 +185,12 @@ namespace Xml
 
         assert(
             std::find(std::begin(mChildren), std::end(mChildren), node)
-            != std::end(mChildren)
+            == std::end(mChildren)
         );
         #endif
 
         mChildren.push_back(node);
+        node->setParent(this);
     }
 }
 

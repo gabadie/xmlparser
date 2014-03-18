@@ -22,7 +22,8 @@ namespace Xml
 
         // Type aliases
         using AttributesMap = std::map<std::string, std::string>;
-        using NodeList = std::deque<Node *>;
+        using NodeList      = std::deque<Node *>;
+        using ElementList   = std::vector<Element const *>;
 
         /**
          * Constructor
@@ -41,9 +42,9 @@ namespace Xml
         /**
          * Gets the ordered list of the children of the element
          *
-         * @return Return a list of Node *
+         * @return Return a container of Element const *
          */
-        NodeList const &
+        ElementList
         elements() const;
 
         /**
@@ -151,16 +152,17 @@ namespace Xml
         setAttribute(std::string const & name, std::string const & value);
 
     protected:
-
         /**
          * Exports to a <stream> with a given <indent>
          *
-         * @param <stream> is the stream to export to
-         * @param <indent> is the the indentation prefix
+         * @param stream The stream to export to
+         * @param level  Level of the token
+         * @param indent The indentation prefix
          */
         virtual
         void
-        exportToStream(std::ostream & stream, std::string const & indent) const override;
+        exportToStream(std::ostream & stream, std::size_t level,
+            std::string const & indent) const override;
 
     public:
 
