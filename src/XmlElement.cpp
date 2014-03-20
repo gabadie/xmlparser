@@ -115,7 +115,7 @@ namespace Xml
             }
         }
 
-        return content.substr(0, content.size() - 1);
+        return content.size() > 0 ? content.substr(0, content.size() - 1) : content;
     }
 
     void
