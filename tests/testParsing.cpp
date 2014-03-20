@@ -120,9 +120,7 @@ test_text()
         return;
     }
 
-    std::cerr << doc->root()->text() << "\n";
-
-    //test_assert(doc->root()->text() == "Hello World");
+    test_assert(doc->root()->text() == "Hello\nWorld");
 
     delete doc;
 }

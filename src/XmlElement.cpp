@@ -104,13 +104,18 @@ namespace Xml
 
         for(auto const & c : mChildren)
         {
-            if(c != nullptr)
+            #ifdef APP_DEBUG
+            assert(c != nullptr);
+            #endif
+
+            std::string text = c->contentText();
+            if(text.size() > 0)
             {
-                content += c->contentText();
+                content += text + "\n";
             }
         }
 
-        return content;
+        return content.substr(0, content.size() - 1);
     }
 
     void
