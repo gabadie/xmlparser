@@ -87,7 +87,10 @@ main()
     c3->appendComment("Yet another comment.");
     c1->append(c3);
 
-    std::cerr << doc << std::endl;
+    /*
+     * Xml export is verified with integration tests
+     */
+    //std::cerr << doc << std::endl;
 
     //doc.saveToFile("test.xml");
 
