@@ -62,6 +62,8 @@ template <typename R, typename ...FArgs, typename ...Args>
 int
 checkArgsAndCall(std::string const & option, int argc, R(* func)(FArgs ...), Args && ...args)
 {
+    static_assert(sizeof...(FArgs) == sizeof...(Args), "Wrong number of parameters");
+
     auto nbCmdParams  = argc - 2; // -1 for executable name, -1 for the option
     auto nbFuncParams = sizeof...(FArgs);
 
