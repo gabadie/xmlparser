@@ -68,7 +68,7 @@ $(APP_EXEC_TARGET): LDFLAGS += $(APP_OBJECT_BINARIES) $(APP_EXEC_BINARIES)
 
 TEST_APP_FILES := $(call filelist,tests/test.flist)
 TEST_APP_CPP_FILES := $(filter %.cpp,$(TEST_APP_FILES))
-TEST_APP_SCRIPTS := $(filter-out %.c,$(TEST_APP_FILES))
+TEST_APP_SCRIPTS := $(filter-out %.cpp,$(TEST_APP_FILES))
 
 # ------------------------------------------------------------ C++ test targets
 TEST_APP_TARGETS := $(call test_bins,$(TEST_APP_CPP_FILES))
