@@ -2,8 +2,6 @@
 %{
 /* ----------------------------------------------------------------------------- C/C++ prefix */
 
-#include <fstream>
-#include <sstream>
 #include <stdio.h>
 
 #include "XmlParser.hpp"
@@ -225,15 +223,8 @@ void
 yyrestart(FILE * input_file);
 
 Xml::Document *
-Xml::load(std::string const & path, Xml::Log * log)
+Xml::parse(std::istream & xmlContent, Xml::Log * log)
 {
-    std::ifstream f (path, std::ios::in | std::ios::binary);
-
-    if (!f.is_open())
-    {
-        return nullptr;
-    }
-
     Xml::Document * e = 0;
 
     {
@@ -248,41 +239,7 @@ Xml::load(std::string const & path, Xml::Log * log)
             Xml::parserBindLog(tmpLog);
         }
 
-        Xml::flexSetInput(f);
-
-        yy_flex_debug = 0;
-        yyparse((void **) &e);
-        yyrestart(stdin);
-
-        if (!log)
-        {
-            std::cout << tmpLog;
-        }
-    }
-
-    return e;
-}
-
-Xml::Document *
-Xml::parse(std::string const & xmlContent, Xml::Log * log)
-{
-    std::istringstream f (xmlContent);
-
-    Xml::Document * e = 0;
-
-    {
-        Xml::Log tmpLog;
-
-        if (log)
-        {
-            Xml::parserBindLog(*log);
-        }
-        else
-        {
-            Xml::parserBindLog(tmpLog);
-        }
-
-        Xml::flexSetInput(f);
+        Xml::flexSetInput(xmlContent);
 
         yy_flex_debug = 0;
         yyparse((void **) &e);

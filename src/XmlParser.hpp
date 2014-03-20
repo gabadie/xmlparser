@@ -1,6 +1,7 @@
 #ifndef _H_XML_PARSER
 #define _H_XML_PARSER
 
+#include <iostream>
 #include <string>
 
 #include "XmlDocument.hpp"
@@ -9,6 +10,15 @@
 
 namespace Xml
 {
+
+    /*
+     * Parse a XML from a stream
+     *
+     * @param xmlStream is the xml stream to parse
+     * @param log is the output log
+     */
+    Document *
+    parse(std::istream & xmlContent, Xml::Log * log = nullptr);
 
     /*
      * Parse a XML file

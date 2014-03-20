@@ -9,6 +9,7 @@ XmlElement.cpp
 XmlLog.cpp
 XmlMiscNode.cpp
 XmlNode.cpp
+XmlParser.cpp
 XmlParserError.cpp
 XmlParserInput.cpp
 XmlProcessingInstruction.cpp
