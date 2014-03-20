@@ -21,16 +21,18 @@ displayMan()
 int
 appParse(std::string const & xmlPath)
 {
-    std::cout << "Loading file " << xmlPath << std::endl;
-    Xml::Document * xmlDoc = Xml::load(xmlPath);
+    Xml::Log xmlLog;
+    Xml::Document * xmlDoc = Xml::load(xmlPath, &xmlLog);
 
     if(xmlDoc == nullptr)
     {
         std::cerr << "Failed to parse XML file: " << xmlPath << std::endl;
+        std::cerr << xmlLog;
         return PARSE_ERROR;
     }
 
-    std::cout << (*xmlDoc) << std::endl;
+    std::cout << (*xmlDoc->root()) << std::endl;
+    std::cerr << xmlLog;
 
     delete xmlDoc;
 

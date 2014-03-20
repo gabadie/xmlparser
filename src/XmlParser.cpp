@@ -8,7 +8,7 @@
 Xml::Document *
 Xml::load(std::string const & path, Xml::Log * log)
 {
-    std::ifstream f (path);
+    std::ifstream f (path, std::ios::binary | std::ios::in);
 
     if (!f.is_open())
     {
@@ -18,9 +18,8 @@ Xml::load(std::string const & path, Xml::Log * log)
     /*
      * Work around -> we put the entire xml content in a string first.
      */
-    std::string xmlContent;
-
-    f >> xmlContent;
+    std::string xmlContent((std::istreambuf_iterator<char>(f)),
+                 std::istreambuf_iterator<char>());
 
     return Xml::parse(xmlContent, log);
 }
