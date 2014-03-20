@@ -31,7 +31,7 @@ test_elements_basic()
     test_assert(doc->root()->name() != "hllo");
 
     int i = 0;
-    for (Xml::Element const * e : doc->root()->elements("balise1"))
+    for (Xml::Element const * e : doc->root()->elements())
     {
         test_assert(e->name() == "balise1" || i != 0);
         test_assert(e->name() == "balise2" || i != 1);
