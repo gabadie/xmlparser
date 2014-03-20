@@ -4,3 +4,5 @@
 
 cmd_help
 cmd_no_params
+cmd_notenough_params
+cmd_toomuch_params
