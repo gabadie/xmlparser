@@ -14,7 +14,7 @@ $(call hook_precommit_configs, debug)
 
 # ------------------------------------------------------------ 'make test'
 .PHONY: test
-test: tests
+test: test/full
 
 # ------------------------------------------------------------------------------ Flex and Bison's binaries
 # ------------------------------------------------------------ Flex's file
@@ -86,7 +86,17 @@ $(TEST_APP_TARGETS): LDFLAGS += $(PROJECT_LDFLAGS)
 
 # ------------------------------------------------------------------------------ Application's integration tests
 
-#TEST_INT_SCRIPT := tests_parsing/test_parsing_script.py
-#TEST_INT_TARGET := $(call test_script, $(TEST_INT_SCRIPT))
+TEST_INTEGRATION_DIRS := $(call filelist,tests_integration/test_integration.flist)
+TEST_INTEGRATION_DEST = $(BUILD_DIR)test_integration/
+TEST_INTEGRATION_TARGETS := $(patsubst %,$(TEST_INTEGRATION_DEST)%.stdout.log,$(notdir $(TEST_INTEGRATION_DIRS)))
 
-#$(TEST_INT_TARGET): $(APP_EXEC_TARGET)
+$(foreach TEST_DIR,$(TEST_INTEGRATION_DIRS), \
+	$(eval $(patsubst %,$(TEST_INTEGRATION_DEST)%.stdout.log,$(notdir $(TEST_DIR))): _TEST_DIR = $(TEST_DIR))\
+)
+
+$(TEST_INTEGRATION_TARGETS): %: $(APP_EXEC_TARGET)
+	$(call history_colored_rule,integration test,$(_TEST_DIR),GREEN)
+	$(CMD_MKDIR_ALL) $(TEST_INTEGRATION_DEST)
+	$(CMD_PREFIX)$(call run_script_cmd,tests_integration/test_invocation.sh) $(APP_EXEC_TARGET) $(TEST_INTEGRATION_DEST) $(_TEST_DIR)
+
+_TEST_LOG_TARGETS += $(TEST_INTEGRATION_TARGETS)
