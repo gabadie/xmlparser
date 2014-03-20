@@ -41,7 +41,7 @@ $(APP_FLEX_TARGET): $(APP_BISON_TARGET)
 
 # ------------------------------------------------------------ Flex and Bison's binaries
 APP_FB_BINARIES := $(call bin_object_files,$(APP_FLEX_TARGET) $(APP_BISON_TARGET))
-$(APP_FB_BINARIES): CXXFLAGS = $(PROJECT_CXXFLAGS)
+$(APP_FB_BINARIES): CXXFLAGS = $(PROJECT_CXXFLAGS) -Wno-deprecated
 
 
 # ------------------------------------------------------------------------------ Application's binaries
@@ -86,7 +86,7 @@ $(TEST_APP_TARGETS): LDFLAGS += $(PROJECT_LDFLAGS)
 
 # ------------------------------------------------------------------------------ Application's integration tests
 
-TEST_INT_SCRIPT := tests_parsing/test_parsing_script.py
-TEST_INT_TARGET := $(call test_script, $(TEST_INT_SCRIPT))
+#TEST_INT_SCRIPT := tests_parsing/test_parsing_script.py
+#TEST_INT_TARGET := $(call test_script, $(TEST_INT_SCRIPT))
 
-$(TEST_INT_TARGET): $(APP_EXEC_TARGET)
+#$(TEST_INT_TARGET): $(APP_EXEC_TARGET)
