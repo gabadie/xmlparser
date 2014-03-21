@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/5_choice.xsd">
+    <infos>
+        <surname>King</surname>
+        <name>Julian</name>
+        <birth>02-04-2022</birth>
+        <mobile>lalala</mobile>
+    </infos>
+</person>

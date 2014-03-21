@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/9_occurs.xsd">
+    <infos validity="02-05-2014" invalidity="02-05-2018" test="patate">
+        <surname>Kin1</surname>
+        <surname>King2</surname>
+        <surname>King3</surname>
+        <surname>King4</surname>
+        <surname>King4</surname>
+        <surname>King4</surname>
+        <name>Julian</name>
+        <mobile>lalala</mobile>
+        <mobile>lalala</mobile>
+        <mobile>lalala</mobile>
+        <patate>lalala</patate>
+        <pomme>lalala</pomme>
+    </infos>
+</person>
