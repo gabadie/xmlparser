@@ -4,7 +4,7 @@
 # ------------------------------------------------------------ default configuration
 override config=debug
 
-PROJECT_CXXFLAGS := -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR) -std=c++11 -I src/
+PROJECT_CXXFLAGS := -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR) -std=c++11
 PROJECT_BISONFLAGS := --debug
 PROJECT_FLEXFLAGS := --debug
 
@@ -14,11 +14,11 @@ $(call hook_precommit_configs, debug)
 
 # ------------------------------------------------------------ 'make test'
 .PHONY: test
-test: tests
+test: test/full
 
 # ------------------------------------------------------------------------------ Flex and Bison's binaries
 # ------------------------------------------------------------ Flex's file
-APP_FLEX_FILE = src/XmlParser.lex
+APP_FLEX_FILE = src/Xml/XmlParser.lex
 APP_FLEX_TARGET = $(patsubst %,$(BUILD_SRC_GEN_DIR)%.cpp, $(notdir $(APP_FLEX_FILE)))
 
 $(APP_FLEX_TARGET): $(APP_FLEX_FILE)
@@ -28,7 +28,7 @@ $(APP_FLEX_TARGET): $(APP_FLEX_FILE)
 
 
 # ------------------------------------------------------------ Bison's file
-APP_BISON_FILE = src/XmlParser.y
+APP_BISON_FILE = src/Xml/XmlParser.y
 APP_BISON_TARGET = $(patsubst %,$(BUILD_SRC_GEN_DIR)%.cpp, $(notdir $(APP_BISON_FILE)))
 
 $(APP_BISON_TARGET): $(APP_BISON_FILE)
@@ -41,7 +41,7 @@ $(APP_FLEX_TARGET): $(APP_BISON_TARGET)
 
 # ------------------------------------------------------------ Flex and Bison's binaries
 APP_FB_BINARIES := $(call bin_object_files,$(APP_FLEX_TARGET) $(APP_BISON_TARGET))
-$(APP_FB_BINARIES): CXXFLAGS = $(PROJECT_CXXFLAGS)
+$(APP_FB_BINARIES): CXXFLAGS = $(PROJECT_CXXFLAGS) -Wno-deprecated -I src/Xml/
 
 
 # ------------------------------------------------------------------------------ Application's binaries
@@ -86,7 +86,17 @@ $(TEST_APP_TARGETS): LDFLAGS += $(PROJECT_LDFLAGS)
 
 # ------------------------------------------------------------------------------ Application's integration tests
 
-TEST_INT_SCRIPT := tests_parsing/test_parsing_script.py
-TEST_INT_TARGET := $(call test_script, $(TEST_INT_SCRIPT))
+TEST_INTEGRATION_DIRS := $(call filelist,tests_integration/test_integration.flist)
+TEST_INTEGRATION_DEST = $(BUILD_DIR)test_integration/
+TEST_INTEGRATION_TARGETS := $(patsubst %,$(TEST_INTEGRATION_DEST)%.stdout.log,$(notdir $(TEST_INTEGRATION_DIRS)))
 
-$(TEST_INT_TARGET): $(APP_EXEC_TARGET)
+$(foreach TEST_DIR,$(TEST_INTEGRATION_DIRS), \
+	$(eval $(patsubst %,$(TEST_INTEGRATION_DEST)%.stdout.log,$(notdir $(TEST_DIR))): _TEST_DIR = $(TEST_DIR))\
+)
+
+$(TEST_INTEGRATION_TARGETS): %: $(APP_EXEC_TARGET)
+	$(call history_colored_rule,integration test,$(_TEST_DIR),GREEN)
+	$(CMD_MKDIR_ALL) $(TEST_INTEGRATION_DEST)
+	$(CMD_PREFIX)$(call run_script_cmd,tests_integration/test_invocation.sh) $(APP_EXEC_TARGET) $(TEST_INTEGRATION_DEST) $(_TEST_DIR)
+
+_TEST_LOG_TARGETS += $(TEST_INTEGRATION_TARGETS)

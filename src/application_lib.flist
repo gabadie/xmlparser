@@ -2,14 +2,15 @@
 # List of the application's C++ files
 #
 
-XmlComment.cpp
-XmlDocument.cpp
-XmlDocumentNode.cpp
-XmlElement.cpp
-XmlLog.cpp
-XmlMiscNode.cpp
-XmlNode.cpp
-XmlParserError.cpp
-XmlParserInput.cpp
-XmlProcessingInstruction.cpp
-XmlText.cpp
+Xml/XmlComment.cpp
+Xml/XmlDocument.cpp
+Xml/XmlDocumentNode.cpp
+Xml/XmlElement.cpp
+Xml/XmlLog.cpp
+Xml/XmlMiscNode.cpp
+Xml/XmlNode.cpp
+Xml/XmlParser.cpp
+Xml/XmlParserError.cpp
+Xml/XmlParserInput.cpp
+Xml/XmlProcessingInstruction.cpp
+Xml/XmlText.cpp
