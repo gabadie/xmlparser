@@ -137,6 +137,18 @@ test_syntax_error()
     delete doc;
 }
 
+void
+test_lexical_error()
+{
+    Xml::Log log;
+    Xml::Document * doc = Xml::load("./xml_original_files/lexical_error.xml", &log);
+
+    test_assert(doc == 0);
+    test_assert(log.find("line 1 (lexical error)") == 1);
+
+    delete doc;
+}
+
 
 int
 main()
@@ -145,6 +157,7 @@ main()
     test_elements_errors();
     test_text();
     test_syntax_error();
+    test_lexical_error();
 
     return 0;
 }

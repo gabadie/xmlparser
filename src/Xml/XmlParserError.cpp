@@ -37,7 +37,14 @@ namespace Xml
     void
     parserLexicalError(std::string const & msg)
     {
-        logTarget->append("lexical error: " + msg);
+        std::ostringstream lineStream;
+
+        lineStream << "line ";
+        lineStream << yylineno;
+        lineStream << " (lexical error): ";
+        lineStream << msg;
+
+        logTarget->append(lineStream.str());
     }
 
     void

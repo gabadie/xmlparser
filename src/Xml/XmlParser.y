@@ -215,6 +215,13 @@ yyerror(void ** e, const char * msg)
     Xml::parserSyntaxError(msg);
 }
 
+/*
+ * Flex file number
+ */
+extern
+int
+yylineno;
+
 extern
 int
 yy_flex_debug;
@@ -242,6 +249,8 @@ Xml::parse(std::istream & xmlContent, Xml::Log * log)
         Xml::flexSetInput(xmlContent);
 
         yy_flex_debug = 0;
+        yylineno = 1;
+
         yyparse((void **) &e);
         yyrestart(stdin);
 
