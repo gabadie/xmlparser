@@ -51,7 +51,7 @@ namespace Xml
 /* ----------------------------------------------------------------------------- tokens */
 
 %token EGAL SLASH SUP SUPSPECIAL DOCTYPE COLON INFSPECIAL INF CDATABEGIN
-%token <s> VALEUR DONNEES COMMENT NOM CDATAEND
+%token <s> VALEUR DONNEES COMMENT NOM CDATAEND COMMENTBEGIN COMMENTEND COMMENTCONTENT
 
 
 /* ----------------------------------------------------------------------------- types */
@@ -192,6 +192,12 @@ item:
         free($1);
     };
 
+comment:
+    COMMENTBEGIN COMMENTCONTENT COMMENTEND
+    {
+        //$$ = new Comment($2);
+    };
+
 content:
     content item
     {
@@ -199,11 +205,16 @@ content:
         $$ = $1;
         $$->push_back($2);
     } |
+    content comment
+    {
+        //$$ = new Comment($2);
+    } |
     /* vide */
     {
         /* ---------------------------------------------------- element's content end */
         $$ = new std::list<Xml::Node *>();
     };
+
 
 
 %%
