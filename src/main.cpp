@@ -31,7 +31,7 @@ appParse(std::string const & xmlPath)
         return PARSE_ERROR;
     }
 
-    std::cout << (*xmlDoc->root()) << std::endl;
+    std::cout << (*xmlDoc) << std::endl;
     std::cerr << xmlLog;
 
     delete xmlDoc;

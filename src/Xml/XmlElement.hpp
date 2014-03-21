@@ -1,7 +1,6 @@
 #ifndef _H_XML_ELEMENT
 #define _H_XML_ELEMENT
 
-#include <deque>
 #include <map>
 #include <string>
 #include <vector>
@@ -28,7 +27,7 @@ namespace Xml
 
         // Type aliases
         using AttributesMap = std::map<std::string, std::string>;
-        using NodeList      = std::deque<Node *>;
+        using NodeList      = std::vector<Node *>;
         using ElementList   = std::vector<Element const *>;
 
         /**

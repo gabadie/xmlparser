@@ -12,6 +12,7 @@ namespace Xml
     class DocumentNode : public Node
     {
     public:
+        friend class Document;
 
         /**
          * Constructor
