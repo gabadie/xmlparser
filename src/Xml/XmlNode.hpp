@@ -5,13 +5,14 @@
 #include <list>
 #include <string>
 
+#include "XmlObject.hpp"
+
 namespace Xml
 {
-
     /**
      * Defines the abstract class of a node for interface purpose
      */
-    class Node
+    class Node : public Object
     {
     public:
 
@@ -52,6 +53,15 @@ namespace Xml
          */
         Node const *
         parent() const;
+
+        /**
+         * Gets the root element of the document (const version)
+         *
+         * @return The root element of the document
+         */
+        virtual
+        Element const *
+        root() const override final;
 
     protected:
         /**

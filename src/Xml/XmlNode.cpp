@@ -24,6 +24,12 @@ namespace Xml
         return mParent;
     }
 
+    Element const *
+    Node::root() const
+    {
+        return mParent ? mParent->root() : nullptr;
+    }
+
     std::string const &
     Node::contentText() const
     {

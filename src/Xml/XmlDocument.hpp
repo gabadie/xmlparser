@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "XmlObject.hpp"
 #include "XmlElement.hpp"
 
 namespace Xml
@@ -16,7 +17,7 @@ namespace Xml
     /**
      * Defines a XML document
      */
-    class Document
+    class Document : public Object
     {
     public:
 
@@ -42,20 +43,13 @@ namespace Xml
         ~Document();
 
         /**
-         * Gets the root element of the document (non-const version)
-         *
-         * @return The root element of the document
-         */
-        Element *
-        root();
-
-        /**
          * Gets the root element of the document (const version)
          *
          * @return The root element of the document
          */
+        virtual
         Element const *
-        root() const;
+        root() const override final;
 
         /**
          * Appends a comment to the document

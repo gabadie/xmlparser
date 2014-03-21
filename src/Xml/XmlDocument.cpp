@@ -57,12 +57,6 @@ namespace Xml
         }
     }
 
-    Element *
-    Document::root()
-    {
-        return mRoot;
-    }
-
     Element const *
     Document::root() const
     {
