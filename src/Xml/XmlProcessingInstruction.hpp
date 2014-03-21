@@ -60,6 +60,17 @@ namespace Xml
         setAttribute(std::string const & name, std::string const & value);
 
         /**
+         * Sets the value of an attribute.
+         *
+         * If the attribute does not exist, it is created.
+         *
+         * @param name  Name of the attribute to set
+         * @param value Value to set
+         */
+        void
+        setAttribute(char const * name, char const * value);
+
+        /**
          * Exports to a <stream> with a given <indent>
          *
          * @param <stream> is the stream to export to
@@ -85,12 +96,27 @@ namespace Xml
         setAttribute(std::string const & name, std::string const & value,
             KeyValues && ...keyValues);
 
+        /**
+         * Sets the value of an attribute (variadic version)
+         *
+         * If the attribute does not exist, it is created.
+         *
+         * @param name  Name of the attribute to set
+         * @param value Value to set
+         * @param ...keyValues Other key values to set
+         */
+        template <typename ...KeyValues>
+        void
+        setAttribute(char const * name, char const * value,
+            KeyValues && ...keyValues);
+
     protected:
         std::string mName;         ///< Name of the PI
         AttributesMap mAttributes; ///< Attributes of the element
 
         friend class Xml::Document;
         friend class Xml::Element;
+        friend class Test;
     };
 }
 

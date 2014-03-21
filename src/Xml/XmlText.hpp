@@ -11,6 +11,7 @@ namespace Xml
     // Forward declarations
     class Element;
     class Text;
+    class Test;
     inline
     Text *
     parserText(std::string const & content);
@@ -70,6 +71,7 @@ namespace Xml
         std::string mText; ///< Text content
 
         friend class Xml::Element;
+        friend class Xml::Test;
         friend
         Text *
         parserText(std::string const & content);

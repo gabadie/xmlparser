@@ -132,12 +132,12 @@ namespace Xml
         /**
          * Appends a processing instruction (PI) to the element
          *
-         * @param pi Name of the PI to append
+         * @param name Name of the PI to append
          * @param ...keyValues Key and values parameters of the PI
          */
         template <typename ...KeyValues>
         void
-        appendProcessingInstruction(std::string const & pi, KeyValues && ...keyValues);
+        appendProcessingInstruction(std::string const & name, KeyValues && ...keyValues);
 
         /**
          * Appends a processing instrcution (PI) to the document
@@ -235,5 +235,7 @@ namespace Xml
         friend void Xml::appendNode(Element * element, Node * node);
     };
 }
+
+#include "XmlElement.inl"
 
 #endif //_H_XML_ELEMENT

@@ -6,6 +6,7 @@
 namespace Xml
 {
     template <typename ...KeyValues>
+    inline
     void
     Element::appendProcessingInstruction(std::string const & name, KeyValues && ...keyValues)
     {

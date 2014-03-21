@@ -11,6 +11,7 @@ namespace Xml
     // Forward declarations
     class Document;
     class Element;
+    class Test;
 
     /**
      * Defines a comment
@@ -49,6 +50,8 @@ namespace Xml
 
         friend class Xml::Document;
         friend class Xml::Element;
+        friend class Xml::Test;
+
     };
 }
 
