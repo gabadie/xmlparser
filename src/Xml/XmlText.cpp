@@ -1,5 +1,5 @@
 #include "XmlText.hpp"
-#include "Utils.hpp"
+#include "../Utils.hpp"
 
 namespace Xml
 {

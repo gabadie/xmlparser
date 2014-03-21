@@ -1,6 +1,6 @@
 #include <mk_test.h>
 
-#include "../src/XmlParser.hpp"
+#include "../src/Xml/XmlParser.hpp"
 
 #define xml_code(code) \
     ((const char *) #code)

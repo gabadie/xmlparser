@@ -1,6 +1,6 @@
 #include <utility>
 
-#include "XmlParser.hpp"
+#include "Xml/XmlParser.hpp"
 
 static int const SUCCESS = 0x0000;
 static int const INVALID_COMMAND = 0x0001;

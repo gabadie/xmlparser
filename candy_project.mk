@@ -4,7 +4,7 @@
 # ------------------------------------------------------------ default configuration
 override config=debug
 
-PROJECT_CXXFLAGS := -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR) -std=c++11 -I src/
+PROJECT_CXXFLAGS := -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR) -std=c++11
 PROJECT_BISONFLAGS := --debug
 PROJECT_FLEXFLAGS := --debug
 
@@ -18,7 +18,7 @@ test: test/full
 
 # ------------------------------------------------------------------------------ Flex and Bison's binaries
 # ------------------------------------------------------------ Flex's file
-APP_FLEX_FILE = src/XmlParser.lex
+APP_FLEX_FILE = src/Xml/XmlParser.lex
 APP_FLEX_TARGET = $(patsubst %,$(BUILD_SRC_GEN_DIR)%.cpp, $(notdir $(APP_FLEX_FILE)))
 
 $(APP_FLEX_TARGET): $(APP_FLEX_FILE)
@@ -28,7 +28,7 @@ $(APP_FLEX_TARGET): $(APP_FLEX_FILE)
 
 
 # ------------------------------------------------------------ Bison's file
-APP_BISON_FILE = src/XmlParser.y
+APP_BISON_FILE = src/Xml/XmlParser.y
 APP_BISON_TARGET = $(patsubst %,$(BUILD_SRC_GEN_DIR)%.cpp, $(notdir $(APP_BISON_FILE)))
 
 $(APP_BISON_TARGET): $(APP_BISON_FILE)
@@ -41,7 +41,7 @@ $(APP_FLEX_TARGET): $(APP_BISON_TARGET)
 
 # ------------------------------------------------------------ Flex and Bison's binaries
 APP_FB_BINARIES := $(call bin_object_files,$(APP_FLEX_TARGET) $(APP_BISON_TARGET))
-$(APP_FB_BINARIES): CXXFLAGS = $(PROJECT_CXXFLAGS) -Wno-deprecated
+$(APP_FB_BINARIES): CXXFLAGS = $(PROJECT_CXXFLAGS) -Wno-deprecated -I src/Xml/
 
 
 # ------------------------------------------------------------------------------ Application's binaries

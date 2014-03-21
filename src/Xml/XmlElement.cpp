@@ -8,7 +8,7 @@
 
 #include <algorithm>
 
-#include "Utils.hpp"
+#include "../Utils.hpp"
 #include "XmlComment.hpp"
 #include "XmlElement.hpp"
 #include "XmlProcessingInstruction.hpp"
