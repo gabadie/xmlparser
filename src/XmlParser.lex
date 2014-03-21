@@ -69,11 +69,6 @@ supspecial "?>"{nl}?
 cdata      "<![CDATA["
 endcdata   "]]>"
 
-/* Added those rules to parse comments' content */
-commentbegin {inf}"!--"
-commentcontent ([^-]|"-"[^-])*
-commentend "--"{sup}
-
 /*
  * Le mode CONTENU est utilisé entre les balises ouvrantes et fermantes
  * Le mode INITIAL est utilisé en dehors de la balise racine ou entre les < >
@@ -104,10 +99,6 @@ commentend "--"{sup}
 <CONTENU,INITIAL>{comment}      {dbg; yylval.s = strdup(yytext); return COMMENT;}
 
 <CONTENU>{pcdata}       {dbg; yylval.s = strdup(supprimeEspaces(yytext)); return DONNEES;}
-
-<CONTENU,INITIAL>{commentbegin} {dbg; yylval.s = strdup(yytext); return COMMENTBEGIN;}
-<CONTENU,INITIAL>{commentend} {dbg; yylval.s = strdup(yytext); return COMMENTEND;}
-<CONTENU,INITIAL>{commentcontent} {dbg; yylval.s = strdup(yytext); return COMMENTCONTENT;}
 
 . {
     Xml::parserLexicalError("unknown \"" + std::string(yytext) + "\"");

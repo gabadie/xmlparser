@@ -51,7 +51,7 @@ namespace Xml
 /* ----------------------------------------------------------------------------- tokens */
 
 %token EGAL SLASH SUP SUPSPECIAL DOCTYPE COLON INFSPECIAL INF CDATABEGIN
-%token <s> VALEUR DONNEES COMMENT NOM CDATAEND COMMENTBEGIN COMMENTEND COMMENTCONTENT
+%token <s> VALEUR DONNEES NOM CDATAEND COMMENT
 
 
 /* ----------------------------------------------------------------------------- types */
@@ -192,11 +192,6 @@ item:
         free($1);
     };
 
-comment:
-    COMMENTBEGIN COMMENTCONTENT COMMENTEND
-    {
-        //$$ = new Comment($2);
-    };
 
 content:
     content item
@@ -205,9 +200,10 @@ content:
         $$ = $1;
         $$->push_back($2);
     } |
-    content comment
+    content COMMENT
     {
-        //$$ = new Comment($2);
+        //new Comment($2);
+        $$ = $1;
     } |
     /* vide */
     {
