@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="person">
+        <xs:complexType>
+            <xs:element name="address" type="addressType">
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="addressType">
+        <xs:attribute ref="validity" use="required"/>
+    </xs:complexType>
+
+    <xs:attribute name="validity" type="xs:date"/>
+</xs:schema>

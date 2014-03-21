@@ -5,3 +5,4 @@
 testCompilation.cpp
 testDocument.cpp
 testParsing.cpp
+testXsdValidation.cpp
