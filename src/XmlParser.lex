@@ -69,6 +69,11 @@ supspecial "?>"{nl}?
 cdata      "<![CDATA["
 endcdata   "]]>"
 
+/* Added those rules to parse comments' content */
+begincomment {inf}"!--"
+commentcontent ([^-]|"-"[^-])*
+endcomment "--"{sup}
+
 /*
  * Le mode CONTENU est utilisé entre les balises ouvrantes et fermantes
  * Le mode INITIAL est utilisé en dehors de la balise racine ou entre les < >
