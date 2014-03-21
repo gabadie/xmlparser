@@ -1,36 +1,52 @@
-Xsl::XslDocument::render(Xml::Document xmlDoc) {
+//penser à garder la racine qqpart
+//demander si besoin de regex
+
+
+std::map<std::string, Xsl::Instruction*> xslInstructions;
+
+Xml::Document xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) {
     Xml::Document result = new Xml::Document();
-    Xsl::Template rootTemplate = this.getTemplate('/');
-    rootTemplate.apply(xmlDoc.root());
+    Vector <Xml::Node*> resultNodes;
+    applyDefaultTemplate(xmlDoc.root(), resultNodes);
+    if (resultNodes.size() == 1) {
+        result.setRoot(resultNodes[0]);
+        return result;
+    }
+    else {
+        throw Exception();
+    }
+    
 }
 
-Xsl::DefaultTemplate::apply(Xml::Node context) {
+Vector <Xml::Node*> applyDefaultTemplate(Xml::Node* context, Vector<Node*> resultNodes) {
     // TODO : faire ça autrement...
     if (isinstance(context, Text)) {
         return [context];
     }
-
-    Vector<Xml::Node> nodes;
-    foreach (Xml::Node child : context.mChildren) {
-        Xsl::Template xslTemplate = this.getTemplate(child.getName());
-        nodes += xslTemplate.apply(child);
+    
+    for (auto child : context.children()) {
+        Xsl::Element xslTemplate = this.getTemplate(child);
+        applyTemplate(xslTemplate, child, resultNodes);
     }
-
-    return nodes;
+    return resultNodes;
 }
 
-Xsl::Template::apply(Xml::Node context) {
-    Vector<Xml::Node> nodes;
+Vector <Xml::Node*> applyTemplate (const Xml::Element& xslTemplate, const Xml::Node* context, Vector<Node*> resultNodes) {
+    if (xslTemplate == null) {
+        return applyDefaultTemplate(context, resultNodes);
+    }
 
     // Attention, ici on parcours des éléments XSL, et pas le document XML qu'on transforme
-    foreach (Xml::Node node : this.mChildren) {
-        if (node is not un élément XSL) {
-            nodes.push(node);
+    for (auto node : xslTemplate.children()) {
+        if (node.iselement() && node.namespace() != 'xsl') {
+            resultNodes.push(node);
         }
         else {
-            nodes += node.apply(context);
+            xslInstructions[node->name()]->(context, node, resultNodes);
         }
     }
-
 }
 
+void Xsl::ValueOf::operator () (Xml::Node* context, Xml::Element xslElement, Vector <Xml::Node*> resultNodes) {
+    resultNodes.push(context.select(xslElement.attr('select').text()));
+}
