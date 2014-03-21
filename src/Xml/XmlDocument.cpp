@@ -26,7 +26,10 @@ namespace Xml
         mRoot(root),
         mChildren()
     {
-
+        if(root != nullptr)
+        {
+            mChildren.push_back(root);
+        }
     }
 
     std::ostream &
@@ -81,7 +84,12 @@ namespace Xml
     void
     Document::setRoot(Element * root)
     {
-        if(root != nullptr && root != mRoot)
+        if(root == mRoot)
+        {
+            return;
+        }
+
+        if(root != nullptr)
         {
             // If there is already a root node...
             if(mRoot != nullptr)
@@ -102,9 +110,15 @@ namespace Xml
             {
                 this->appendNode(root);
             }
-
-            mRoot = root;
         }
+        else
+        {
+            auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
+            mChildren.erase(it);
+            delete mRoot;
+        }
+
+        mRoot = root;
     }
 
     bool
@@ -127,11 +141,21 @@ namespace Xml
     Document::appendNode(DocumentNode * documentNode)
     {
         #ifdef APP_DEBUG
+        assert(documentNode != nullptr);
         assert(
             std::find(std::begin(mChildren), std::end(mChildren), documentNode)
             == std::end(mChildren)
         );
+        /* TODO
+         * Check that the document node is not a child of root
+         */
         #endif
+
+        // A document has only one Xml::Element
+        if(documentNode->isElement() && mRoot != nullptr)
+        {
+            delete mRoot;
+        }
 
         mChildren.push_back(documentNode);
     }
