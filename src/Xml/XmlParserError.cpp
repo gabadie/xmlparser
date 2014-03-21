@@ -1,4 +1,6 @@
 
+#include <sstream>
+
 #include "XmlParserError.hpp"
 
 
@@ -7,6 +9,20 @@ namespace
     Xml::Log * logTarget = nullptr;
     bool syntaxErrors = false;
 }
+
+/*
+ * Flex file number
+ */
+extern
+int
+yylineno;
+
+/*
+ * Flex file number
+ */
+extern
+char
+yytext[];
 
 namespace Xml
 {
@@ -27,7 +43,14 @@ namespace Xml
     void
     parserSyntaxError(std::string const & msg)
     {
-        logTarget->append("syntax error: " + msg);
+        std::ostringstream lineStream;
+
+        lineStream << "line ";
+        lineStream << yylineno;
+        lineStream << " (syntax error): ";
+        lineStream << msg;
+
+        logTarget->append(lineStream.str());
         syntaxErrors = true;
     }
 
