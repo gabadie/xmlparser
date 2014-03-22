@@ -73,7 +73,7 @@ namespace Xml
         std::string const &
         contentText() const;
 
-    private:
+    protected:
         friend class Element;
 
         /**

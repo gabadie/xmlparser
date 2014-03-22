@@ -13,7 +13,7 @@
 
 
 #ifdef FLEXDEBUG
-#define dbg printf("[%s:%d] \"%s\"\n",__FILE__,__LINE__,xmltext)
+#define dbg printf("[%s:%d] \"%s\"\n",__FILE__,__LINE__,yytext)
 #else
 #define dbg ((void)0)
 #endif
@@ -46,6 +46,7 @@ static char * enleveGuillemets(char *s) {
 /* ----------------------------------------------------------------------------- Flex configuration */
 /* we don't have yywrap() */
 %option 8bit noyywrap
+%option yylineno
 
 
 /* ----------------------------------------------------------------------------- Terminals' definitions */

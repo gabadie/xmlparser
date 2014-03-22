@@ -2,10 +2,10 @@
 
 #include <algorithm>
 
-#include "../src/XmlComment.hpp"
-#include "../src/XmlDocument.hpp"
-#include "../src/XmlElement.hpp"
-#include "../src/XmlProcessingInstruction.hpp"
+#include "../src/Xml/XmlComment.hpp"
+#include "../src/Xml/XmlDocument.hpp"
+#include "../src/Xml/XmlElement.hpp"
+#include "../src/Xml/XmlProcessingInstruction.hpp"
 
 using namespace Xml;
 
