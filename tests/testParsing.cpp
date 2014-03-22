@@ -1,4 +1,5 @@
 #include <mk_test.h>
+#include <sstream>
 
 #include "../src/Xml/XmlParser.hpp"
 
@@ -130,8 +131,8 @@ test_comment()
 {
     std::string content (xml_code(
         <hello>
-            Hello
-            <balise1></balise2>
+            <!-- this is a comment -->
+            <balise1></balise1>
             <!-- this is another comment -->
         </hello>
     ));
@@ -146,8 +147,15 @@ test_comment()
         return;
     }
 
-    // test_assert(doc->root()->text() == "Hello\nWorld");
+    std::stringstream ss;
+    ss << *doc->root()->children()[2];
+    test_assert(ss.str() == "<!-- this is another comment -->");
 
+    ss.str(std::string());
+    ss.clear();
+
+    ss << *doc->root()->children()[0];
+    test_assert(ss.str() == "<!-- this is a comment -->");
     delete doc;
 }
 

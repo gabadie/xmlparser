@@ -194,10 +194,11 @@ item:
     } |
     COMMENT
     {
-        //new Comment($2);
-        // std::cerr << "Comment ! " << std::endl;
         $$ = (Xml::Node *) new Xml::Comment(std::string($1));
-        delete $1;
+        /*
+         * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
+        free($1);
     };
 
 
