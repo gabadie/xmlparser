@@ -6,6 +6,7 @@
 
 #include "XmlParser.hpp"
 #include "XmlText.hpp"
+#include "XmlComment.hpp"
 #include "XmlParserError.hpp"
 #include "XmlParserInput.hpp"
 
@@ -190,6 +191,13 @@ item:
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
          */
         free($1);
+    } |
+    COMMENT
+    {
+        //new Comment($2);
+        // std::cerr << "Comment ! " << std::endl;
+        $$ = (Xml::Node *) new Xml::Comment(std::string($1));
+        delete $1;
     };
 
 
@@ -199,11 +207,6 @@ content:
         /* ---------------------------------------------------- element's content */
         $$ = $1;
         $$->push_back($2);
-    } |
-    content COMMENT
-    {
-        //new Comment($2);
-        $$ = $1;
     } |
     /* vide */
     {

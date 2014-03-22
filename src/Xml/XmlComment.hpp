@@ -18,6 +18,12 @@ namespace Xml
     class Comment : public DocumentNode
     {
     public:
+        /**
+         * Constructor
+         *
+         * @param content Content of the comment
+         */
+        Comment(std::string const & content = "");
 
         /**
          * Destructor
@@ -26,13 +32,6 @@ namespace Xml
         ~Comment();
 
     protected:
-        /**
-         * Constructor
-         *
-         * @param content Content of the comment
-         */
-        Comment(std::string const & content = "");
-
         /**
          * Exports to a <stream> with a given <indent>
          *
