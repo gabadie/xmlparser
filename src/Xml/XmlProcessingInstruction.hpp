@@ -67,8 +67,12 @@ namespace Xml
          * @param name  Name of the attribute to set
          * @param value Value to set
          */
+        inline
         void
-        setAttribute(char const * name, char const * value);
+        setAttribute(char const * name, char const * value)
+        {
+            setAttribute(std::string(name), std::string(value));
+        }
 
         /**
          * Exports to a <stream> with a given <indent>

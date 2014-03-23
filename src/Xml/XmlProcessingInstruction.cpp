@@ -39,15 +39,6 @@ namespace Xml
     }
 
     void
-    ProcessingInstruction::setAttribute(char const * name, char const * value)
-    {
-        if(name != nullptr && value != nullptr && name != "")
-        {
-            mAttributes[name] = value;
-        }
-    }
-
-    void
     ProcessingInstruction::exportToStream(std::ostream & stream, std::size_t level,
         std::string const & indent) const
     {
