@@ -76,9 +76,7 @@ namespace Xml
             {
                 auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
 
-                #ifdef APP_DEBUG
-                assert(it != std::end(mChildren));
-                #endif
+                app_assert(it != std::end(mChildren));
 
                 // ...we delete it
                 delete mRoot;
