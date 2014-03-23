@@ -4,17 +4,11 @@
 #include <iosfwd>
 #include <string>
 
+#include "XmlForward.hpp"
 #include "XmlNode.hpp"
 
 namespace Xml
 {
-    // Forward declarations
-    class Element;
-    class Text;
-    class Test;
-    inline
-    Text *
-    parserText(std::string const & content);
 
     /**
      * Defines a text node
@@ -61,9 +55,7 @@ namespace Xml
 
         friend class Xml::Element;
         friend class Xml::Test;
-        friend
-        Text *
-        parserText(std::string const & content);
+        friend XML_BISON_MAIN();
     };
 }
 

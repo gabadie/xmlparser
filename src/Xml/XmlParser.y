@@ -14,23 +14,6 @@ int yylex(void);
 
 void yyerror(void ** e, const char * msg);
 
-namespace Xml
-{
-    inline
-    void
-    appendNode(Element * element, Node * node)
-    {
-        element->appendNode(node);
-    }
-
-    inline
-    Text *
-    parserText(std::string const & content)
-    {
-        return new Xml::Text(content);
-    }
-}
-
 %}
 
 
@@ -97,7 +80,7 @@ element:
                 continue;
             }
 
-            Xml::appendNode($1, node);
+            $1->appendNode(node);
         }
 
         /*
@@ -185,7 +168,7 @@ item:
     DONNEES
     {
         /* ---------------------------------------------------- text in an element */
-        $$ = (Xml::Node *) Xml::parserText(std::string($1));
+        $$ = (Xml::Node *) new Xml::Text(std::string($1));
 
         /*
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.

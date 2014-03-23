@@ -5,17 +5,11 @@
 #include <string>
 #include <vector>
 
+#include "XmlForward.hpp"
 #include "XmlDocumentNode.hpp"
 
 namespace Xml
 {
-    //Forward declarations
-    class Element;
-    class Test;
-
-    inline
-    void
-    appendNode(Element * element, Node * node);
 
     /**
      * Defines an XML element
@@ -223,12 +217,8 @@ namespace Xml
         AttributesMap mAttributes; ///< Attributes of the element
         NodeList mChildren;        ///< Children elements
 
-
         friend class Xml::Test;
-        /**
-         * Friendship to let the Xml parser access to the appendNove method.
-         */
-        friend void Xml::appendNode(Element * element, Node * node);
+        friend XML_BISON_MAIN();
     };
 }
 
