@@ -6,6 +6,7 @@
 
 #include "XmlParser.hpp"
 #include "XmlText.hpp"
+#include "XmlComment.hpp"
 #include "XmlParserError.hpp"
 #include "XmlParserInput.hpp"
 
@@ -51,7 +52,7 @@ namespace Xml
 /* ----------------------------------------------------------------------------- tokens */
 
 %token EGAL SLASH SUP SUPSPECIAL DOCTYPE COLON INFSPECIAL INF CDATABEGIN
-%token <s> VALEUR DONNEES COMMENT NOM CDATAEND
+%token <s> VALEUR DONNEES NOM CDATAEND COMMENT
 
 
 /* ----------------------------------------------------------------------------- types */
@@ -190,7 +191,16 @@ item:
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
          */
         free($1);
+    } |
+    COMMENT
+    {
+        $$ = (Xml::Node *) new Xml::Comment(std::string($1));
+        /*
+         * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
+        free($1);
     };
+
 
 content:
     content item
@@ -206,6 +216,7 @@ content:
     };
 
 
+
 %%
 /* ----------------------------------------------------------------------------- C/C++ suffix */
 
@@ -214,6 +225,13 @@ yyerror(void ** e, const char * msg)
 {
     Xml::parserSyntaxError(msg);
 }
+
+/*
+ * Flex file number
+ */
+extern
+int
+yylineno;
 
 extern
 int
@@ -242,6 +260,8 @@ Xml::parse(std::istream & xmlContent, Xml::Log * log)
         Xml::flexSetInput(xmlContent);
 
         yy_flex_debug = 0;
+        yylineno = 1;
+
         yyparse((void **) &e);
         yyrestart(stdin);
 

@@ -2,6 +2,5 @@
 # List of the application's tests
 #
 
-testCompilation.cpp
 testDocument.cpp
 testParsing.cpp

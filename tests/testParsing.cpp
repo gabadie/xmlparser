@@ -1,4 +1,5 @@
 #include <mk_test.h>
+#include <sstream>
 
 #include "../src/Xml/XmlParser.hpp"
 
@@ -125,6 +126,63 @@ test_text()
     delete doc;
 }
 
+void
+test_comment()
+{
+    std::string content (xml_code(
+        <hello>
+            <!-- this is a comment -->
+            <balise1></balise1>
+            <!-- this is another comment -->
+        </hello>
+    ));
+    Xml::Log log;
+
+    Xml::Document * doc = Xml::parse(content, &log);
+
+    test_assert(doc != 0);
+
+    if (doc == 0)
+    {
+        return;
+    }
+
+    std::stringstream ss;
+    ss << *doc->root()->children()[2];
+    test_assert(ss.str() == "<!-- this is another comment -->");
+
+    ss.str(std::string());
+    ss.clear();
+
+    ss << *doc->root()->children()[0];
+    test_assert(ss.str() == "<!-- this is a comment -->");
+    delete doc;
+}
+
+void
+test_syntax_error()
+{
+    Xml::Log log;
+    Xml::Document * doc = Xml::load("./xml_original_files/syntax_error.xml", &log);
+
+    test_assert(doc == 0);
+    test_assert(log.find("line 2") == 1);
+
+    delete doc;
+}
+
+void
+test_lexical_error()
+{
+    Xml::Log log;
+    Xml::Document * doc = Xml::load("./xml_original_files/lexical_error.xml", &log);
+
+    test_assert(doc == 0);
+    test_assert(log.find("line 1 (lexical error)") == 1);
+
+    delete doc;
+}
+
 
 int
 main()
@@ -132,6 +190,9 @@ main()
     test_elements_basic();
     test_elements_errors();
     test_text();
+    test_comment();
+    test_syntax_error();
+    test_lexical_error();
 
     return 0;
 }

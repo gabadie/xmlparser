@@ -41,6 +41,15 @@ namespace Xml
         void
         append(std::string const & line);
 
+        /**
+         * Checks a substring in the Xml log
+         *
+         * @param line is the line to append to the log's tail.
+         *
+         * @return the first line if found or 0 if not found
+         */
+        size_t
+        find(std::string const & subString) const;
 
     protected:
         std::list<std::string> mLines; ///< List of lines

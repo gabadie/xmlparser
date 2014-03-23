@@ -13,7 +13,7 @@
 
 
 #ifdef FLEXDEBUG
-#define dbg printf("[%s:%d] \"%s\"\n",__FILE__,__LINE__,xmltext)
+#define dbg printf("[%s:%d] \"%s\"\n",__FILE__,__LINE__,yytext)
 #else
 #define dbg ((void)0)
 #endif
@@ -41,11 +41,19 @@ static char * enleveGuillemets(char *s) {
    return s;
 }
 
+// enlève les caractères en début et fin d'un commentaire
+static char * nettoieCommentaire(char *s) {
+   s += 5;
+   s[strlen(s)-3] = '\0';
+   return s;
+}
+
 
 %}
 /* ----------------------------------------------------------------------------- Flex configuration */
 /* we don't have yywrap() */
 %option 8bit noyywrap
+%option yylineno
 
 
 /* ----------------------------------------------------------------------------- Terminals' definitions */
@@ -96,7 +104,7 @@ endcdata   "]]>"
 
 <CONTENU,INITIAL>{infspecial}  {dbg; BEGIN(INITIAL); return INFSPECIAL;}
 <CONTENU,INITIAL>{inf}         {dbg; BEGIN(INITIAL); return INF;}
-<CONTENU,INITIAL>{comment}      {dbg; yylval.s = strdup(yytext); return COMMENT;}
+<CONTENU,INITIAL>{comment}      {dbg; yylval.s = strdup(nettoieCommentaire(yytext)); return COMMENT;}
 
 <CONTENU>{pcdata}       {dbg; yylval.s = strdup(supprimeEspaces(yytext)); return DONNEES;}
 

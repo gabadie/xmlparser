@@ -25,4 +25,22 @@ namespace Xml
         mLines.push_back(line);
     }
 
+    size_t
+    Log::find(std::string const & subString) const
+    {
+        size_t lineId = 0;
+
+        for (auto line : mLines)
+        {
+            lineId++;
+
+            if (line.find(subString) != std::string::npos)
+            {
+                return lineId;
+            }
+        }
+
+        return 0;
+    }
+
 }
