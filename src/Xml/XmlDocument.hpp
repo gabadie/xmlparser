@@ -37,13 +37,30 @@ namespace Xml
         ~Document();
 
         /**
-         * Gets the root element of the document (const version)
+         * Gets the itself document
          *
-         * @return The root element of the document
+         * @return The document
          */
-        virtual
+        Document const *
+        document() const override final;
+
+        /**
+         * Gets the document's root
+         *
+         * @return The document root
+         */
+        Element *
+        root()
+        {
+            return mRoot;
+        }
+
         Element const *
-        root() const override final;
+        root() const
+        {
+            return mRoot;
+        }
+
 
         /**
          * Appends a comment to the document

@@ -6,9 +6,10 @@
 
 namespace Xml
 {
-    // Forward declaration
+    // Forward declarations
     class Element;
     class Test;
+    class Document;
 
     /**
      * Defines a abstract interface for all Xml classes
@@ -44,21 +45,16 @@ namespace Xml
         parent() const;
 
         /**
-         * Gets the root element of the document (non-const version)
+         * Gets the object's document
          *
-         * @return The root element of the document
+         * @return The document
          */
-        Element *
-        root();
+        Document *
+        document();
 
-        /**
-         * Gets the root element of the document (const version)
-         *
-         * @return The root element of the document
-         */
         virtual
-        Element const *
-        root() const = 0;
+        Document const *
+        document() const = 0;
 
         /**
          * Implements standart stream operator

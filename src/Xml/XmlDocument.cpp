@@ -41,10 +41,10 @@ namespace Xml
         }
     }
 
-    Element const *
-    Document::root() const
+    Document const *
+    Document::document() const
     {
-        return mRoot;
+        return this;
     }
 
     void

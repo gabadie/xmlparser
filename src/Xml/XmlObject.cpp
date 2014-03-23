@@ -19,10 +19,10 @@ namespace Xml
         return mParent;
     }
 
-    Element *
-    Object::root()
+    Document *
+    Object::document()
     {
-        return const_cast<Element *>(static_cast<Object const *>(this)->root());
+        return const_cast<Document *>(static_cast<Object const *>(this)->document());
     }
 
     bool

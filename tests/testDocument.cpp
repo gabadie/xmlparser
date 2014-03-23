@@ -170,12 +170,6 @@ namespace Xml
             test_assert(root.children()[3] == xmlComment);
             test_assert(root.children()[4] == xmlPI);
 
-            // A root only exists in a XML document
-            test_assert(xmlElt1->root() == nullptr);
-            test_assert(xmlElt2->root() == nullptr);
-            test_assert(xmlComment->root() == nullptr);
-            test_assert(xmlPI->root() == nullptr);
-
             // Remove node
             {
                 root.remove(xmlText);
@@ -358,8 +352,8 @@ namespace Xml
                 root->append(xmlElt1);
 
                 test_assert(xmlElt1->parent() == root);
-                test_assert(xmlElt1->root() != nullptr);
-                test_assert(xmlElt1->root() == root);
+                test_assert(xmlElt1->document()->root() != nullptr);
+                test_assert(xmlElt1->document()->root() == root);
             }
         }
 

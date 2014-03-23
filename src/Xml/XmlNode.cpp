@@ -12,10 +12,10 @@ namespace Xml
 
     }
 
-    Element const *
-    Node::root() const
+    Document const *
+    Node::document() const
     {
-        return mParent ? mParent->root() : nullptr;
+        return mParent ? mParent->document() : nullptr;
     }
 
     std::string const &

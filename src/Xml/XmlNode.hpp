@@ -29,13 +29,13 @@ namespace Xml
         ~Node();
 
         /**
-         * Gets the root element of the document (const version)
+         * Gets the node's document
          *
-         * @return The root element of the document
+         * @return The document
          */
-        virtual
-        Element const *
-        root() const override final;
+        Document const *
+        document() const override final;
+
 
     protected:
         friend class Xml::Element;
