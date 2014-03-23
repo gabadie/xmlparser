@@ -151,10 +151,14 @@ namespace Xml
     void
     Element::clearContent()
     {
-        for(auto & c : mChildren)
+        auto it = std::begin(mChildren);
+
+        while(it != std::end(mChildren))
         {
-            this->remove(c);
+            (*it)->mParent = nullptr;
+            delete (*it++);
         }
+
         mChildren.clear();
     }
 
