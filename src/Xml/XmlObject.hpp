@@ -15,11 +15,6 @@ namespace Xml
     {
     public:
         /**
-         * Constructor
-         */
-        Object() = default;
-
-        /**
          * Destructor
          */
         virtual
@@ -95,7 +90,10 @@ namespace Xml
         appendProcessingInstruction(ProcessingInstruction * pi);
 
     protected:
-        friend class Xml::Element;
+        /**
+         * Constructor
+         */
+        Object() = default;
 
         /**
          * Exports to a <stream> with a given <indent>
@@ -126,6 +124,10 @@ namespace Xml
         virtual
         void
         appendNode(Node * node);
+
+        friend class Xml::Document;
+        friend class Xml::Element;
+        friend class Xml::Node;
     };
 
     /**
