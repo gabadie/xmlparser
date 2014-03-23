@@ -29,5 +29,7 @@ namespace Xsd
     protected:
         std::string mRegex;
 
-    }
+    };
 }
+
+#endif //_H_XSD_TYPE

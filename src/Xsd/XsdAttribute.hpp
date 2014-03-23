@@ -14,20 +14,20 @@ namespace Xsd
      */
     class Attribute
     {
-        public :
-            /**
-             * Constructor
-             */
-            Attribute(std::string const & name, bool required);
+    public :
+        /**
+         * Constructor
+         */
+        Attribute(std::string const & name, bool required);
 
-            /**
-             * Destructor
-             */
-            virtual ~Attribute();
+        /**
+         * Destructor
+         */
+        virtual ~Attribute();
 
-        protected:
-            std::string mName;
-            bool mRequired;
+    protected:
+        std::string mName;
+        bool mRequired;
     };
 }
 

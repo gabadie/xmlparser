@@ -1,137 +1,106 @@
 #include <mk_test.h>
+#include <regex>
+#include <iostream>
+#include <dirent.h>
+#include <sstream>
+#include <string>
 
-#include "../src/Xsd/XsdParser.hpp"
+#include "../src/Xsd/XsdChecker.hpp"
 
-#define xml_code(code) \
-    ((const char *) #code)
+using namespace Xsd;
 
-void
-test_elements_basic()
+std::string xmlFolder = "xml_files";
+std::string xsdFolder = "xsd_files";
+std::regex invalidFileRegexp("^[0-9]*_err_.*$");
+
+std::string
+getFilePath(std::string folderPath, std::string fileName)
 {
-    std::string content (xml_code(
-        <hello>
-            <balise1>
-            </balise1>
-            <balise2>
-            </balise2>
-        </hello>
-    ));
-    Xml::Log log;
+    std::ostringstream out;
+    out << folderPath << "/" << fileName;
+    return out.str();
+}
 
-    Xml::Document * doc = Xml::parse(content, &log);
-
-    test_assert(doc != 0);
-
-    if (doc == 0)
-    {
-        return;
-    }
-
-    test_assert(doc->root()->name() == "hello");
-    test_assert(doc->root()->name() != "hllo");
-
-    int i = 0;
-    for (Xml::Element const * e : doc->root()->elements())
-    {
-        test_assert(e->name() == "balise1" || i != 0);
-        test_assert(e->name() == "balise2" || i != 1);
-        test_assert(i < 2);
-
-        i++;
-    }
-
-    delete doc;
+std::string
+getXsdFileNameFromXmlError(std::string fileName)
+{
+    int idx = fileName.find("_", 0);
+    std::string start = fileName.substr(0, idx+1);
+    std::string end = fileName.substr(idx+3, std::string::npos);
+    return start + end;
 }
 
 void
-test_elements_errors()
+test_construction()
 {
-    {
-        std::string content (xml_code(
-            <hello>
-                <balise1>
-                <balise1>
-                <balise2>
-                </balise2>
-            </hello>
-        ));
-        Xml::Log log;
-
-        Xml::Document * doc = Xml::parse(content, &log);
-
-        test_assert(doc == 0);
-    }
-
-    {
-        std::string content (xml_code(
-            <hello>
-                <balise1>
-                <balise2>
-                </balise2>
-            </hello>
-        ));
-        Xml::Log log;
-
-        Xml::Document * doc = Xml::parse(content, &log);
-
-        test_assert(doc == 0);
-    }
-
-    {
-        std::string content (xml_code(
-            <hello>
-                <balise1>
-                </balise3>
-                <balise2>
-                </balise2>
-            </hello>
-        ));
-        Xml::Log log;
-
-        Xml::Document * doc = Xml::parse(content, &log);
-
-        test_assert(doc != 0);
-        test_assert(doc->root()->elements("balise1").size() == 0);
-        test_assert(doc->root()->elements("balise2").size() == 1);
-    }
+    //TODO test the construction of the intermediary XSD structure
+    //Example: test_assert(doc->root()->name() == "hello");
 }
 
 void
-test_text()
+test_validation()
 {
-    std::string content (xml_code(
-        <hello>
-            Hello
-            <balise1>
-            </balise1>
-            World
-            <balise2>
-            </balise2>
-        </hello>
-    ));
-    Xml::Log log;
+    DIR * dir;
+    struct dirent * ent;
+    std::string xmlFilePath;
+    std::string xsdFilePath;
+    Xml::Log xmlLog;
+    bool valid;
 
-    Xml::Document * doc = Xml::parse(content, &log);
-
-    test_assert(doc != 0);
-
-    if (doc == 0)
+    dir = opendir (xmlFolder.c_str());
+    while ((ent = readdir (dir)) != NULL)
     {
-        return;
+        xmlFilePath = getFilePath(xmlFolder, ent->d_name);
+        std::cout << "test" <<std::endl;
+        if (std::regex_match(std::string(ent->d_name), invalidFileRegexp))
+        {
+            xsdFilePath = getXsdFileNameFromXmlError(ent->d_name);
+            valid = false;
+        }
+        else
+        {
+            xsdFilePath = getFilePath(xsdFolder, ent->d_name);
+            valid = true;
+        }
+
+        std::cout << "Validation of " << xmlFilePath << " from " << xsdFilePath << std::endl;
+
+        Xml::Document * xmlDoc = Xml::load(xmlFilePath, &xmlLog);
+        test_assert(xmlDoc != NULL);
+        Xml::Document * xsdDoc = Xml::load(xsdFilePath, &xmlLog);
+        test_assert(xsdDoc != NULL);
+
+        // Building XSD Checker
+        Xsd::Checker * checker = new Xsd::Checker(xsdDoc);
+
+        // Validation process
+        if(valid)
+        {
+            test_assert(checker->isValid(xmlDoc));
+        }
+        else
+        {
+            test_assert(!checker->isValid(xmlDoc));
+        }
+
+        delete xmlDoc;
+        delete checker;
     }
-
-    test_assert(doc->root()->text() == "Hello\nWorld");
-
-    delete doc;
+    closedir (dir);
 }
-
 
 int
 main()
 {
-    test_elements_basic();
-    test_elements_errors();
-    test_text();
+    if (std::regex_match ("subject", std::regex(".*") ))
+        std::cout << "string matched" << std::endl;
+    //std::regex expression(".*");
+    //std::string test("test");
+    //std::regex_match(test, expression);
+
+    //TODO test XSD construction
+    test_construction();
+    //test_validation();
 
     return 0;
 }

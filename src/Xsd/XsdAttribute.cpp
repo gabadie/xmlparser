@@ -7,8 +7,8 @@
 namespace Xsd
 {
     Attribute::Attribute(std::string const & name, bool required):
-    mName(name),
-    mRequired(required)
+        mName(name),
+        mRequired(required)
     {
 
     }
