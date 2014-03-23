@@ -35,3 +35,5 @@ ProcessingInstruction::setAttribute(char const * name, char const * value,
 }
 
 }
+
+#include "XmlObject.inl"

@@ -7,9 +7,11 @@
 namespace Xml
 {
     // Forward declarations
-    class Element;
-    class Test;
     class Document;
+    class Element;
+    class Node;
+    class ProcessingInstruction;
+    class Test;
 
     /**
      * Defines a abstract interface for all Xml classes
@@ -63,6 +65,32 @@ namespace Xml
             return stream;
         }
 
+        /**
+         * Appends a comment to the element
+         *
+         * @param comment Text of the comment to append
+         */
+        void
+        appendComment(std::string const & comment);
+
+        /**
+         * Appends a processing instruction (PI) to the element
+         *
+         * @param name Name of the PI to append
+         * @param ...keyValues Key and values parameters of the PI
+         */
+        template <typename ...KeyValues>
+        void
+        appendProcessingInstruction(std::string const & name, KeyValues && ...keyValues);
+
+        /**
+         * Appends a processing instrcution (PI) to the document
+         *
+         * @param pi The PI to append
+         */
+        void
+        appendProcessingInstruction(ProcessingInstruction * pi);
+
     protected:
         friend class Xml::Element;
 
@@ -87,6 +115,15 @@ namespace Xml
         bool
         isElement() const;
 
+        /**
+         * Appends a node
+         *
+         * @param node Node to append
+         */
+        virtual
+        void
+        appendNode(Node * node);
+
     protected:
         friend class Xml::Test;
     };
@@ -102,5 +139,11 @@ namespace Xml
     }
 
 }
+
+/*
+ * #include "XmlObject.inl" is included in XmlProcessingInstruction.inl to
+ * avoid header circular dependencies
+ */
+//#include "XmlObject.inl"
 
 #endif //_H_XML_OBJECT

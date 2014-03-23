@@ -10,8 +10,7 @@
 namespace Xml
 {
     // Forward declarations
-    class Document;
-    class Element;
+    class Object;
 
     /**
      * Defines a processing instruction
@@ -118,8 +117,7 @@ namespace Xml
         std::string mName;         ///< Name of the PI
         AttributesMap mAttributes; ///< Attributes of the element
 
-        friend class Xml::Document;
-        friend class Xml::Element;
+        friend class Xml::Object;
         friend class Test;
     };
 }

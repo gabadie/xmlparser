@@ -12,11 +12,9 @@
 #include <iostream>
 
 #include "../AppDebug.hpp"
-#include "XmlComment.hpp"
 #include "XmlDocument.hpp"
 #include "XmlDocumentNode.hpp"
 #include "XmlElement.hpp"
-#include "XmlProcessingInstruction.hpp"
 
 #ifdef APP_DEBUG
 #include <cassert>
@@ -55,12 +53,6 @@ namespace Xml
     Document::parent() const
     {
         return nullptr;
-    }
-
-    void
-    Document::appendComment(std::string const & comment)
-    {
-        this->appendNode(new Comment(comment));
     }
 
     Document::NodesList const &
@@ -142,21 +134,17 @@ namespace Xml
     }
 
     void
-    Document::appendNode(DocumentNode * documentNode)
+    Document::appendNode(Node * documentNode)
     {
-        #ifdef APP_DEBUG
-        assert(documentNode != nullptr);
+        app_assert(documentNode != nullptr);
+        app_assert(documentNode->contentText() == ""); // make sure we are not appending a Xml::Text
 
-        assert(
+        app_assert(
             std::find(std::begin(mChildren), std::end(mChildren), documentNode)
             == std::end(mChildren)
         );
 
-        if(mRoot != nullptr)
-        {
-            assert(!mRoot->hasChild(documentNode));
-        }
-        #endif
+        app_assert(mRoot == nullptr || !mRoot->hasChild(documentNode));
 
         // A document has only one Xml::Element
         if(documentNode->isElement() && mRoot != nullptr)
@@ -164,7 +152,7 @@ namespace Xml
             delete mRoot;
         }
 
-        mChildren.push_back(documentNode);
+        mChildren.push_back((DocumentNode *) documentNode);
         documentNode->mParent = this;
     }
 

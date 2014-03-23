@@ -8,10 +8,9 @@
 
 #include <algorithm>
 
+#include "../AppDebug.hpp"
 #include "../Utils.hpp"
-#include "XmlComment.hpp"
 #include "XmlElement.hpp"
-#include "XmlProcessingInstruction.hpp"
 #include "XmlText.hpp"
 
 #ifdef APP_DEBUG
@@ -172,18 +171,6 @@ namespace Xml
         this->appendNode(new Text(text));
     }
 
-    void
-    Element::appendComment(std::string const & comment)
-    {
-        this->appendNode(new Comment(comment));
-    }
-
-    void
-    Element::appendProcessingInstruction(ProcessingInstruction * pi)
-    {
-        this->appendNode(pi);
-    }
-
     bool
     Element::remove(Node * node)
     {
@@ -262,14 +249,12 @@ namespace Xml
     void
     Element::appendNode(Node * node)
     {
-        #ifdef APP_DEBUG
-        assert(node != nullptr);
-        assert(node != this);
-        assert(
+        app_assert(node != nullptr);
+        app_assert(node != this);
+        app_assert(
             std::find(std::begin(mChildren), std::end(mChildren), node)
             == std::end(mChildren)
         );
-        #endif
 
         mChildren.push_back(node);
         node->mParent = this;

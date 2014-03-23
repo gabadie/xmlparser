@@ -8,6 +8,8 @@
 
 namespace Xml
 {
+    // Forward decalarations
+    class Document;
     class Element;
 
     /**
@@ -49,6 +51,7 @@ namespace Xml
         // Pointer to the parent object
         Object * mParent;
 
+        friend class Xml::Document;
         friend class Xml::Element;
 
         /**
