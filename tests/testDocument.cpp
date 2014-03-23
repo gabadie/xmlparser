@@ -1,8 +1,6 @@
 #include <mk_test.h>
 
-#include <algorithm>
 #include <sstream>
-#include <utility>
 
 /*
  * To test the Xml parser, we need to access some protected/private field
