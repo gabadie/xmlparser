@@ -37,15 +37,9 @@ testXmlElementParsingBasic()
     test_assert(doc->root()->name() == "hello");
     test_assert(doc->root()->name() != "hllo");
 
-    int i = 0;
-    for (Xml::Element const * e : doc->root()->elements())
-    {
-        test_assert(e->name() == "balise1" || i != 0);
-        test_assert(e->name() == "balise2" || i != 1);
-        test_assert(i < 2);
-
-        i++;
-    }
+    test_assert(doc->root()->elements()[0]->name() == "balise1");
+    test_assert(doc->root()->elements()[1]->name() == "balise2");
+    test_assert(doc->root()->elements().size() == 2);
 
     delete doc;
 }

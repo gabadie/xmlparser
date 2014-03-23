@@ -15,6 +15,19 @@
 
 
 void
+testXmlElementBasics()
+{
+    Xml::Element root("root");
+
+    test_assert(root.isElement() == true);
+
+    root.appendText("hello");
+
+    test_assert(root.contentText() == "");
+    test_assert(root.text() == "hello");
+}
+
+void
 testXmlElementTagname()
 {
     std::string name = "test";
@@ -22,8 +35,6 @@ testXmlElementTagname()
     Xml::Element root(name);
 
     test_assert(root.name() == name);
-    test_assert(root.parent() == nullptr);
-    test_assert(root.document() == nullptr);
 
     std::string tag  = "root";
 
@@ -58,6 +69,11 @@ void
 testXmlElementChildren()
 {
     Xml::Element root("root");
+
+    { // tests root's parent and document
+        test_assert(root.parent() == nullptr);
+        test_assert(root.document() == nullptr);
+    }
 
     { // empty children
         test_assert(root.elements().size() == 0);
@@ -190,6 +206,7 @@ testXmlElementContent()
 int
 main()
 {
+    testXmlElementBasics();
     testXmlElementTagname();
     testXmlElementAttributes();
     testXmlElementChildren();

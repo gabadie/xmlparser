@@ -65,6 +65,8 @@ testXmlTextParsing()
             return;
         }
 
+        test_assert(doc->root()->mChildren[0]->contentText() == "Hello");
+        test_assert(doc->root()->mChildren[2]->contentText() == "World");
         test_assert(doc->root()->text() == "Hello\nWorld");
 
         delete doc;
