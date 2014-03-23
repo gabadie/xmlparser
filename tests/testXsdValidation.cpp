@@ -92,8 +92,12 @@ test_validation()
 int
 main()
 {
-    if (std::regex_match ("subject", std::regex(".*") ))
-        std::cout << "string matched" << std::endl;
+    std::string fnames[] = {"foo.txt", "bar.txt", "baz.dat", "zoidberg"};
+    std::regex txt_regex("[a-z]+\\.txt");
+
+    for (const auto &fname : fnames) {
+        std::cout << fname << ": " << std::regex_match(fname, txt_regex) << '\n';
+    }
     //std::regex expression(".*");
     //std::string test("test");
     //std::regex_match(test, expression);
