@@ -159,33 +159,6 @@ testElementNode()
 }
 
 void
-testTextNode()
-{
-    std::string text = "This is a text.";
-    Xml::Text xmlText(text);
-
-    test_assert(xmlText.contentText() == text);
-
-    {
-        std::ostringstream oss;
-        xmlText >> oss;
-        test_assert(oss.str() == text);
-    }
-
-    {
-        std::ostringstream oss;
-        oss << xmlText;
-        test_assert(oss.str() == text);
-    }
-
-    {
-        std::ostringstream oss;
-        xmlText.exportToStream(oss, 0, "");
-        test_assert(oss.str() == text);
-    }
-}
-
-void
 testXmlDocument()
 {
     Xml::Document doc;
@@ -290,7 +263,6 @@ testXmlDocument()
 int
 main()
 {
-    testTextNode();
     testElementNode();
     testXmlDocument();
 

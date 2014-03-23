@@ -99,36 +99,6 @@ test_elements_errors()
 }
 
 void
-test_text()
-{
-    std::string content (xml_code(
-        <hello>
-            Hello
-            <balise1>
-            </balise1>
-            World
-            <balise2>
-            </balise2>
-        </hello>
-    ));
-    Xml::Log log;
-
-    Xml::Document * doc = Xml::parse(content, &log);
-
-    test_assert(doc != 0);
-    test_assert(doc->root() != 0);
-
-    if (doc == 0 || doc->root() == 0)
-    {
-        return;
-    }
-
-    test_assert(doc->root()->text() == "Hello\nWorld");
-
-    delete doc;
-}
-
-void
 test_syntax_error()
 {
     Xml::Log log;
@@ -158,7 +128,6 @@ main()
 {
     test_elements_basic();
     test_elements_errors();
-    test_text();
     test_syntax_error();
     test_lexical_error();
 

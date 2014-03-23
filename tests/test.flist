@@ -6,4 +6,5 @@ testDocument.cpp
 testParsing.cpp
 testXmlComment.cpp
 testXmlProcessingInstruction.cpp
+testXmlText.cpp
 testXPath.cpp
