@@ -28,14 +28,6 @@ namespace Xml
          */
         ~Text() override;
 
-        /**
-         * Set the text content
-         *
-         * @param text Text content to set
-         */
-        void
-        setText(std::string const & text);
-
     protected:
         /**
          * Constructor
@@ -65,7 +57,7 @@ namespace Xml
         contentText() const override;
 
     protected:
-        std::string mText; ///< Text content
+        std::string const mText; ///< Text content
 
         friend class Xml::Element;
         friend class Xml::Test;

@@ -251,28 +251,22 @@ namespace Xml
 
         test_assert(xmlText.contentText() == text);
 
-        std::string text2 = "This is another text.";
-
-        xmlText.setText(text2);
-
-        test_assert(xmlText.contentText() == text2);
-
         {
             std::ostringstream oss;
             xmlText >> oss;
-            test_assert(oss.str() == text2);
+            test_assert(oss.str() == text);
         }
 
         {
             std::ostringstream oss;
             oss << xmlText;
-            test_assert(oss.str() == text2);
+            test_assert(oss.str() == text);
         }
 
         {
             std::ostringstream oss;
             xmlText.exportToStream(oss, 0, "");
-            test_assert(oss.str() == text2);
+            test_assert(oss.str() == text);
         }
     }
 

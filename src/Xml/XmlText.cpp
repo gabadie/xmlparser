@@ -16,12 +16,6 @@ namespace Xml
     }
 
     void
-    Text::setText(std::string const & text)
-    {
-        mText = text;
-    }
-
-    void
     Text::exportToStream(std::ostream & stream, std::size_t level,
         std::string const & indent) const
     {
