@@ -3,15 +3,10 @@
 
 #include <iostream>
 
+#include "XmlForward.hpp"
 
 namespace Xml
 {
-    // Forward declarations
-    class Document;
-    class Element;
-    class Node;
-    class ProcessingInstruction;
-    class Test;
 
     /**
      * Defines a abstract interface for all Xml classes
