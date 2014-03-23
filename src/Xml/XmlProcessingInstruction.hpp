@@ -5,12 +5,11 @@
 #include <string>
 #include <map>
 
+#include "XmlForward.hpp"
 #include "XmlDocumentNode.hpp"
 
 namespace Xml
 {
-    // Forward declarations
-    class Object;
 
     /**
      * Defines a processing instruction
@@ -117,6 +116,7 @@ namespace Xml
 
         friend class Xml::Object;
         friend class Test;
+        friend XML_BISON_MAIN();
     };
 }
 

@@ -5,13 +5,12 @@
 #include <string>
 #include <vector>
 
+#include "XmlForward.hpp"
 #include "XmlObject.hpp"
 #include "XmlElement.hpp"
 
 namespace Xml
 {
-    // Forward declarations
-    class DocumentNode;
 
     /**
      * Defines a XML document
