@@ -159,37 +159,6 @@ testElementNode()
 }
 
 void
-testPINode()
-{
-    Xml::ProcessingInstruction xmlPI("xml", "version", "1.0", "encoding", "UTF-8");
-
-    test_assert(xmlPI.mName == "xml");
-    test_assert(xmlPI.attribute("version") == "1.0");
-    test_assert(xmlPI.attribute("encoding") == "UTF-8");
-
-    std::string pi = "<?xml encoding=\"UTF-8\" version=\"1.0\"?>";
-
-    {
-        std::ostringstream oss;
-        xmlPI >> oss;
-        test_assert(oss.str() == pi);
-    }
-
-    {
-        std::ostringstream oss;
-        oss << xmlPI;
-        test_assert(oss.str() == pi);
-    }
-
-    {
-        std::ostringstream oss;
-        xmlPI.exportToStream(oss, 0, "");
-        test_assert(oss.str() == pi);
-    }
-
-}
-
-void
 testTextNode()
 {
     std::string text = "This is a text.";
@@ -321,7 +290,6 @@ testXmlDocument()
 int
 main()
 {
-    testPINode();
     testTextNode();
     testElementNode();
     testXmlDocument();
