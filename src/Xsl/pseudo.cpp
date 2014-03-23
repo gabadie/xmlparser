@@ -1,6 +1,4 @@
-//penser à garder la racine qqpart
-//demander si besoin de regex
-
+#include <""
 
 std::map<std::string, Xsl::Instruction*> xslInstructions;
 
@@ -18,24 +16,27 @@ Xml::Document xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) {
     
 }
 
-Vector <Xml::Node*> applyDefaultTemplate(Xml::Node* context, Vector<Node*> resultNodes) {
+void applyDefaultTemplate(Xml::Node* context, Vector<Node*> resultNodes) {
     // TODO : faire ça autrement...
     if (isinstance(context, Text)) {
-        return [context];
+        resultNodes.push(context);
     }
     
     for (auto child : context.children()) {
         Xsl::Element xslTemplate = this.getTemplate(child);
-        applyTemplate(xslTemplate, child, resultNodes);
+
+        if (xslTemplate == null) {
+            applyDefaultTemplate(context, resultNodes);
+            return ;
+        }
+        else{
+           applyTemplate(xslTemplate, child, resultNodes);
+           return ;
+        }
     }
-    return resultNodes;
 }
 
-Vector <Xml::Node*> applyTemplate (const Xml::Element& xslTemplate, const Xml::Node* context, Vector<Node*> resultNodes) {
-    if (xslTemplate == null) {
-        return applyDefaultTemplate(context, resultNodes);
-    }
-
+void applyTemplate (const Xml::Element& xslTemplate, const Xml::Node* context, Vector<Node*> resultNodes) {
     // Attention, ici on parcours des éléments XSL, et pas le document XML qu'on transforme
     for (auto node : xslTemplate.children()) {
         if (node.iselement() && node.namespace() != 'xsl') {
@@ -47,6 +48,21 @@ Vector <Xml::Node*> applyTemplate (const Xml::Element& xslTemplate, const Xml::N
     }
 }
 
-void Xsl::ValueOf::operator () (Xml::Node* context, Xml::Element xslElement, Vector <Xml::Node*> resultNodes) {
-    resultNodes.push(context.select(xslElement.attr('select').text()));
+void Xsl::ValueOf::operator () (Xml::Node* context, Xml::Element valueOfElement, Vector <Xml::Node*> resultNodes) {
+    resultNodes.push(context.select(valueOfElement.attr('select').text()));
+}
+
+void Xsl::ForEach::operator () (Xml::Node* context, Xml::Element forEachElement, Vector <Xml::Node*> resultNodes) {
+    Vector <Xml::Node*> matchingNodes = context.select(forEachElement.attr('select'));
+    for (auto node : matchingNodes) {
+        applyTemplate(forEachElement, node, resultNodes);
+    } 
+}
+
+void Xsl::ApplyTemplate::operator () (Xml::Node* context, Xml::Element applyTemplatehElement, Vector <Xml::Node*> resultNodes) {
+    Vector <Xml::Node*> matchingNodes = context.select(forEachElement.attr('select'));
+    for (auto node ; matchingNodes){
+        Xsl::Element xslTemplate = DOCUMENT.getTemplate(node);
+        applyTemplate(xslTemplate, node, resultNodes)
+    }
 }
