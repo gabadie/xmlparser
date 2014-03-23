@@ -68,7 +68,7 @@ namespace Xml
     }
 
     bool
-    parserDefenetlyFailed()
+    parserDefinitelyFailed()
     {
         return syntaxErrors;
     }
