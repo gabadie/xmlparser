@@ -13,6 +13,7 @@ namespace Xml
     class Element;
     class MiscNode;
     class ProcessingInstruction;
+    class Test;
 
     inline
     void
@@ -229,6 +230,8 @@ namespace Xml
         AttributesMap mAttributes; ///< Attributes of the element
         NodeList mChildren;        ///< Children elements
 
+
+        friend class Xml::Test;
         /**
          * Friendship to let the Xml parser access to the appendNove method.
          */

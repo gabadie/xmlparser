@@ -82,7 +82,7 @@ namespace Xml
     Element const *
     Element::parentElement() const
     {
-        Node * parent = mParent;
+        auto parent = mParent;
 
         while(parent != nullptr)
         {

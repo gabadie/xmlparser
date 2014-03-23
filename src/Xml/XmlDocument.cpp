@@ -99,6 +99,7 @@ namespace Xml
 
                 // and replaces it by the new one
                 *it = root;
+                root->mParent = this;
             }
             else
             {
@@ -152,6 +153,7 @@ namespace Xml
         }
 
         mChildren.push_back(documentNode);
+        documentNode->mParent = this;
     }
 
 }

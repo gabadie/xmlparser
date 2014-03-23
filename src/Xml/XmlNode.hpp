@@ -9,6 +9,8 @@
 
 namespace Xml
 {
+    class Element;
+
     /**
      * Defines the abstract class of a node for interface purpose
      */
@@ -39,22 +41,6 @@ namespace Xml
         ~Node();
 
         /**
-         * Gets the parent node (non-const version)
-         *
-         * @return The parent node
-         */
-        Node *
-        parent();
-
-        /**
-         * Gets the parent node (const version)
-         *
-         * @return The parent node
-         */
-        Node const *
-        parent() const;
-
-        /**
          * Gets the root element of the document (const version)
          *
          * @return The root element of the document
@@ -64,6 +50,8 @@ namespace Xml
         root() const override final;
 
     protected:
+        friend class Xml::Element;
+
         /**
          * Exports to a <stream> with a given <indent>
          *
@@ -82,22 +70,6 @@ namespace Xml
         virtual
         std::string const &
         contentText() const;
-
-    protected:
-        friend class Element;
-
-        /**
-         * Tells whether or not the node is an Element
-         *
-         * @return True if the node is an Element, false otherwise.
-         */
-        virtual
-        bool
-        isElement() const;
-
-    protected:
-        // Pointer to the parent node
-        Node * mParent;
     };
 
     /**

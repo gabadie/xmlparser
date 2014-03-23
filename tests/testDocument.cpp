@@ -139,6 +139,9 @@ namespace Xml
             ProcessingInstruction * xmlPI = dynamic_cast<ProcessingInstruction *>(root->children()[4]);
             test_assert(xmlPI != nullptr);
 
+            test_assert(xmlElt1->isElement());
+            test_assert(xmlElt2->isElement());
+
             test_assert(xmlElt1->parent() == root);
             test_assert(xmlElt1->parentElement() == root);
             test_assert(xmlText->parent() == root);
@@ -157,6 +160,12 @@ namespace Xml
             test_assert(root->children()[2] == xmlElt2);
             test_assert(root->children()[3] == xmlComment);
             test_assert(root->children()[4] == xmlPI);
+
+            // A root only exists in a XML document
+            test_assert(xmlElt1->root() == nullptr);
+            test_assert(xmlElt2->root() == nullptr);
+            test_assert(xmlComment->root() == nullptr);
+            test_assert(xmlPI->root() == nullptr);
 
             // Remove node
             {
@@ -298,7 +307,7 @@ namespace Xml
             auto root = new Element(name);
 
             doc.setRoot(root);
-
+            test_assert(root->parent() == &doc);
             test_assert(doc.children().size() == 3);
 
             {
@@ -320,7 +329,7 @@ namespace Xml
             auto root = new Element(name);
 
             doc.setRoot(root);
-
+            test_assert(root->parent() == &doc);
             test_assert(doc.children().size() == 3);
 
             {
@@ -333,6 +342,15 @@ namespace Xml
                 auto xmlRoot = doc.root();
                 test_assert(xmlRoot != nullptr);
                 test_assert(xmlRoot == root);
+            }
+
+            {
+                auto xmlElt1 = new Element("child1");
+                root->append(xmlElt1);
+
+                test_assert(xmlElt1->parent() == root);
+                test_assert(xmlElt1->root() != nullptr);
+                test_assert(xmlElt1->root() == root);
             }
         }
 
