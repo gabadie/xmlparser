@@ -31,6 +31,14 @@ namespace Xml
         ~Object();
 
         /**
+         * Deletes copy constructor and operator =
+         */
+        Object(Object const &) = delete;
+
+        void
+        operator = (Object const &) = delete;
+
+        /**
          * Gets the object's document
          *
          * @return The document
