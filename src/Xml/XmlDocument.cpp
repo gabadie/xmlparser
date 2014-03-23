@@ -161,6 +161,8 @@ namespace Xml
         // A document has only one Xml::Element
         if(documentNode->isElement() && mRoot != nullptr)
         {
+            auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
+            mChildren.erase(it);
             delete mRoot;
         }
 
