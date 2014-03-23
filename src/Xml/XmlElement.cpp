@@ -100,24 +100,6 @@ namespace Xml
         return elements;
     }
 
-    Element const *
-    Element::parentElement() const
-    {
-        auto parent = mParent;
-
-        while(parent != nullptr)
-        {
-            if(parent->isElement())
-            {
-                return static_cast<Element const *>(parent);
-            }
-
-            parent = parent->parent();
-        }
-
-        return nullptr;
-    }
-
     std::string
     Element::text() const
     {

@@ -78,20 +78,20 @@ testXmlElementChildren()
         test_assert(root.hasChild(c2));
     }
 
-    { // recusive children checking
+    { // test parents
+        test_assert(c1->parent() == &root);
+        test_assert(c2->parent() == &root);
+    }
+
+    { // recursive children checking
         auto c3 = new Xml::Element("child3");
 
         c2->append(c3);
 
         test_assert(c2->hasChild(c3));
         test_assert(root.hasChild(c3));
-    }
 
-    { // test parents
-        test_assert(c1->parent() == &root);
-        test_assert(c1->parentElement() == &root);
-        test_assert(c2->parent() == &root);
-        test_assert(c2->parentElement() == &root);
+        test_assert(c3->parent() == c2);
     }
 
     { // check element orders
@@ -132,10 +132,8 @@ testXmlElementDeletion()
     test_assert(xmlElt2->isElement());
 
     test_assert(xmlElt1->parent() == &root);
-    test_assert(xmlElt1->parentElement() == &root);
     test_assert(xmlText->parent() == &root);
     test_assert(xmlElt2->parent() == &root);
-    test_assert(xmlElt2->parentElement() == &root);
     test_assert(xmlComment->parent() == &root);
     test_assert(xmlPI->parent() == &root);
 
