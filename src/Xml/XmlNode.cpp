@@ -2,7 +2,9 @@
 
 namespace Xml
 {
-    Node::Node(): mParent(nullptr)
+    Node::Node():
+        Object(),
+        mParent(nullptr)
     {
 
     }
@@ -12,13 +14,13 @@ namespace Xml
 
     }
 
-    Node *
-    Node::parent()
+    Document const *
+    Node::document() const
     {
-        return mParent;
+        return mParent ? mParent->document() : nullptr;
     }
 
-    Node const *
+    Object const *
     Node::parent() const
     {
         return mParent;
@@ -29,11 +31,5 @@ namespace Xml
     {
         static std::string const dummy = "";
         return dummy;
-    }
-
-    bool
-    Node::isElement() const
-    {
-        return false;
     }
 }

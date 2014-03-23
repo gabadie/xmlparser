@@ -5,18 +5,16 @@
 #include <string>
 #include <map>
 
+#include "XmlForward.hpp"
 #include "XmlDocumentNode.hpp"
 
 namespace Xml
 {
-    // Forward declarations
-    class Document;
-    class Element;
 
     /**
      * Defines a processing instruction
      */
-    class ProcessingInstruction : public DocumentNode
+    class ProcessingInstruction final : public DocumentNode
     {
     public:
         // Type aliases
@@ -25,8 +23,7 @@ namespace Xml
         /**
          * Destructor
          */
-        virtual
-        ~ProcessingInstruction();
+        ~ProcessingInstruction() override;
 
         /**
          * Gets the value of an attribute by name
@@ -60,12 +57,26 @@ namespace Xml
         setAttribute(std::string const & name, std::string const & value);
 
         /**
+         * Sets the value of an attribute.
+         *
+         * If the attribute does not exist, it is created.
+         *
+         * @param name  Name of the attribute to set
+         * @param value Value to set
+         */
+        inline
+        void
+        setAttribute(char const * name, char const * value)
+        {
+            setAttribute(std::string(name), std::string(value));
+        }
+
+        /**
          * Exports to a <stream> with a given <indent>
          *
          * @param <stream> is the stream to export to
          * @param <indent> is the the indentation prefix
          */
-        virtual
         void
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
@@ -85,12 +96,26 @@ namespace Xml
         setAttribute(std::string const & name, std::string const & value,
             KeyValues && ...keyValues);
 
+        /**
+         * Sets the value of an attribute (variadic version)
+         *
+         * If the attribute does not exist, it is created.
+         *
+         * @param name  Name of the attribute to set
+         * @param value Value to set
+         * @param ...keyValues Other key values to set
+         */
+        template <typename ...KeyValues>
+        void
+        setAttribute(char const * name, char const * value,
+            KeyValues && ...keyValues);
+
     protected:
         std::string mName;         ///< Name of the PI
         AttributesMap mAttributes; ///< Attributes of the element
 
-        friend class Xml::Document;
-        friend class Xml::Element;
+        friend class Xml::Object;
+        friend XML_BISON_MAIN();
     };
 }
 

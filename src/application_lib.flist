@@ -8,6 +8,7 @@ Xml/XmlDocumentNode.cpp
 Xml/XmlElement.cpp
 Xml/XmlLog.cpp
 Xml/XmlMiscNode.cpp
+Xml/XmlObject.cpp
 Xml/XmlNode.cpp
 Xml/XmlParser.cpp
 Xml/XmlParserError.cpp

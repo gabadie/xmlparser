@@ -126,5 +126,10 @@
 
 #endif //APP_DEBUG
 
+/*
+ * @infos: unreachable crash
+ */
+#define app_unreachable() \
+    app_crash_msg("This code is supposed to be unreachable");
 
 #endif

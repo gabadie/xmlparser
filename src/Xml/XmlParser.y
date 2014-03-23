@@ -6,29 +6,13 @@
 
 #include "XmlParser.hpp"
 #include "XmlText.hpp"
+#include "XmlComment.hpp"
 #include "XmlParserError.hpp"
 #include "XmlParserInput.hpp"
 
 int yylex(void);
 
 void yyerror(void ** e, const char * msg);
-
-namespace Xml
-{
-    inline
-    void
-    appendNode(Element * element, Node * node)
-    {
-        element->appendNode(node);
-    }
-
-    inline
-    Text *
-    parserText(std::string const & content)
-    {
-        return new Xml::Text(content);
-    }
-}
 
 %}
 
@@ -51,7 +35,7 @@ namespace Xml
 /* ----------------------------------------------------------------------------- tokens */
 
 %token EGAL SLASH SUP SUPSPECIAL DOCTYPE COLON INFSPECIAL INF CDATABEGIN
-%token <s> VALEUR DONNEES COMMENT NOM CDATAEND
+%token <s> VALEUR DONNEES NOM CDATAEND COMMENT
 
 
 /* ----------------------------------------------------------------------------- types */
@@ -96,7 +80,7 @@ element:
                 continue;
             }
 
-            Xml::appendNode($1, node);
+            $1->appendNode(node);
         }
 
         /*
@@ -184,13 +168,22 @@ item:
     DONNEES
     {
         /* ---------------------------------------------------- text in an element */
-        $$ = (Xml::Node *) Xml::parserText(std::string($1));
+        $$ = (Xml::Node *) new Xml::Text(std::string($1));
 
         /*
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
          */
         free($1);
+    } |
+    COMMENT
+    {
+        $$ = (Xml::Node *) new Xml::Comment(std::string($1));
+        /*
+         * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
+        free($1);
     };
+
 
 content:
     content item
@@ -206,6 +199,7 @@ content:
     };
 
 
+
 %%
 /* ----------------------------------------------------------------------------- C/C++ suffix */
 
@@ -214,6 +208,13 @@ yyerror(void ** e, const char * msg)
 {
     Xml::parserSyntaxError(msg);
 }
+
+/*
+ * Flex file number
+ */
+extern
+int
+yylineno;
 
 extern
 int
@@ -242,6 +243,8 @@ Xml::parse(std::istream & xmlContent, Xml::Log * log)
         Xml::flexSetInput(xmlContent);
 
         yy_flex_debug = 0;
+        yylineno = 1;
+
         yyparse((void **) &e);
         yyrestart(stdin);
 
