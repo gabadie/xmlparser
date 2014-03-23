@@ -16,10 +16,6 @@
 #include "XmlElement.hpp"
 #include "XmlText.hpp"
 
-#ifdef APP_DEBUG
-#include <cassert>
-#endif
-
 namespace Xml
 {
     Element::Element(std::string const & name):
@@ -256,11 +252,12 @@ namespace Xml
             // We retrieve the element children that match the query
             for(auto const & c : mChildren)
             {
-                #ifdef APP_DEBUG
-                assert(c != nullptr);
-                #endif
+                app_assert(c != nullptr);
 
-                if(!c->isElement()) continue;
+                if(!c->isElement())
+                {
+                    continue;
+                }
 
                 auto elt = static_cast<Element *>(c);
                 if(elt->name() == xPathQuery)
@@ -287,21 +284,20 @@ namespace Xml
             {
                 auto slashPos = xPathQuery.find("/");
 
-                #ifdef APP_DEBUG
-                assert(slashPos != std::string::npos);
-                assert(slashPos != xPathQuery.size() - 1);
-                #endif
+                app_assert(slashPos != std::string::npos);
+                app_assert(slashPos != xPathQuery.size() - 1);
 
                 auto token = xPathQuery.substr(0, slashPos);
 
                 // And apply the rest of the query recursively to the Element children
                 for(auto const & c : mChildren)
                 {
-                    #ifdef APP_DEBUG
-                    assert(c != nullptr);
-                    #endif
+                    app_assert(c != nullptr);
 
-                    if(!c->isElement()) continue;
+                    if(!c->isElement())
+                    {
+                        continue;
+                    }
 
                     auto elt = static_cast<Element *>(c);
                     if(elt->name() == token)
@@ -330,9 +326,7 @@ namespace Xml
 
         for(auto const & c : mChildren)
         {
-            #ifdef APP_DEBUG
-            assert(c != nullptr);
-            #endif
+            app_assert(c != nullptr);
 
             c->exportToStream(stream, level + 1, indent);
             stream << "\n";

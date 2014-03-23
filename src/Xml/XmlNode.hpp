@@ -4,14 +4,11 @@
 #include <list>
 #include <string>
 
+#include "XmlForward.hpp"
 #include "XmlObject.hpp"
 
 namespace Xml
 {
-    // Forward decalarations
-    class Document;
-    class Element;
-
     /**
      * Defines the abstract class of a node for interface purpose
      */

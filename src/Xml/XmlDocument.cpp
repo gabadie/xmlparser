@@ -16,10 +16,6 @@
 #include "XmlDocumentNode.hpp"
 #include "XmlElement.hpp"
 
-#ifdef APP_DEBUG
-#include <cassert>
-#endif
-
 namespace Xml
 {
     Document::Document(Element * root):
