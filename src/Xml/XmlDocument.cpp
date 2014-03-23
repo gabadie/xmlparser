@@ -7,8 +7,9 @@
  */
 
 #include <algorithm>
-#include <iostream>
 #include <fstream>
+#include <iosfwd>
+#include <iostream>
 
 #include "../AppDebug.hpp"
 #include "XmlComment.hpp"
@@ -35,16 +36,25 @@ namespace Xml
 
     Document::~Document()
     {
-        for(auto & c : mChildren)
+        for (auto node : mChildren)
         {
-            delete c;
+            node->mParent = nullptr;
+            delete node;
         }
+
+        mChildren.clear();
     }
 
     Document const *
     Document::document() const
     {
         return this;
+    }
+
+    Object const *
+    Document::parent() const
+    {
+        return nullptr;
     }
 
     void

@@ -36,8 +36,19 @@ namespace Xml
         Document const *
         document() const override final;
 
+        /**
+         * Gets the parent xml object (const version)
+         *
+         * @return The parent xml object
+         */
+        Object const *
+        parent() const override final;
+
 
     protected:
+        // Pointer to the parent object
+        Object * mParent;
+
         friend class Xml::Element;
 
         /**

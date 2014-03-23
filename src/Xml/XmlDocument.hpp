@@ -37,12 +37,20 @@ namespace Xml
         ~Document();
 
         /**
-         * Gets the itself document
+         * Gets the itself document (const version)
          *
          * @return The document
          */
         Document const *
         document() const override final;
+
+        /**
+         * Gets the parent xml object (const version)
+         *
+         * @return nullptr
+         */
+        Object const *
+        parent() const override final;
 
         /**
          * Gets the document's root

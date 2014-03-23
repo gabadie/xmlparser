@@ -2,7 +2,9 @@
 
 namespace Xml
 {
-    Node::Node(): Object()
+    Node::Node():
+        Object(),
+        mParent(nullptr)
     {
 
     }
@@ -16,6 +18,12 @@ namespace Xml
     Node::document() const
     {
         return mParent ? mParent->document() : nullptr;
+    }
+
+    Object const *
+    Node::parent() const
+    {
+        return mParent;
     }
 
     std::string const &

@@ -29,22 +29,6 @@ namespace Xml
         ~Object();
 
         /**
-         * Gets the parent xml object (non-const version)
-         *
-         * @return The parent xml object
-         */
-        Object *
-        parent();
-
-        /**
-         * Gets the parent xml object (const version)
-         *
-         * @return The parent xml object
-         */
-        Object const *
-        parent() const;
-
-        /**
          * Gets the object's document
          *
          * @return The document
@@ -55,6 +39,18 @@ namespace Xml
         virtual
         Document const *
         document() const = 0;
+
+        /**
+         * Gets the object's parent
+         *
+         * @return The parent (either a Document or an Element)
+         */
+        Object *
+        parent();
+
+        virtual
+        Object const *
+        parent() const = 0;
 
         /**
          * Implements standart stream operator
@@ -92,9 +88,6 @@ namespace Xml
         isElement() const;
 
     protected:
-        // Pointer to the parent object
-        Object * mParent;
-
         friend class Xml::Test;
     };
 
