@@ -7,22 +7,16 @@ namespace Xml
 
     }
 
+    Document *
+    Object::document()
+    {
+        return const_cast<Document *>(static_cast<Object const *>(this)->document());
+    }
+
     Object *
     Object::parent()
     {
-        return mParent;
-    }
-
-    Object const *
-    Object::parent() const
-    {
-        return mParent;
-    }
-
-    Element *
-    Object::root()
-    {
-        return const_cast<Element *>(static_cast<Object const *>(this)->root());
+        return const_cast<Object *>(static_cast<Object const *>(this)->parent());
     }
 
     bool

@@ -1,11 +1,15 @@
 #ifndef _H_XML_OBJECT
 #define _H_XML_OBJECT
 
+#include <iostream>
+
+
 namespace Xml
 {
-    // Forward declaration
+    // Forward declarations
     class Element;
     class Test;
+    class Document;
 
     /**
      * Defines a abstract interface for all Xml classes
@@ -25,40 +29,54 @@ namespace Xml
         ~Object();
 
         /**
-         * Gets the parent xml object (non-const version)
+         * Gets the object's document
          *
-         * @return The parent xml object
+         * @return The document
+         */
+        Document *
+        document();
+
+        virtual
+        Document const *
+        document() const = 0;
+
+        /**
+         * Gets the object's parent
+         *
+         * @return The parent (either a Document or an Element)
          */
         Object *
         parent();
 
-        /**
-         * Gets the parent xml object (const version)
-         *
-         * @return The parent xml object
-         */
-        Object const *
-        parent() const;
-
-        /**
-         * Gets the root element of the document (non-const version)
-         *
-         * @return The root element of the document
-         */
-        Element *
-        root();
-
-        /**
-         * Gets the root element of the document (const version)
-         *
-         * @return The root element of the document
-         */
         virtual
-        Element const *
-        root() const = 0;
+        Object const *
+        parent() const = 0;
+
+        /**
+         * Implements standart stream operator
+         */
+        inline
+        std::ostream &
+        operator >> (std::ostream & stream) const
+        {
+            exportToStream(stream, 0, "  ");
+            return stream;
+        }
 
     protected:
         friend class Xml::Element;
+
+        /**
+         * Exports to a <stream> with a given <indent>
+         *
+         * @param stream The stream to export to
+         * @param level  Level of the token
+         * @param indent The indentation prefix
+         */
+        virtual
+        void
+        exportToStream(std::ostream & stream, std::size_t level,
+            std::string const & indent) const = 0;
 
         /**
          * Tells whether or not the node is an Element
@@ -70,11 +88,19 @@ namespace Xml
         isElement() const;
 
     protected:
-        // Pointer to the parent object
-        Object * mParent;
-
         friend class Xml::Test;
     };
+
+    /**
+     * Defines a sexier standart stream operator
+     */
+    inline
+    std::ostream &
+    operator << (std::ostream & stream, Object const & object)
+    {
+        return object >> stream;
+    }
+
 }
 
 #endif //_H_XML_OBJECT

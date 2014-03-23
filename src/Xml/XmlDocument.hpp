@@ -31,25 +31,44 @@ namespace Xml
         Document(Element * root = nullptr);
 
         /**
-         * Implements standard stream operator
-         */
-        std::ostream &
-        operator >> (std::ostream & stream) const;
-
-        /**
          * Destructor
          */
         virtual
         ~Document();
 
         /**
-         * Gets the root element of the document (const version)
+         * Gets the itself document (const version)
          *
-         * @return The root element of the document
+         * @return The document
          */
-        virtual
+        Document const *
+        document() const override final;
+
+        /**
+         * Gets the parent xml object (const version)
+         *
+         * @return nullptr
+         */
+        Object const *
+        parent() const override final;
+
+        /**
+         * Gets the document's root
+         *
+         * @return The document root
+         */
+        Element *
+        root()
+        {
+            return mRoot;
+        }
+
         Element const *
-        root() const override final;
+        root() const
+        {
+            return mRoot;
+        }
+
 
         /**
          * Appends a comment to the document
@@ -97,6 +116,18 @@ namespace Xml
 
     protected:
         /**
+         * Exports to a <stream> with a given <indent>
+         *
+         * @param stream The stream to export to
+         * @param level  Level of the token
+         * @param indent The indentation prefix
+         */
+        virtual
+        void
+        exportToStream(std::ostream & stream, std::size_t level,
+            std::string const & indent) const override;
+
+        /**
          * Appends a DocumentNode to the Document
          *
          * @param documentNode Document node to append
@@ -110,15 +141,6 @@ namespace Xml
         //DocType mDocType;  ///< DocType of the XML document //TODO
     };
 
-    /**
-     * Defines a sexier standard stream operator
-     */
-    inline
-    std::ostream &
-    operator << (std::ostream & stream, Document const & doc)
-    {
-        return doc >> stream;
-    }
 }
 
 #include "XmlDocument.inl"

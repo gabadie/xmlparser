@@ -7,9 +7,11 @@
  */
 
 #include <algorithm>
-#include <iostream>
 #include <fstream>
+#include <iosfwd>
+#include <iostream>
 
+#include "../AppDebug.hpp"
 #include "XmlComment.hpp"
 #include "XmlDocument.hpp"
 #include "XmlDocumentNode.hpp"
@@ -32,35 +34,27 @@ namespace Xml
         }
     }
 
-    std::ostream &
-    Document::operator >> (std::ostream & stream) const
-    {
-        for(auto i = 0u; i < mChildren.size(); ++i)
-        {
-            auto const & c = mChildren[i];
-
-            #ifdef APP_DEBUG
-            assert(c != nullptr);
-            #endif
-
-            stream << (*c) << (i == mChildren.size() - 1 ? "" : "\n");
-        }
-
-        return stream;
-    }
-
     Document::~Document()
     {
-        for(auto & c : mChildren)
+        for (auto node : mChildren)
         {
-            delete c;
+            node->mParent = nullptr;
+            delete node;
         }
+
+        mChildren.clear();
     }
 
-    Element const *
-    Document::root() const
+    Document const *
+    Document::document() const
     {
-        return mRoot;
+        return this;
+    }
+
+    Object const *
+    Document::parent() const
+    {
+        return nullptr;
     }
 
     void
@@ -130,6 +124,21 @@ namespace Xml
         file << *this;
 
         return true;
+    }
+
+    void
+    Document::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
+    {
+        for(auto i = 0u; i < mChildren.size(); ++i)
+        {
+            auto const & c = mChildren[i];
+
+            app_assert(c != nullptr);
+
+            c->exportToStream(stream, level, indent);
+
+            stream << (i == mChildren.size() - 1 ? "" : "\n");
+        }
     }
 
     void
