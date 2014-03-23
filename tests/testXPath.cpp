@@ -24,7 +24,7 @@
  * </root>
  */
 void
-testXPath()
+testSelect()
 {
     Xml::Document doc;
 
@@ -302,10 +302,72 @@ testXPath()
     }
 }
 
+void
+testValueOf()
+{
+    Xml::Document doc;
+
+    std::string root = "root";
+    Xml::Element * xmlRoot = new Xml::Element(root);
+    doc.setRoot(xmlRoot);
+
+    std::string attr1 = "attr1";
+    std::string value1 = "value1";
+    xmlRoot->setAttribute(attr1, value1);
+
+    {
+        test_assert(xmlRoot->valueOf(".") == "");
+        test_assert(xmlRoot->valueOf("@" + attr1) == value1);
+        test_assert(xmlRoot->valueOf("@" + attr1 + "foo") == "");
+    }
+
+    std::string elt1 = "elt1";
+    Xml::Element * xmlElt1 = new Xml::Element(elt1);
+    xmlRoot->append(xmlElt1);
+
+    {
+        std::string text = "This is a text in elt1.";
+        xmlElt1->appendText(text);
+
+        test_assert(xmlElt1->valueOf("@") == "");
+        test_assert(xmlElt1->valueOf(".") == text);
+        test_assert(xmlElt1->valueOf("/" + elt1) == text);
+        test_assert(xmlRoot->valueOf("/" + elt1) == text);
+        test_assert(xmlElt1->valueOf("../@" + attr1) == value1);
+    }
+
+    std::string elt11 = "elt11";
+    Xml::Element * xmlElt11_1 = new Xml::Element(elt11);
+    Xml::Element * xmlElt11_2 = new Xml::Element(elt11);
+    xmlElt1->append(xmlElt11_1);
+    xmlElt1->append(xmlElt11_2);
+
+    {
+        std::string text = "This is a text in elt11.";
+        xmlElt11_1->appendText(text);
+
+        std::string attr = "attr11";
+        std::string value = "value11";
+        xmlElt11_2->setAttribute(attr, value);
+
+        test_assert(xmlElt11_1->valueOf(".") == text);
+        test_assert(xmlElt1->valueOf(elt11) == text);
+        test_assert(xmlElt11_1->valueOf("/" + elt1 + "/" + elt11) == text);
+        test_assert(xmlElt11_1->valueOf("/" + elt1 + "/" + elt11 + "/@" + attr) == "");
+        test_assert(xmlElt11_2->valueOf("@" + attr) == value);
+
+        std::string attr2 = "attr12";
+        std::string value2 = "value12";
+        xmlElt11_1->setAttribute(attr2, value2);
+        test_assert(xmlElt1->valueOf("/" + elt1 + "/" + elt11 + "/@" + attr2) == value2);
+    }
+}
+
 int
 main()
 {
-    testXPath();
+    testSelect();
+    testValueOf();
 
     return 0;
 }

@@ -225,6 +225,11 @@ namespace Xml
     {
         std::list<Element const *> results;
 
+        if(xPathQuery == "")
+        {
+            return results;
+        }
+
         if(xPathQuery == "/")
         {
             auto doc = this->document();
@@ -310,6 +315,40 @@ namespace Xml
         }
 
         return results;
+    }
+
+    std::string
+    Element::valueOf(std::string const & xPathQuery) const
+    {
+        if(xPathQuery == "")
+        {
+            return "";
+        }
+
+        // If we request an attribute of the current element
+        if(xPathQuery[0] == '@')
+        {
+            return this->attribute(xPathQuery.substr(1));
+        }
+
+        // If we request the attribute of another element
+        auto atPos = xPathQuery.find("/@");
+        if(atPos != std::string::npos)
+        {
+            auto results = this->select(xPathQuery.substr(0, atPos));
+            // Keep only the first result
+            return results.size() > 0 ?
+                (*std::begin(results))->attribute(xPathQuery.substr(atPos + 2)) : "";
+        }
+        // Else if we request the content of an element
+        else
+        {
+            auto results = this->select(xPathQuery);
+            // Keep only the first result
+            return results.size() > 0 ? (*std::begin(results))->text() : "";
+        }
+
+        return "";
     }
 
     void

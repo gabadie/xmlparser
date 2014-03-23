@@ -180,6 +180,16 @@ namespace Xml
         std::list<Element const *>
         select(std::string const & xPathQuery) const;
 
+        /**
+         * Gets the value of the result of the XPath query
+         *
+         * @param xPathQuery XPath query
+         *
+         * @return The value of the result of the XPath query
+         */
+        std::string
+        valueOf(std::string const & xPathQuery) const;
+
     protected:
         /**
          * Exports to a <stream> with a given <indent>
