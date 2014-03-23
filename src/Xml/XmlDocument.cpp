@@ -137,13 +137,16 @@ namespace Xml
     {
         #ifdef APP_DEBUG
         assert(documentNode != nullptr);
+
         assert(
             std::find(std::begin(mChildren), std::end(mChildren), documentNode)
             == std::end(mChildren)
         );
-        /* TODO
-         * Check that the document node is not a child of root
-         */
+
+        if(mRoot != nullptr)
+        {
+            assert(!mRoot->hasChild(documentNode));
+        }
         #endif
 
         // A document has only one Xml::Element

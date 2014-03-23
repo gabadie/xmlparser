@@ -101,6 +101,14 @@ namespace Xml
             root->append(c1);
             root->append(c2);
 
+            test_assert(root->hasChild(c1));
+            test_assert(root->hasChild(c2));
+
+            auto c3 = new Element("child3");
+            c2->append(c3);
+            test_assert(c2->hasChild(c3));
+            test_assert(root->hasChild(c3));
+
             test_assert(c1->parent() == root);
             test_assert(c1->parentElement() == root);
             test_assert(c2->parent() == root);
