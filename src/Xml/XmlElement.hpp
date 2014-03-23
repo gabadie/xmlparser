@@ -52,7 +52,7 @@ namespace Xml
          *
          * @return The children nodes of the element
          */
-        NodeList const  &
+        NodeList const &
         children() const;
 
         /**
