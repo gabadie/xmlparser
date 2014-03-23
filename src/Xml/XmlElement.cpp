@@ -230,6 +230,95 @@ namespace Xml
         mAttributes[name] = value;
     }
 
+    std::list<Element const *>
+    Element::select(std::string const & xPathQuery) const
+    {
+        std::list<Element const *> results;
+
+        if(xPathQuery == "/")
+        {
+            auto root = this->root();
+            if(root != nullptr)
+            {
+                results.push_back(root);
+            }
+        }
+        else if(xPathQuery == ".")
+        {
+            results.push_back(this);
+        }
+        else if(xPathQuery == "..")
+        {
+            if(mParent != nullptr && mParent->isElement())
+            {
+                results.push_back(static_cast<Element *>(mParent));
+            }
+        }
+        // If the XPath query has no '/'
+        else if(xPathQuery.find("/") == std::string::npos)
+        {
+            // We retrieve the element children that match the query
+            for(auto const & c : mChildren)
+            {
+                #ifdef APP_DEBUG
+                assert(c != nullptr);
+                #endif
+
+                if(!c->isElement()) continue;
+
+                auto elt = static_cast<Element *>(c);
+                if(elt->name() == xPathQuery)
+                {
+                    results.push_back(elt);
+                }
+            }
+        }
+        // Else if the XPath query has at least one '/'
+        else
+        {
+            // If '/' is the first char, we start the query from the root
+            if(xPathQuery[0] == '/')
+            {
+                auto root = this->root();
+                if(root != nullptr)
+                {
+                    return root->select(xPathQuery.substr(1));
+                }
+            }
+            // Otherwise we get the first token...
+            else
+            {
+                auto slashPos = xPathQuery.find("/");
+
+                #ifdef APP_DEBUG
+                assert(slashPos != std::string::npos);
+                assert(slashPos != xPathQuery.size() - 1);
+                #endif
+
+                auto token = xPathQuery.substr(0, slashPos);
+
+                // And apply the rest of the query recursively to the Element children
+                for(auto const & c : mChildren)
+                {
+                    #ifdef APP_DEBUG
+                    assert(c != nullptr);
+                    #endif
+
+                    if(!c->isElement()) continue;
+
+                    auto elt = static_cast<Element *>(c);
+                    if(elt->name() == token)
+                    {
+                        auto res = elt->select(xPathQuery.substr(slashPos + 1));
+                        results.splice(std::end(results), res); // Concatenate the results
+                    }
+                }
+            }
+        }
+
+        return results;
+    }
+
     void
     Element::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
     {

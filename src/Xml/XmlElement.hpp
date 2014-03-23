@@ -204,6 +204,16 @@ namespace Xml
         void
         setAttribute(std::string const & name, std::string const & value);
 
+        /**
+         * Returns the element of the XPath query
+         *
+         * @param xPathQuery XPath query
+         *
+         * @return The list of Element result of the XPath query
+         */
+        std::list<Element const *>
+        select(std::string const & xPathQuery) const;
+
     protected:
         /**
          * Exports to a <stream> with a given <indent>
