@@ -19,23 +19,14 @@ namespace Xml
     /**
      * Defines a text node
      */
-    class Text : public Node
+    class Text final : public Node
     {
     public:
 
         /**
          * Destructor
          */
-        virtual
-        ~Text();
-
-        /**
-         * Set the text content
-         *
-         * @param text Text content to set
-         */
-        void
-        setText(std::string const & text);
+        ~Text() override;
 
     protected:
         /**
@@ -52,7 +43,6 @@ namespace Xml
          * @param level  Level of the token
          * @param indent The indentation prefix
          */
-        virtual
         void
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
@@ -63,12 +53,11 @@ namespace Xml
          *
          * @return The content text
          */
-        virtual
         std::string const &
         contentText() const override;
 
     protected:
-        std::string mText; ///< Text content
+        std::string const mText; ///< Text content
 
         friend class Xml::Element;
         friend class Xml::Test;

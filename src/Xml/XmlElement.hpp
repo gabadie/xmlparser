@@ -11,8 +11,6 @@ namespace Xml
 {
     //Forward declarations
     class Element;
-    class MiscNode;
-    class ProcessingInstruction;
     class Test;
 
     inline
@@ -22,7 +20,7 @@ namespace Xml
     /**
      * Defines an XML element
      */
-    class Element : public DocumentNode
+    class Element final : public DocumentNode
     {
     public:
 
@@ -134,32 +132,6 @@ namespace Xml
         appendText(std::string const & text);
 
         /**
-         * Appends a comment to the element
-         *
-         * @param comment Text of the comment to append
-         */
-        void
-        appendComment(std::string const & comment);
-
-        /**
-         * Appends a processing instruction (PI) to the element
-         *
-         * @param name Name of the PI to append
-         * @param ...keyValues Key and values parameters of the PI
-         */
-        template <typename ...KeyValues>
-        void
-        appendProcessingInstruction(std::string const & name, KeyValues && ...keyValues);
-
-        /**
-         * Appends a processing instrcution (PI) to the document
-         *
-         * @param pi The PI to append
-         */
-        void
-        appendProcessingInstruction(ProcessingInstruction * pi);
-
-        /**
          * Deletes a child node.
          *
          * @return True is the element has been removed, false otherwise.
@@ -244,7 +216,7 @@ namespace Xml
          * @param node Node to append
          */
         void
-        appendNode(Node * node);
+        appendNode(Node * node) override;
 
     protected:
         std::string mName;         ///< Name of the element
@@ -259,7 +231,5 @@ namespace Xml
         friend void Xml::appendNode(Element * element, Node * node);
     };
 }
-
-#include "XmlElement.inl"
 
 #endif //_H_XML_ELEMENT

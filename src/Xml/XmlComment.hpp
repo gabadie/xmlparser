@@ -4,21 +4,24 @@
 #include <iosfwd>
 #include <string>
 
+#include "XmlForward.hpp"
 #include "XmlDocumentNode.hpp"
 
 namespace Xml
 {
-    // Forward declarations
-    class Document;
-    class Element;
-    class Test;
 
     /**
      * Defines a comment
      */
-    class Comment : public DocumentNode
+    class Comment final : public DocumentNode
     {
     public:
+        /**
+         * Destructor
+         */
+        ~Comment() override;
+
+    protected:
         /**
          * Constructor
          *
@@ -27,29 +30,21 @@ namespace Xml
         Comment(std::string const & content = "");
 
         /**
-         * Destructor
-         */
-        virtual
-        ~Comment();
-
-    protected:
-        /**
          * Exports to a <stream> with a given <indent>
          *
          * @param <stream> is the stream to export to
          * @param <indent> is the the indentation prefix
          */
-        virtual
         void
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
 
     protected:
-        std::string mContent;
+        std::string const mContent;
 
-        friend class Xml::Document;
-        friend class Xml::Element;
+        friend class Xml::Object;
         friend class Xml::Test;
+        friend XML_BISON_MAIN();
 
     };
 }

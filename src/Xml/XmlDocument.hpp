@@ -12,12 +12,11 @@ namespace Xml
 {
     // Forward declarations
     class DocumentNode;
-    class ProcessingInstruction;
 
     /**
      * Defines a XML document
      */
-    class Document : public Object
+    class Document final : public Object
     {
     public:
 
@@ -33,8 +32,7 @@ namespace Xml
         /**
          * Destructor
          */
-        virtual
-        ~Document();
+        ~Document() override;
 
         /**
          * Gets the itself document (const version)
@@ -68,25 +66,6 @@ namespace Xml
         {
             return mRoot;
         }
-
-
-        /**
-         * Appends a comment to the document
-         *
-         * @param comment Text of the comment to append
-         */
-        void
-        appendComment(std::string const & comment);
-
-        /**
-         * Appends a processing instruction (PI) to the element
-         *
-         * @param name Name of the PI to append
-         * @param ...keyValues Key and values parameters of the PI
-         */
-        template <typename ...KeyValues>
-        void
-        appendProcessingInstruction(std::string const & name, KeyValues && ...keyValues);
 
         /**
          * Sets the root element of the document
@@ -122,18 +101,17 @@ namespace Xml
          * @param level  Level of the token
          * @param indent The indentation prefix
          */
-        virtual
         void
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
 
         /**
-         * Appends a DocumentNode to the Document
+         * Appends a node
          *
-         * @param documentNode Document node to append
+         * @param node Node to append
          */
         void
-        appendNode(DocumentNode * documentNode);
+        appendNode(Node * node) override;
 
     protected:
         Element * mRoot;     ///< Root of the XML document
@@ -142,7 +120,5 @@ namespace Xml
     };
 
 }
-
-#include "XmlDocument.inl"
 
 #endif //_H_XML_DOCUMENT
