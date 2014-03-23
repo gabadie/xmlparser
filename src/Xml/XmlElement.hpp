@@ -20,7 +20,7 @@ namespace Xml
     /**
      * Defines an XML element
      */
-    class Element : public DocumentNode
+    class Element final : public DocumentNode
     {
     public:
 
@@ -216,7 +216,7 @@ namespace Xml
          * @param node Node to append
          */
         void
-        appendNode(Node * node) override final;
+        appendNode(Node * node) override;
 
     protected:
         std::string mName;         ///< Name of the element

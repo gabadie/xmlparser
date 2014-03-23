@@ -14,7 +14,7 @@ namespace Xml
     /**
      * Defines a comment
      */
-    class Comment : public DocumentNode
+    class Comment final : public DocumentNode
     {
     public:
         /**
@@ -27,8 +27,7 @@ namespace Xml
         /**
          * Destructor
          */
-        virtual
-        ~Comment();
+        ~Comment() override;
 
     protected:
         /**
@@ -37,7 +36,6 @@ namespace Xml
          * @param <stream> is the stream to export to
          * @param <indent> is the the indentation prefix
          */
-        virtual
         void
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;

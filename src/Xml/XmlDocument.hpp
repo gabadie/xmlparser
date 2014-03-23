@@ -16,7 +16,7 @@ namespace Xml
     /**
      * Defines a XML document
      */
-    class Document : public Object
+    class Document final : public Object
     {
     public:
 
@@ -32,8 +32,7 @@ namespace Xml
         /**
          * Destructor
          */
-        virtual
-        ~Document();
+        ~Document() override;
 
         /**
          * Gets the itself document (const version)
@@ -102,7 +101,6 @@ namespace Xml
          * @param level  Level of the token
          * @param indent The indentation prefix
          */
-        virtual
         void
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
@@ -113,7 +111,7 @@ namespace Xml
          * @param node Node to append
          */
         void
-        appendNode(Node * node) override final;
+        appendNode(Node * node) override;
 
     protected:
         Element * mRoot;     ///< Root of the XML document

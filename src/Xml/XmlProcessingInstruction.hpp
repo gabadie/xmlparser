@@ -15,7 +15,7 @@ namespace Xml
     /**
      * Defines a processing instruction
      */
-    class ProcessingInstruction : public DocumentNode
+    class ProcessingInstruction final : public DocumentNode
     {
     public:
         // Type aliases
@@ -24,8 +24,7 @@ namespace Xml
         /**
          * Destructor
          */
-        virtual
-        ~ProcessingInstruction();
+        ~ProcessingInstruction() override;
 
         /**
          * Gets the value of an attribute by name
@@ -79,7 +78,6 @@ namespace Xml
          * @param <stream> is the stream to export to
          * @param <indent> is the the indentation prefix
          */
-        virtual
         void
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
