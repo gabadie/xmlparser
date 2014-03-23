@@ -30,6 +30,10 @@ namespace Xml
             static
             void
             TextNode();
+
+            static
+            void
+            XmlDocument();
     };
 
     void
@@ -254,6 +258,99 @@ namespace Xml
             test_assert(oss.str() == text2);
         }
     }
+
+    void
+    Test::XmlDocument()
+    {
+        Document doc;
+
+        // Add a processing instruction before the xml tree
+        doc.appendProcessingInstruction("xml", "version", "1.0", "encoding", "UTF-8");
+
+        test_assert(doc.children().size() == 1);
+
+        {
+            auto pi = dynamic_cast<ProcessingInstruction *>(doc.children()[0]);
+
+            test_assert(pi != nullptr);
+            test_assert(pi->attribute("version")  == "1.0");
+            test_assert(pi->attribute("encoding") == "UTF-8");
+        }
+
+        // Add a comment before the xml tree
+        std::string comment = "This is a comment at the beginning of the XML document.";
+        doc.appendComment(comment);
+
+        test_assert(doc.children().size() == 2);
+
+        {
+            auto xmlComment = dynamic_cast<Comment *>(doc.children()[1]);
+            test_assert(xmlComment != nullptr);
+            std::string formattedComment = "<!--" + comment + "-->";
+            std::ostringstream oss;
+            *xmlComment >> oss;
+            test_assert(oss.str() == formattedComment);
+        }
+
+        // Add a root to the xml document
+        {
+            std::string name = "root";
+            auto root = new Element(name);
+
+            doc.setRoot(root);
+
+            test_assert(doc.children().size() == 3);
+
+            {
+                auto xmlRoot = dynamic_cast<Element *>(doc.children()[2]);
+                test_assert(xmlRoot != nullptr);
+                test_assert(xmlRoot == root);
+            }
+
+            {
+                auto xmlRoot = doc.root();
+                test_assert(xmlRoot != nullptr);
+                test_assert(xmlRoot == root);
+            }
+        }
+
+        // Replace the xml document's root
+        {
+            std::string name = "new_root";
+            auto root = new Element(name);
+
+            doc.setRoot(root);
+
+            test_assert(doc.children().size() == 3);
+
+            {
+                auto xmlRoot = dynamic_cast<Element *>(doc.children()[2]);
+                test_assert(xmlRoot != nullptr);
+                test_assert(xmlRoot == root);
+            }
+
+            {
+                auto xmlRoot = doc.root();
+                test_assert(xmlRoot != nullptr);
+                test_assert(xmlRoot == root);
+            }
+        }
+
+        // Add a comment after the xml tree
+        std::string endComment = "This is a comment at the end of the XML document.";
+        doc.appendComment(endComment);
+
+        test_assert(doc.children().size() == 4);
+
+        {
+            auto xmlComment = dynamic_cast<Comment *>(doc.children()[3]);
+            test_assert(xmlComment != nullptr);
+            std::string formattedComment = "<!--" + endComment + "-->";
+            std::ostringstream oss;
+            *xmlComment >> oss;
+            test_assert(oss.str() == formattedComment);
+        }
+    }
 }
 
 
@@ -266,96 +363,7 @@ main()
     Test::PINode();
     Test::TextNode();
     Test::ElementNode();
-
-    return 0;
-
-    Document doc;
-
-    std::string name = "test";
-    std::string tag  = "root";
-
-    auto root = new Element(name);
-
-    test_assert(root->name() == name);
-    root->setName(tag);
-    test_assert(root->name() == tag);
-
-
-    doc.appendProcessingInstruction("xml", "version", "1.0", "encoding", "UTF-8");
-
-    test_assert(static_cast<ProcessingInstruction *>(doc.children()[0])->attribute("version")  == "1.0");
-    test_assert(static_cast<ProcessingInstruction *>(doc.children()[0])->attribute("encoding") == "UTF-8");
-
-    doc.appendComment("This is a comment at the beginning of the XML document.");
-
-    doc.setRoot(root);
-
-    doc.appendComment("This is a comment at the end of the XML document.");
-
-    test_assert(doc.root() == root);
-
-    test_assert(doc.children().size() == 4);
-
-    auto c1 = new Element("child1");
-    auto c2 = new Element("child2");
-
-    root->append(c1);
-    root->append(c2);
-
-    test_assert(c1->parent() == root);
-    test_assert(c1->parentElement() == root);
-    test_assert(c2->parent() == root);
-    test_assert(c2->parentElement() == root);
-
-    test_assert(root->elements().size() == 2);
-    test_assert(root->elements()[0] == c1);
-    test_assert(root->elements()[1] == c2);
-
-    std::string text = "This is a text in root.";
-
-    root->appendText(text);
-    test_assert(root->text() == text);
-
-    std::string attr1 = "attr1";
-    std::string attr2 = "attr2";
-    std::string value1 = "value1";
-    std::string value2 = "value2";
-
-    c1->setAttribute(attr1, value1);
-    c1->setAttribute(attr2, value2);
-
-    test_assert(c1->attribute(attr1) == value1);
-    test_assert(c1->attribute(attr2) == value2);
-
-    std::string text1 = "This is a text in child 1.";
-    std::string text2 = "This is a text in child 2.";
-    c1->appendText(text1);
-    c2->appendText(text2);
-
-    test_assert(c1->text() == text1);
-    test_assert(c2->text() == text2);
-
-    c1->appendComment("This is a comment.");
-    c1->appendComment("This is another comment.");
-
-    auto c3 = new Element("child1.1");
-    std::string text3 = "This is a text in child 1.1.";
-    c3->appendText(text3);
-    c3->appendComment("Yet another comment.");
-    c1->append(c3);
-
-    auto const children = root->children();
-    test_assert(std::find(std::begin(children), std::end(children), c1) != std::end(children));
-    root->remove(c1);
-    auto const children2 = root->children();
-    test_assert(std::find(std::begin(children2), std::end(children2), c1) == std::end(children2));
-
-    root->setContent("Foo");
-    test_assert(root->text() == "Foo");
-
-    root->clearContent();
-    test_assert(root->text() == "");
-    test_assert(root->elements().size() == 0);
+    Test::XmlDocument();
 
     return 0;
 }
