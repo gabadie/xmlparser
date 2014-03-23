@@ -1,6 +1,7 @@
-#include <mk_test.h>
 
 #include <sstream>
+
+#include "testhelper.hpp"
 
 /*
  * To test the Xml parser, we need to access some protected/private field
@@ -13,34 +14,6 @@
 #include "../src/Xml/XmlElement.hpp"
 #include "../src/Xml/XmlProcessingInstruction.hpp"
 #include "../src/Xml/XmlText.hpp"
-
-void
-testCommentNode()
-{
-    std::string comment = "This is a comment.";
-    std::string formattedComment = "<!--" + comment + "-->";
-    Xml::Comment xmlComment(comment);
-
-    test_assert(xmlComment.contentText() == "");
-
-    {
-        std::ostringstream oss;
-        xmlComment >> oss;
-        test_assert(oss.str() == formattedComment);
-    }
-
-    {
-        std::ostringstream oss;
-        oss << xmlComment;
-        test_assert(oss.str() == formattedComment);
-    }
-
-    {
-        std::ostringstream oss;
-        xmlComment.exportToStream(oss, 0, "");
-        test_assert(oss.str() == formattedComment);
-    }
-}
 
 void
 testElementNode()
@@ -348,7 +321,6 @@ testXmlDocument()
 int
 main()
 {
-    testCommentNode();
     testPINode();
     testTextNode();
     testElementNode();

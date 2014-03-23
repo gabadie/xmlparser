@@ -4,4 +4,5 @@
 
 testDocument.cpp
 testParsing.cpp
+testXmlComment.cpp
 testXPath.cpp
