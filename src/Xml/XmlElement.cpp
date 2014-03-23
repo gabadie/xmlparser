@@ -10,6 +10,7 @@
 
 #include "../Utils.hpp"
 #include "XmlComment.hpp"
+#include "XmlDocument.hpp"
 #include "XmlElement.hpp"
 #include "XmlProcessingInstruction.hpp"
 #include "XmlText.hpp"
@@ -235,7 +236,9 @@ namespace Xml
 
         if(xPathQuery == "/")
         {
-            auto root = this->root();
+            auto doc = this->document();
+            auto root = doc ? doc->root() : nullptr;
+
             if(root != nullptr)
             {
                 results.push_back(root);
@@ -277,7 +280,8 @@ namespace Xml
             // If '/' is the first char, we start the query from the root
             if(xPathQuery[0] == '/')
             {
-                auto root = this->root();
+                auto doc = this->document();
+                auto root = doc ? doc->root() : nullptr;
                 if(root != nullptr)
                 {
                     return root->select(xPathQuery.substr(1));
