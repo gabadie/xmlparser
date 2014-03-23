@@ -43,9 +43,10 @@ static char * enleveGuillemets(char *s) {
 
 // enlève les caractères en début et fin d'un commentaire
 static char * nettoieCommentaire(char *s) {
-   s += 5;
-   s[strlen(s)-3] = '\0';
-   return s;
+    s = supprimeEspaces(s);
+    s += 4;
+    s[strlen(s)-3] = '\0';
+    return s;
 }
 
 

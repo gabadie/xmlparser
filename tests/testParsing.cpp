@@ -155,13 +155,10 @@ test_comment()
         return;
     }
 
-    //std::cerr << content << std::endl;
-    //std::cerr << *doc << std::endl;
-
     {
         std::stringstream ss;
         ss << *doc->children()[0];
-        //test_assert(ss.str() == "<!-- this is a comment before the root -->");
+        test_assert(ss.str() == "<!-- this is a comment before the root -->");
     }
 
     {
