@@ -7,9 +7,11 @@
  */
 
 #include <algorithm>
+#include <sstream>
 
 #include "../AppDebug.hpp"
 #include "../Utils.hpp"
+#include "XmlConsts.hpp"
 #include "XmlDocument.hpp"
 #include "XmlElement.hpp"
 #include "XmlText.hpp"
@@ -123,22 +125,28 @@ namespace Xml
     std::string
     Element::text() const
     {
-        std::string content = "";
+        std::ostringstream contentStream;
 
         for(auto const & c : mChildren)
         {
-            #ifdef APP_DEBUG
-            assert(c != nullptr);
-            #endif
+            app_assert(c != nullptr);
 
-            std::string text = c->contentText();
-            if(text.size() > 0)
+            std::string const text = c->contentText();
+
+            if(text.size() == 0)
             {
-                content += text + "\n";
+                continue;
             }
+
+            if (contentStream.tellp() != 0)
+            {
+                contentStream << Xml::CAT_SEPARATOR;
+            }
+
+            contentStream << text;
         }
 
-        return content.size() > 0 ? content.substr(0, content.size() - 1) : content;
+        return contentStream.str();
     }
 
     void
