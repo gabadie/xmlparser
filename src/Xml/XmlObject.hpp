@@ -1,6 +1,9 @@
 #ifndef _H_XML_OBJECT
 #define _H_XML_OBJECT
 
+#include <iostream>
+
+
 namespace Xml
 {
     // Forward declaration
@@ -57,8 +60,31 @@ namespace Xml
         Element const *
         root() const = 0;
 
+        /**
+         * Implements standart stream operator
+         */
+        inline
+        std::ostream &
+        operator >> (std::ostream & stream) const
+        {
+            exportToStream(stream, 0, "  ");
+            return stream;
+        }
+
     protected:
         friend class Xml::Element;
+
+        /**
+         * Exports to a <stream> with a given <indent>
+         *
+         * @param stream The stream to export to
+         * @param level  Level of the token
+         * @param indent The indentation prefix
+         */
+        virtual
+        void
+        exportToStream(std::ostream & stream, std::size_t level,
+            std::string const & indent) const = 0;
 
         /**
          * Tells whether or not the node is an Element
@@ -75,6 +101,17 @@ namespace Xml
 
         friend class Xml::Test;
     };
+
+    /**
+     * Defines a sexier standart stream operator
+     */
+    inline
+    std::ostream &
+    operator << (std::ostream & stream, Object const & object)
+    {
+        return object >> stream;
+    }
+
 }
 
 #endif //_H_XML_OBJECT

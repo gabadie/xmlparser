@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "../AppDebug.hpp"
 #include "XmlComment.hpp"
 #include "XmlDocument.hpp"
 #include "XmlDocumentNode.hpp"
@@ -30,23 +31,6 @@ namespace Xml
         {
             mChildren.push_back(root);
         }
-    }
-
-    std::ostream &
-    Document::operator >> (std::ostream & stream) const
-    {
-        for(auto i = 0u; i < mChildren.size(); ++i)
-        {
-            auto const & c = mChildren[i];
-
-            #ifdef APP_DEBUG
-            assert(c != nullptr);
-            #endif
-
-            stream << (*c) << (i == mChildren.size() - 1 ? "" : "\n");
-        }
-
-        return stream;
     }
 
     Document::~Document()
@@ -130,6 +114,21 @@ namespace Xml
         file << *this;
 
         return true;
+    }
+
+    void
+    Document::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
+    {
+        for(auto i = 0u; i < mChildren.size(); ++i)
+        {
+            auto const & c = mChildren[i];
+
+            app_assert(c != nullptr);
+
+            c->exportToStream(stream, level, indent);
+
+            stream << (i == mChildren.size() - 1 ? "" : "\n");
+        }
     }
 
     void
