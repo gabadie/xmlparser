@@ -6,29 +6,13 @@
 
 #include "XmlParser.hpp"
 #include "XmlText.hpp"
+#include "XmlComment.hpp"
 #include "XmlParserError.hpp"
 #include "XmlParserInput.hpp"
 
 int yylex(void);
 
 void yyerror(void ** e, const char * msg);
-
-namespace Xml
-{
-    inline
-    void
-    appendNode(Element * element, Node * node)
-    {
-        element->appendNode(node);
-    }
-
-    inline
-    Text *
-    parserText(std::string const & content)
-    {
-        return new Xml::Text(content);
-    }
-}
 
 %}
 
@@ -42,7 +26,7 @@ namespace Xml
     char * s;
     std::string * str;
     std::map<std::string, std::string> * attrs;
-    std::list<Xml::Node *> * node_list;
+    std::list<Xml::Node *> * nodeList;
     Xml::Node * node;
     Xml::Element * e;
 }
@@ -51,27 +35,78 @@ namespace Xml
 /* ----------------------------------------------------------------------------- tokens */
 
 %token EGAL SLASH SUP SUPSPECIAL DOCTYPE COLON INFSPECIAL INF CDATABEGIN
-%token <s> VALEUR DONNEES COMMENT NOM CDATAEND
+%token <s> VALEUR DONNEES NOM CDATAEND COMMENT
 
 
 /* ----------------------------------------------------------------------------- types */
 %start document
-%type <e> element
-%type <e> stag
-%type <str> etag
 %type <attrs> atts
-%type <node_list> content
+%type <e> element
+%type <e> emptytag
+%type <e> stag
+%type <nodeList> content
+%type <nodeList> misc
 %type <node> item
+%type <node> miscitem
+%type <str> etag
 
 
 %%
 /* ----------------------------------------------------------------------------- types rules */
 
 document:
-    element
+    misc element misc
     {
         /* ---------------------------------------------------- root */
-        *e = new Xml::Document($1);
+        /*
+         * Allocates the XML document
+         */
+        Xml::Document * doc = new Xml::Document();
+
+        /*
+         * Appends document nodes
+         */
+        if ($1 != nullptr)
+        {
+            for (auto node : *$1)
+            {
+                doc->appendNode(node);
+            }
+
+            /*
+             * Delete document nodes' list allocated in rule 'misc'
+             */
+            delete $1;
+        }
+
+        /*
+         * Appends document's root
+         */
+        if ($2 != nullptr)
+        {
+            doc->appendNode($2);
+        }
+
+        /*
+         * Appends document nodes
+         */
+        if ($3 != nullptr)
+        {
+            for (auto node : *$3)
+            {
+                doc->appendNode(node);
+            }
+
+            /*
+             * Delete document nodes' list allocated in rule 'misc'
+             */
+            delete $3;
+        }
+
+        /*
+         * Returns the document to the yyparse()'s output parameter
+         */
+        *e = doc;
     };
 
 element:
@@ -96,7 +131,7 @@ element:
                 continue;
             }
 
-            Xml::appendNode($1, node);
+            $1->appendNode(node);
         }
 
         /*
@@ -121,11 +156,61 @@ element:
         delete $3;
     };
 
+miscitem:
+    COMMENT
+    {
+        /* ---------------------------------------------------- comment node */
+        $$ = (Xml::Node *) new Xml::Comment(std::string($1));
+
+        /*
+         * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
+        free($1);
+    };
+
+misc:
+    misc miscitem
+    {
+        /* ---------------------------------------------------- misc element */
+        /*
+         * we forward the misc list first.
+         */
+        $$ = $1;
+
+        /*
+         * miscitem parsing has successed.
+         */
+        if ($2 != nullptr)
+        {
+            /*
+             * If no misc list yet, then we allocate it
+             */
+            if ($$ == nullptr)
+            {
+                $$ = new std::list<Xml::Node *>();
+            }
+
+            /*
+             * We push the misc item at the tail of the misc list
+             */
+            $$->push_back($2);
+        }
+    } |
+    /* vide */
+    {
+        /* ---------------------------------------------------- empty misc */
+        /*
+         * if misc is empty, we return an empty list.
+         */
+        $$ = nullptr;
+    };
+
 emptytag:
     INF NOM atts SLASH SUP
     {
         /* ---------------------------------------------------- empty element tag */
-
+        /* TODO: empty tag */
+        $$ = nullptr;
     };
 
 stag:
@@ -138,6 +223,7 @@ stag:
     {
         /* ---------------------------------------------------- nonempty element start tag (with namespace) */
         /* TODO: namespaces */
+        $$ = nullptr;
     };
 
 etag:
@@ -155,6 +241,7 @@ etag:
     {
         /* ---------------------------------------------------- nonempty element end tag (with namespace) */
         /* TODO: namespaces */
+        $$ = nullptr;
     };
 
 atts:
@@ -184,13 +271,18 @@ item:
     DONNEES
     {
         /* ---------------------------------------------------- text in an element */
-        $$ = (Xml::Node *) Xml::parserText(std::string($1));
+        $$ = (Xml::Node *) new Xml::Text(std::string($1));
 
         /*
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
          */
         free($1);
-    };
+    } |
+    miscitem
+    {
+        /* ---------------------------------------------------- misc element */
+        $$ = $1;
+    }
 
 content:
     content item
@@ -206,6 +298,7 @@ content:
     };
 
 
+
 %%
 /* ----------------------------------------------------------------------------- C/C++ suffix */
 
@@ -214,6 +307,13 @@ yyerror(void ** e, const char * msg)
 {
     Xml::parserSyntaxError(msg);
 }
+
+/*
+ * Flex file number
+ */
+extern
+int
+yylineno;
 
 extern
 int
@@ -242,6 +342,8 @@ Xml::parse(std::istream & xmlContent, Xml::Log * log)
         Xml::flexSetInput(xmlContent);
 
         yy_flex_debug = 0;
+        yylineno = 1;
+
         yyparse((void **) &e);
         yyrestart(stdin);
 
