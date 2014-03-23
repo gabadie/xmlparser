@@ -15,39 +15,43 @@
 
 
 void
-testXmlElementBasics()
+testXmlElementTagname()
 {
     std::string name = "test";
 
     Xml::Element root(name);
 
     test_assert(root.name() == name);
+    test_assert(root.parent() == nullptr);
+    test_assert(root.document() == nullptr);
 
-    { // change tag name
-        std::string tag  = "root";
+    std::string tag  = "root";
 
-        root.setName(tag);
+    root.setName(tag);
 
-        test_assert(root.name() == tag);
-    }
+    test_assert(root.name() == tag);
+}
 
-    { // attribute
-        std::string attr1 = "attr1";
-        std::string value1 = "value1";
-        std::string attr2 = "attr2";
-        std::string value2 = "value2";
+void
+testXmlElementAttributes()
+{
+    Xml::Element root("root");
 
-        test_assert(attr1 != attr2);
-        test_assert(value1 != value2);
+    std::string attr1 = "attr1";
+    std::string value1 = "value1";
+    std::string attr2 = "attr2";
+    std::string value2 = "value2";
 
-        test_assert(root.attribute(attr1) == "");
-        root.setAttribute(attr1, value1);
-        test_assert(root.attribute(attr1) == value1);
+    test_assert(attr1 != attr2);
+    test_assert(value1 != value2);
 
-        test_assert(root.attribute(attr2) == "");
-        root.setAttribute(attr2, value2);
-        test_assert(root.attribute(attr2) == value2);
-    }
+    test_assert(root.attribute(attr1) == "");
+    root.setAttribute(attr1, value1);
+    test_assert(root.attribute(attr1) == value1);
+
+    test_assert(root.attribute(attr2) == "");
+    root.setAttribute(attr2, value2);
+    test_assert(root.attribute(attr2) == value2);
 }
 
 void
@@ -149,6 +153,7 @@ testXmlElementDeletion()
     // Remove node
     {
         root.remove(xmlText);
+
         test_assert(root.elements().size() == 2);
         test_assert(root.children().size() == 4);
         test_assert(root.children()[0] == xmlElt1);
@@ -179,7 +184,7 @@ testXmlElementContent()
     root.setContent(content);
 
     test_assert(root.elements().size() == 0);
-    test_assert(root.children().size() == 1);
+    test_assert(root.mChildren.size() == 1);
     test_assert(dynamic_cast<Xml::Text *>(root.children()[0]) != nullptr);
 }
 
@@ -187,7 +192,8 @@ testXmlElementContent()
 int
 main()
 {
-    testXmlElementBasics();
+    testXmlElementTagname();
+    testXmlElementAttributes();
     testXmlElementChildren();
     testXmlElementContent();
 
