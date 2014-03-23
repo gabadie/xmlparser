@@ -24,7 +24,11 @@ namespace Xml
     {
         if(root != nullptr)
         {
+            app_assert(root->mParent == nullptr);
+
             mChildren.push_back(root);
+
+            root->mParent = this;
         }
     }
 

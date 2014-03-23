@@ -70,11 +70,6 @@ testXmlElementChildren()
 {
     Xml::Element root("root");
 
-    { // tests root's parent and document
-        test_assert(root.parent() == nullptr);
-        test_assert(root.document() == nullptr);
-    }
-
     { // empty children
         test_assert(root.elements().size() == 0);
         test_assert(root.mChildren.size() == 0);
@@ -94,11 +89,6 @@ testXmlElementChildren()
         test_assert(root.hasChild(c2));
     }
 
-    { // test parents
-        test_assert(c1->parent() == &root);
-        test_assert(c2->parent() == &root);
-    }
-
     { // recursive children checking
         auto c3 = new Xml::Element("child3");
 
@@ -116,70 +106,6 @@ testXmlElementChildren()
 
         test_assert(root.children()[0] == c1);
         test_assert(root.children()[1] == c2);
-    }
-}
-
-void
-testXmlElementDeletion()
-{
-    Xml::Element root("root");
-
-    auto xmlElt1 = new Xml::Element("elt1");
-    root.append(xmlElt1);
-
-    std::string text = "This is a text.";
-    root.appendText(text);
-    Xml::Text * xmlText = dynamic_cast<Xml::Text *>(root.children()[1]);
-    test_assert(xmlText != nullptr);
-
-    auto xmlElt2 = new Xml::Element("elt2");
-    root.append(xmlElt2);
-
-    std::string comment = "This is a comment.";
-    root.appendComment(comment);
-    Xml::Comment * xmlComment = dynamic_cast<Xml::Comment *>(root.children()[3]);
-    test_assert(xmlComment != nullptr);
-
-    root.appendProcessingInstruction("xml", "version", "1.0", "encoding", "UTF-8");
-    Xml::ProcessingInstruction * xmlPI = dynamic_cast<Xml::ProcessingInstruction *>(root.children()[4]);
-    test_assert(xmlPI != nullptr);
-
-    test_assert(xmlElt1->isElement());
-    test_assert(xmlElt2->isElement());
-
-    test_assert(xmlElt1->parent() == &root);
-    test_assert(xmlText->parent() == &root);
-    test_assert(xmlElt2->parent() == &root);
-    test_assert(xmlComment->parent() == &root);
-    test_assert(xmlPI->parent() == &root);
-
-    test_assert(root.elements().size() == 2);
-    test_assert(root.elements()[0] == xmlElt1);
-    test_assert(root.elements()[1] == xmlElt2);
-
-    test_assert(root.children().size() == 5);
-    test_assert(root.children()[0] == xmlElt1);
-    test_assert(root.children()[1] == xmlText);
-    test_assert(root.children()[2] == xmlElt2);
-    test_assert(root.children()[3] == xmlComment);
-    test_assert(root.children()[4] == xmlPI);
-
-    // Remove node
-    {
-        root.remove(xmlText);
-
-        test_assert(root.elements().size() == 2);
-        test_assert(root.children().size() == 4);
-        test_assert(root.children()[0] == xmlElt1);
-        test_assert(root.children()[1] == xmlElt2);
-        test_assert(root.children()[2] == xmlComment);
-        test_assert(root.children()[3] == xmlPI);
-    }
-
-    // Clear content
-    {
-        root.clearContent();
-        test_assert(root.children().size() == 0);
     }
 }
 
