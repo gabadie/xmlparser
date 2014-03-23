@@ -217,7 +217,6 @@ namespace Xml
         AttributesMap mAttributes; ///< Attributes of the element
         NodeList mChildren;        ///< Children elements
 
-        friend class Xml::Test;
         friend XML_BISON_MAIN();
     };
 }

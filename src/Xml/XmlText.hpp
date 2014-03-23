@@ -54,7 +54,6 @@ namespace Xml
         std::string const mText; ///< Text content
 
         friend class Xml::Element;
-        friend class Xml::Test;
         friend XML_BISON_MAIN();
     };
 }

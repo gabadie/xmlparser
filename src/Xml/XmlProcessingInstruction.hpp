@@ -115,7 +115,6 @@ namespace Xml
         AttributesMap mAttributes; ///< Attributes of the element
 
         friend class Xml::Object;
-        friend class Test;
         friend XML_BISON_MAIN();
     };
 }

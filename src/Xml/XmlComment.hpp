@@ -43,7 +43,6 @@ namespace Xml
         std::string const mContent;
 
         friend class Xml::Object;
-        friend class Xml::Test;
         friend XML_BISON_MAIN();
 
     };

@@ -17,11 +17,6 @@ namespace Xml
     class ProcessingInstruction;
     class Text;
 
-    /*
-     * Namespace's test class
-     */
-    class Test;
-
 }
 
 /*

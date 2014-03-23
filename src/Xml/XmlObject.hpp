@@ -126,9 +126,6 @@ namespace Xml
         virtual
         void
         appendNode(Node * node);
-
-    protected:
-        friend class Xml::Test;
     };
 
     /**
