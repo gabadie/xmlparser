@@ -52,7 +52,7 @@ namespace Xml
          *
          * @return The children nodes of the element
          */
-        NodeList const  &
+        NodeList const &
         children() const;
 
         /**
@@ -73,14 +73,6 @@ namespace Xml
          */
         ElementList
         elements(std::string const & tag) const;
-
-        /**
-         * Get the parent element of the element
-         *
-         * @return The parent element if found, nullptr otherwise.
-         */
-        Element const *
-        parentElement() const;
 
         /**
          * Get the text content of the element
@@ -179,6 +171,16 @@ namespace Xml
          */
         std::list<Element const *>
         select(std::string const & xPathQuery) const;
+
+        /**
+         * Gets the value of the result of the XPath query
+         *
+         * @param xPathQuery XPath query
+         *
+         * @return The value of the result of the XPath query
+         */
+        std::string
+        valueOf(std::string const & xPathQuery) const;
 
     protected:
         /**

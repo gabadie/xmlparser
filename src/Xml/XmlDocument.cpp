@@ -24,7 +24,11 @@ namespace Xml
     {
         if(root != nullptr)
         {
+            app_assert(root->mParent == nullptr);
+
             mChildren.push_back(root);
+
+            root->mParent = this;
         }
     }
 
@@ -141,11 +145,16 @@ namespace Xml
         app_assert(mRoot == nullptr || !mRoot->hasChild(documentNode));
 
         // A document has only one Xml::Element
-        if(documentNode->isElement() && mRoot != nullptr)
+        if (documentNode->isElement())
         {
-            auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
-            mChildren.erase(it);
-            delete mRoot;
+            if (mRoot != nullptr)
+            {
+                auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
+                mChildren.erase(it);
+                delete mRoot;
+            }
+
+            mRoot = (Element *) documentNode;
         }
 
         mChildren.push_back((DocumentNode *) documentNode);

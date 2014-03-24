@@ -1,6 +1,7 @@
 #ifndef _H_XSD_TYPE
 #define _H_XSD_TYPE
 
+#include "../Xml/XmlElement.hpp"
 #include <string>
 
 namespace Xsd
@@ -24,12 +25,16 @@ namespace Xsd
          * Create the type regex
          */
         void
-        createRegex();
+        ParseTypeFromComplexType(XmlElement xmlElement);
+
+        /**
+         * Create the regex for an element
+         */
+        void
+        getRegexFromElement(XmlElement xmlElement);
 
     protected:
         std::string mRegex;
 
     };
-}
-
-#endif //_H_XSD_TYPE
+ }

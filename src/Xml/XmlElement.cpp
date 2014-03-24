@@ -24,7 +24,7 @@ namespace Xml
         mAttributes(),
         mChildren()
     {
-
+        app_assert(name != "");
     }
 
     Element::~Element()
@@ -47,6 +47,7 @@ namespace Xml
         {
             if(c == node)
             {
+                app_assert(node->mParent == this);
                 return true;
             }
 
@@ -98,24 +99,6 @@ namespace Xml
             }
         }
         return elements;
-    }
-
-    Element const *
-    Element::parentElement() const
-    {
-        auto parent = mParent;
-
-        while(parent != nullptr)
-        {
-            if(parent->isElement())
-            {
-                return static_cast<Element const *>(parent);
-            }
-
-            parent = parent->parent();
-        }
-
-        return nullptr;
     }
 
     std::string
@@ -201,6 +184,8 @@ namespace Xml
     void
     Element::setName(std::string const & name)
     {
+        app_assert(name != "");
+
         mName = name;
     }
 
@@ -217,6 +202,8 @@ namespace Xml
     void
     Element::setAttribute(std::string const & name, std::string const & value)
     {
+        app_assert(name != "");
+
         mAttributes[name] = value;
     }
 
@@ -224,6 +211,11 @@ namespace Xml
     Element::select(std::string const & xPathQuery) const
     {
         std::list<Element const *> results;
+
+        if(xPathQuery == "")
+        {
+            return results;
+        }
 
         if(xPathQuery == "/")
         {
@@ -310,6 +302,40 @@ namespace Xml
         }
 
         return results;
+    }
+
+    std::string
+    Element::valueOf(std::string const & xPathQuery) const
+    {
+        if(xPathQuery == "")
+        {
+            return "";
+        }
+
+        // If we request an attribute of the current element
+        if(xPathQuery[0] == '@')
+        {
+            return this->attribute(xPathQuery.substr(1));
+        }
+
+        // If we request the attribute of another element
+        auto atPos = xPathQuery.find("/@");
+        if(atPos != std::string::npos)
+        {
+            auto results = this->select(xPathQuery.substr(0, atPos));
+            // Keep only the first result
+            return results.size() > 0 ?
+                (*std::begin(results))->attribute(xPathQuery.substr(atPos + 2)) : "";
+        }
+        // Else if we request the content of an element
+        else
+        {
+            auto results = this->select(xPathQuery);
+            // Keep only the first result
+            return results.size() > 0 ? (*std::begin(results))->text() : "";
+        }
+
+        return "";
     }
 
     void

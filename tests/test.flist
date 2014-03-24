@@ -5,3 +5,11 @@
 testDocument.cpp
 testParsing.cpp
 testXsdValidation.cpp
+testXsl.cpp
+testXmlComment.cpp
+testXmlElement.cpp
+testXmlElementParsing.cpp
+testXmlNode.cpp
+testXmlProcessingInstruction.cpp
+testXmlText.cpp
+testXPath.cpp

@@ -12,18 +12,21 @@ namespace Xml
     class DocumentNode : public Node
     {
     public:
-        friend class Document;
-
-        /**
-         * Constructor
-         */
-        DocumentNode();
-
         /**
          * Destructor
          */
         virtual
         ~DocumentNode();
+
+    protected:
+        /**
+         * Constructor
+         */
+        DocumentNode();
+
+        friend class Xml::Comment;
+        friend class Xml::Element;
+        friend class Xml::ProcessingInstruction;
     };
 }
 
