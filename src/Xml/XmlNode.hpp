@@ -1,36 +1,20 @@
 #ifndef _H_XML_NODE
 #define _H_XML_NODE
 
-#include <iostream>
 #include <list>
 #include <string>
 
+#include "XmlForward.hpp"
+#include "XmlObject.hpp"
+
 namespace Xml
 {
-
     /**
      * Defines the abstract class of a node for interface purpose
      */
-    class Node
+    class Node : public Object
     {
     public:
-
-        /**
-         * Constructor
-         */
-        Node();
-
-        /**
-         * Implements standart stream operator
-         */
-        inline
-        std::ostream &
-        operator >> (std::ostream & stream) const
-        {
-            exportToStream(stream, 0, "  ");
-            return stream;
-        }
-
         /**
          * Destructor
          */
@@ -38,33 +22,31 @@ namespace Xml
         ~Node();
 
         /**
-         * Gets the parent node (non-const version)
+         * Gets the node's document
          *
-         * @return The parent node
+         * @return The document
          */
-        Node *
-        parent();
+        Document const *
+        document() const override final;
 
         /**
-         * Gets the parent node (const version)
+         * Gets the parent xml object (const version)
          *
-         * @return The parent node
+         * @return The parent xml object
          */
-        Node const *
-        parent() const;
+        Object const *
+        parent() const override final;
+
 
     protected:
+        // Pointer to the parent object
+        Object * mParent;
+
+
         /**
-         * Exports to a <stream> with a given <indent>
-         *
-         * @param stream The stream to export to
-         * @param level  Level of the token
-         * @param indent The indentation prefix
+         * Constructor
          */
-        virtual
-        void
-        exportToStream(std::ostream & stream, std::size_t level,
-            std::string const & indent) const = 0;
+        Node();
 
         /**
          * Gets the content text if is a Xml::Text
@@ -73,33 +55,13 @@ namespace Xml
         std::string const &
         contentText() const;
 
-    protected:
-        friend class Element;
 
-        /**
-         * Tells whether or not the node is an Element
-         *
-         * @return True if the node is an Element, false otherwise.
-         */
-        virtual
-        bool
-        isElement() const;
+        friend class Xml::Document;
+        friend class Xml::DocumentNode;
+        friend class Xml::Element;
+        friend class Xml::Text;
 
-    protected:
-        // Pointer to the parent node
-        Node * mParent;
     };
-
-    /**
-     * Defines a sexier standart stream operator
-     */
-    inline
-    std::ostream &
-    operator << (std::ostream & stream, Node const & node)
-    {
-        node >> stream;
-        return stream;
-    }
 
 }
 

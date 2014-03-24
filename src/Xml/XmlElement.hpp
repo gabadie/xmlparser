@@ -5,23 +5,16 @@
 #include <string>
 #include <vector>
 
+#include "XmlForward.hpp"
 #include "XmlDocumentNode.hpp"
 
 namespace Xml
 {
-    //Forward declarations
-    class Element;
-    class MiscNode;
-    class ProcessingInstruction;
-
-    inline
-    void
-    appendNode(Element * element, Node * node);
 
     /**
      * Defines an XML element
      */
-    class Element : public DocumentNode
+    class Element final : public DocumentNode
     {
     public:
 
@@ -44,11 +37,22 @@ namespace Xml
         ~Element();
 
         /**
+         * Tells whether or not the element has the given node in
+         * its children recursively.
+         *
+         * @param node Node to find
+         *
+         * @return True if found, false otherwise.
+         */
+        bool
+        hasChild(Node * node) const;
+
+        /**
          * Gets the children nodes of the element.
          *
          * @return The children nodes of the element
          */
-        NodeList const  &
+        NodeList const &
         children() const;
 
         /**
@@ -69,14 +73,6 @@ namespace Xml
          */
         ElementList
         elements(std::string const & tag) const;
-
-        /**
-         * Get the parent element of the element
-         *
-         * @return The parent element if found, nullptr otherwise.
-         */
-        Element const *
-        parentElement() const;
 
         /**
          * Get the text content of the element
@@ -120,32 +116,6 @@ namespace Xml
          */
         void
         appendText(std::string const & text);
-
-        /**
-         * Appends a comment to the element
-         *
-         * @param comment Text of the comment to append
-         */
-        void
-        appendComment(std::string const & comment);
-
-        /**
-         * Appends a processing instruction (PI) to the element
-         *
-         * @param pi Name of the PI to append
-         * @param ...keyValues Key and values parameters of the PI
-         */
-        template <typename ...KeyValues>
-        void
-        appendProcessingInstruction(std::string const & pi, KeyValues && ...keyValues);
-
-        /**
-         * Appends a processing instrcution (PI) to the document
-         *
-         * @param pi The PI to append
-         */
-        void
-        appendProcessingInstruction(ProcessingInstruction * pi);
 
         /**
          * Deletes a child node.
@@ -192,6 +162,26 @@ namespace Xml
         void
         setAttribute(std::string const & name, std::string const & value);
 
+        /**
+         * Returns the element of the XPath query
+         *
+         * @param xPathQuery XPath query
+         *
+         * @return The list of Element result of the XPath query
+         */
+        std::list<Element const *>
+        select(std::string const & xPathQuery) const;
+
+        /**
+         * Gets the value of the result of the XPath query
+         *
+         * @param xPathQuery XPath query
+         *
+         * @return The value of the result of the XPath query
+         */
+        std::string
+        valueOf(std::string const & xPathQuery) const;
+
     protected:
         /**
          * Exports to a <stream> with a given <indent>
@@ -222,17 +212,14 @@ namespace Xml
          * @param node Node to append
          */
         void
-        appendNode(Node * node);
+        appendNode(Node * node) override;
 
     protected:
         std::string mName;         ///< Name of the element
         AttributesMap mAttributes; ///< Attributes of the element
         NodeList mChildren;        ///< Children elements
 
-        /**
-         * Friendship to let the Xml parser access to the appendNove method.
-         */
-        friend void Xml::appendNode(Element * element, Node * node);
+        friend XML_BISON_MAIN();
     };
 }
 

@@ -7,16 +7,14 @@
  */
 
 #include <algorithm>
+#include <sstream>
 
+#include "../AppDebug.hpp"
 #include "../Utils.hpp"
-#include "XmlComment.hpp"
+#include "XmlConsts.hpp"
+#include "XmlDocument.hpp"
 #include "XmlElement.hpp"
-#include "XmlProcessingInstruction.hpp"
 #include "XmlText.hpp"
-
-#ifdef APP_DEBUG
-#include <cassert>
-#endif
 
 namespace Xml
 {
@@ -26,7 +24,7 @@ namespace Xml
         mAttributes(),
         mChildren()
     {
-
+        app_assert(name != "");
     }
 
     Element::~Element()
@@ -39,6 +37,30 @@ namespace Xml
         {
             static_cast<Element *>(mParent)->remove(this);
         }
+    }
+
+
+    bool
+    Element::hasChild(Node * node) const
+    {
+        for(auto const & c : mChildren)
+        {
+            if(c == node)
+            {
+                app_assert(node->mParent == this);
+                return true;
+            }
+
+            if(c->isElement())
+            {
+                if(static_cast<Element *>(c)->hasChild(node))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     Element::NodeList const  &
@@ -79,43 +101,31 @@ namespace Xml
         return elements;
     }
 
-    Element const *
-    Element::parentElement() const
-    {
-        Node * parent = mParent;
-
-        while(parent != nullptr)
-        {
-            if(parent->isElement())
-            {
-                return static_cast<Element const *>(parent);
-            }
-
-            parent = parent->parent();
-        }
-
-        return nullptr;
-    }
-
     std::string
     Element::text() const
     {
-        std::string content = "";
+        std::ostringstream contentStream;
 
         for(auto const & c : mChildren)
         {
-            #ifdef APP_DEBUG
-            assert(c != nullptr);
-            #endif
+            app_assert(c != nullptr);
 
-            std::string text = c->contentText();
-            if(text.size() > 0)
+            std::string const text = c->contentText();
+
+            if(text.size() == 0)
             {
-                content += text + "\n";
+                continue;
             }
+
+            if (contentStream.tellp() != 0)
+            {
+                contentStream << Xml::CAT_SEPARATOR;
+            }
+
+            contentStream << text;
         }
 
-        return content.size() > 0 ? content.substr(0, content.size() - 1) : content;
+        return contentStream.str();
     }
 
     void
@@ -128,10 +138,12 @@ namespace Xml
     void
     Element::clearContent()
     {
-        for(auto & c : mChildren)
+        for (auto node : mChildren)
         {
-            this->remove(c);
+            node->mParent = nullptr;
+            delete node;
         }
+
         mChildren.clear();
     }
 
@@ -145,18 +157,6 @@ namespace Xml
     Element::appendText(std::string const & text)
     {
         this->appendNode(new Text(text));
-    }
-
-    void
-    Element::appendComment(std::string const & comment)
-    {
-        this->appendNode(new Comment(comment));
-    }
-
-    void
-    Element::appendProcessingInstruction(ProcessingInstruction * pi)
-    {
-        this->appendNode(pi);
     }
 
     bool
@@ -184,6 +184,8 @@ namespace Xml
     void
     Element::setName(std::string const & name)
     {
+        app_assert(name != "");
+
         mName = name;
     }
 
@@ -200,7 +202,140 @@ namespace Xml
     void
     Element::setAttribute(std::string const & name, std::string const & value)
     {
+        app_assert(name != "");
+
         mAttributes[name] = value;
+    }
+
+    std::list<Element const *>
+    Element::select(std::string const & xPathQuery) const
+    {
+        std::list<Element const *> results;
+
+        if(xPathQuery == "")
+        {
+            return results;
+        }
+
+        if(xPathQuery == "/")
+        {
+            auto doc = this->document();
+            auto root = doc ? doc->root() : nullptr;
+
+            if(root != nullptr)
+            {
+                results.push_back(root);
+            }
+        }
+        else if(xPathQuery == ".")
+        {
+            results.push_back(this);
+        }
+        else if(xPathQuery == "..")
+        {
+            if(mParent != nullptr && mParent->isElement())
+            {
+                results.push_back(static_cast<Element *>(mParent));
+            }
+        }
+        // If the XPath query has no '/'
+        else if(xPathQuery.find("/") == std::string::npos)
+        {
+            // We retrieve the element children that match the query
+            for(auto const & c : mChildren)
+            {
+                app_assert(c != nullptr);
+
+                if(!c->isElement())
+                {
+                    continue;
+                }
+
+                auto elt = static_cast<Element *>(c);
+                if(elt->name() == xPathQuery)
+                {
+                    results.push_back(elt);
+                }
+            }
+        }
+        // Else if the XPath query has at least one '/'
+        else
+        {
+            // If '/' is the first char, we start the query from the root
+            if(xPathQuery[0] == '/')
+            {
+                auto doc = this->document();
+                auto root = doc ? doc->root() : nullptr;
+                if(root != nullptr)
+                {
+                    return root->select(xPathQuery.substr(1));
+                }
+            }
+            // Otherwise we get the first token...
+            else
+            {
+                auto slashPos = xPathQuery.find("/");
+
+                app_assert(slashPos != std::string::npos);
+                app_assert(slashPos != xPathQuery.size() - 1);
+
+                auto token = xPathQuery.substr(0, slashPos);
+
+                // And apply the rest of the query recursively to the Element children
+                for(auto const & c : mChildren)
+                {
+                    app_assert(c != nullptr);
+
+                    if(!c->isElement())
+                    {
+                        continue;
+                    }
+
+                    auto elt = static_cast<Element *>(c);
+                    if(elt->name() == token)
+                    {
+                        auto res = elt->select(xPathQuery.substr(slashPos + 1));
+                        results.splice(std::end(results), res); // Concatenate the results
+                    }
+                }
+            }
+        }
+
+        return results;
+    }
+
+    std::string
+    Element::valueOf(std::string const & xPathQuery) const
+    {
+        if(xPathQuery == "")
+        {
+            return "";
+        }
+
+        // If we request an attribute of the current element
+        if(xPathQuery[0] == '@')
+        {
+            return this->attribute(xPathQuery.substr(1));
+        }
+
+        // If we request the attribute of another element
+        auto atPos = xPathQuery.find("/@");
+        if(atPos != std::string::npos)
+        {
+            auto results = this->select(xPathQuery.substr(0, atPos));
+            // Keep only the first result
+            return results.size() > 0 ?
+                (*std::begin(results))->attribute(xPathQuery.substr(atPos + 2)) : "";
+        }
+        // Else if we request the content of an element
+        else
+        {
+            auto results = this->select(xPathQuery);
+            // Keep only the first result
+            return results.size() > 0 ? (*std::begin(results))->text() : "";
+        }
+
+        return "";
     }
 
     void
@@ -217,9 +352,7 @@ namespace Xml
 
         for(auto const & c : mChildren)
         {
-            #ifdef APP_DEBUG
-            assert(c != nullptr);
-            #endif
+            app_assert(c != nullptr);
 
             c->exportToStream(stream, level + 1, indent);
             stream << "\n";
@@ -237,14 +370,12 @@ namespace Xml
     void
     Element::appendNode(Node * node)
     {
-        #ifdef APP_DEBUG
-        assert(node != nullptr);
-        assert(node != this);
-        assert(
+        app_assert(node != nullptr);
+        app_assert(node != this);
+        app_assert(
             std::find(std::begin(mChildren), std::end(mChildren), node)
             == std::end(mChildren)
         );
-        #endif
 
         mChildren.push_back(node);
         node->mParent = this;

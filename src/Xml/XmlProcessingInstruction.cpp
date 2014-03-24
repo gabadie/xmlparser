@@ -32,7 +32,10 @@ namespace Xml
     void
     ProcessingInstruction::setAttribute(std::string const & name, std::string const & value)
     {
-        mAttributes[name] = value;
+        if(name.size() > 0)
+        {
+            mAttributes[name] = value;
+        }
     }
 
     void

@@ -5,18 +5,17 @@
 #include <string>
 #include <vector>
 
+#include "XmlForward.hpp"
+#include "XmlObject.hpp"
 #include "XmlElement.hpp"
 
 namespace Xml
 {
-    // Forward declarations
-    class DocumentNode;
-    class ProcessingInstruction;
 
     /**
      * Defines a XML document
      */
-    class Document
+    class Document final : public Object
     {
     public:
 
@@ -30,50 +29,42 @@ namespace Xml
         Document(Element * root = nullptr);
 
         /**
-         * Implements standard stream operator
-         */
-        std::ostream &
-        operator >> (std::ostream & stream) const;
-
-        /**
          * Destructor
          */
-        virtual
-        ~Document();
+        ~Document() override;
 
         /**
-         * Gets the root element of the document (non-const version)
+         * Gets the itself document (const version)
          *
-         * @return The root element of the document
+         * @return The document
+         */
+        Document const *
+        document() const override final;
+
+        /**
+         * Gets the parent xml object (const version)
+         *
+         * @return nullptr
+         */
+        Object const *
+        parent() const override final;
+
+        /**
+         * Gets the document's root
+         *
+         * @return The document root
          */
         Element *
-        root();
+        root()
+        {
+            return mRoot;
+        }
 
-        /**
-         * Gets the root element of the document (const version)
-         *
-         * @return The root element of the document
-         */
         Element const *
-        root() const;
-
-        /**
-         * Appends a comment to the document
-         *
-         * @param comment Text of the comment to append
-         */
-        void
-        appendComment(std::string const & comment);
-
-        /**
-         * Appends a processing instruction (PI) to the element
-         *
-         * @param name Name of the PI to append
-         * @param ...keyValues Key and values parameters of the PI
-         */
-        template <typename ...KeyValues>
-        void
-        appendProcessingInstruction(std::string const & name, KeyValues && ...keyValues);
+        root() const
+        {
+            return mRoot;
+        }
 
         /**
          * Sets the root element of the document
@@ -103,30 +94,32 @@ namespace Xml
 
     protected:
         /**
-         * Appends a DocumentNode to the Document
+         * Exports to a <stream> with a given <indent>
          *
-         * @param documentNode Document node to append
+         * @param stream The stream to export to
+         * @param level  Level of the token
+         * @param indent The indentation prefix
          */
         void
-        appendNode(DocumentNode * documentNode);
+        exportToStream(std::ostream & stream, std::size_t level,
+            std::string const & indent) const override;
+
+        /**
+         * Appends a node
+         *
+         * @param node Node to append
+         */
+        void
+        appendNode(Node * node) override;
 
     protected:
         Element * mRoot;     ///< Root of the XML document
         NodesList mChildren; ///< Children nodes
         //DocType mDocType;  ///< DocType of the XML document //TODO
+
+        friend XML_BISON_MAIN();
     };
 
-    /**
-     * Defines a sexier standard stream operator
-     */
-    inline
-    std::ostream &
-    operator << (std::ostream & stream, Document const & doc)
-    {
-        return doc >> stream;
-    }
 }
-
-#include "XmlDocument.inl"
 
 #endif //_H_XML_DOCUMENT

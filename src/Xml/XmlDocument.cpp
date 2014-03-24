@@ -7,18 +7,14 @@
  */
 
 #include <algorithm>
-#include <iostream>
 #include <fstream>
+#include <iosfwd>
+#include <iostream>
 
-#include "XmlComment.hpp"
+#include "../AppDebug.hpp"
 #include "XmlDocument.hpp"
 #include "XmlDocumentNode.hpp"
 #include "XmlElement.hpp"
-#include "XmlProcessingInstruction.hpp"
-
-#ifdef APP_DEBUG
-#include <cassert>
-#endif
 
 namespace Xml
 {
@@ -28,51 +24,35 @@ namespace Xml
     {
         if(root != nullptr)
         {
+            app_assert(root->mParent == nullptr);
+
             mChildren.push_back(root);
+
+            root->mParent = this;
         }
-    }
-
-    std::ostream &
-    Document::operator >> (std::ostream & stream) const
-    {
-        for(auto i = 0u; i < mChildren.size(); ++i)
-        {
-            auto const & c = mChildren[i];
-
-            #ifdef APP_DEBUG
-            assert(c != nullptr);
-            #endif
-
-            stream << (*c) << (i == mChildren.size() - 1 ? "" : "\n");
-        }
-
-        return stream;
     }
 
     Document::~Document()
     {
-        for(auto & c : mChildren)
+        for (auto node : mChildren)
         {
-            delete c;
+            node->mParent = nullptr;
+            delete node;
         }
+
+        mChildren.clear();
     }
 
-    Element *
-    Document::root()
+    Document const *
+    Document::document() const
     {
-        return mRoot;
+        return this;
     }
 
-    Element const *
-    Document::root() const
+    Object const *
+    Document::parent() const
     {
-        return mRoot;
-    }
-
-    void
-    Document::appendComment(std::string const & comment)
-    {
-        this->appendNode(new Comment(comment));
+        return nullptr;
     }
 
     Document::NodesList const &
@@ -96,15 +76,14 @@ namespace Xml
             {
                 auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
 
-                #ifdef APP_DEBUG
-                assert(it != std::end(mChildren));
-                #endif
+                app_assert(it != std::end(mChildren));
 
                 // ...we delete it
                 delete mRoot;
 
                 // and replaces it by the new one
                 *it = root;
+                root->mParent = this;
             }
             else
             {
@@ -138,26 +117,48 @@ namespace Xml
     }
 
     void
-    Document::appendNode(DocumentNode * documentNode)
+    Document::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
     {
-        #ifdef APP_DEBUG
-        assert(documentNode != nullptr);
-        assert(
+        for(auto i = 0u; i < mChildren.size(); ++i)
+        {
+            auto const & c = mChildren[i];
+
+            app_assert(c != nullptr);
+
+            c->exportToStream(stream, level, indent);
+
+            stream << (i == mChildren.size() - 1 ? "" : "\n");
+        }
+    }
+
+    void
+    Document::appendNode(Node * documentNode)
+    {
+        app_assert(documentNode != nullptr);
+        app_assert(documentNode->contentText() == ""); // make sure we are not appending a Xml::Text
+
+        app_assert(
             std::find(std::begin(mChildren), std::end(mChildren), documentNode)
             == std::end(mChildren)
         );
-        /* TODO
-         * Check that the document node is not a child of root
-         */
-        #endif
+
+        app_assert(mRoot == nullptr || !mRoot->hasChild(documentNode));
 
         // A document has only one Xml::Element
-        if(documentNode->isElement() && mRoot != nullptr)
+        if (documentNode->isElement())
         {
-            delete mRoot;
+            if (mRoot != nullptr)
+            {
+                auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
+                mChildren.erase(it);
+                delete mRoot;
+            }
+
+            mRoot = (Element *) documentNode;
         }
 
-        mChildren.push_back(documentNode);
+        mChildren.push_back((DocumentNode *) documentNode);
+        documentNode->mParent = this;
     }
 
 }
