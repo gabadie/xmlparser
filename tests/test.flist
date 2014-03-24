@@ -4,3 +4,4 @@
 
 testDocument.cpp
 testParsing.cpp
+testXsl.cpp
