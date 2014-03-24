@@ -18,7 +18,7 @@ namespace Xsd
             /**
              * Constructor
              */
-            Attribute(std::string const & name, bool required);
+            Attribute(const std::string & name, bool required);
 
             /**
              * Destructor
@@ -26,7 +26,7 @@ namespace Xsd
             virtual ~Attribute();
 
             Attribute
-            parseAttribute(Xml::Element xmlElement, std::map<std::string, Attribute const *> attributesMap, std::map<std::string, std::string> attributesTypesMap) const;
+            parseAttribute(const Xml::Element & xmlElement) const;
 
         protected:
             std::string mName;

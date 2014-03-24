@@ -1,5 +1,6 @@
 #include "XsdChecker.hpp"
 #include "../Xml/XmlParser.hpp"
+#include "XsdException.hpp"
 
 #ifdef APP_DEBUG
 #include <cassert>
@@ -25,6 +26,7 @@ namespace Xsd
         dateTypeValue = "TODO";
 
         //Check that the root element has xmlns:MYPREFIX="http://www.w3.org/2001/XMLSchema"
+        //or noNamespaceSchemaLocation
         //Quand on parse un type complexe, ajouter ses attributs à la map !
         throw NotImplementedYet("TODO : gestion namespace !!!!!");
 
@@ -61,14 +63,14 @@ namespace Xsd
         return instance;
     }
 
-    static void throwInvalidElementException(std::string & received, std::string & expected)
+    static void throwInvalidElementException(const std::string & received, const std::string & expected)
     {
-        throw new Exception("Invalid XSD root element received :" + received + " (" + expected + " expected");
+        throw new XSDConstructionException("Invalid XSD root element received :" + received + " (" + expected + " expected");
     }
 
-    static void throwMissingAttributeException(std::string & element, std::string & missingAttr)
+    static void throwMissingAttributeException(const std::string & element, const std::string & missingAttr)
     {
-        throw new Exception("Missing attribute for " + element + " element: " + missingAttr);
+        throw new XSDConstructionException("Missing attribute for " + element + " element: " + missingAttr);
     }
 
     static void
@@ -83,10 +85,20 @@ namespace Xsd
     bool
     Checker::isValid(Xml::Document & xmlDoc)
     {
-        //TODO: Algo validation
-
         std::cerr << __func__ << " : not implemented yet" << std::endl;
         __builtin_trap();
+
+        try
+        {
+            //TODO: Algo validation
+            //Check with the namespace or noNamespaceSchemaLocation
+            return true;
+        }
+        catch(XSDConstructionException e)
+        {
+            std::cerr << e.getMessage() << std:endl;
+            return false;
+        }
     }
 
     std::string
@@ -102,49 +114,49 @@ namespace Xsd
     }
 
     static void
-    Checker::addType(std::string & typeName, const Type * const type)
+    Checker::addType(const std::string & typeName, const Type * const type)
     {
         typesMap.insert(typeName, type);
     }
 
     static void
-    Checker::addTypedElement(std::string & elementName, std::string & typeName)
+    Checker::addTypedElement(const std::string & elementName, const std::string & typeName)
     {
         elementsTypesMap.insert(elementName, typeName);
     }
 
     static void
-    Checker::addAttribute(std::string & attributeName, const Attribute * const attribute)
+    Checker::addAttribute(const std::string & attributeName, const Attribute * const attribute)
     {
         attributesMap.insert(attributeName, attribute);
     }
 
     static void
-    Checker::addTypedAttribute(std::string & attributeName, std::string & typeName)
+    Checker::addTypedAttribute(const std::string & attributeName, const std::string & typeName)
     {
         attributesTypesMap.insert(attributeName, typeName);
     }
 
     static Type * const
-    Checker::getType(std::string & typeName)
+    Checker::getType(const std::string & typeName)
     {
         return typesMap[typeName];
     }
 
     static Type * const
-    Checker::getElementType(std::string & elementName)
+    Checker::getElementType(const std::string & elementName)
     {
         return getType(elementsTypesMap[elementName]);
     }
 
     static Attribute * const
-    Checker::getAttribute(std::string & attributeName)
+    Checker::getAttribute(const std::string & attributeName)
     {
         return attributesMap[attributeName];
     }
 
     static Type * const
-    Checker::getAttributeType(std::string & attributeName)
+    Checker::getAttributeType(const std::string & attributeName)
     {
         return getType(attributesTypesMap[attributeName]);
     }

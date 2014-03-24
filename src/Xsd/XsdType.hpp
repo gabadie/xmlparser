@@ -23,22 +23,22 @@ namespace Xsd
          */
         Type(const Xml::Element & xmlElement);
 
-        Type(const Xml::Element & xmlElement, std::string & name);
+        Type(const Xml::Element & xmlElement, const std::string & name);
 
         /**
          * Create the type regex
          */
         static std::string
-        parseComplexType(const Xml::Element & xmlElement);
+        parseComplexType(const Xml::Element & xmlElement) const;
 
         /**
          * Create the regex for an element
          */
         static std::string
-        getRegexFromElement(const Xml::Element & xmlElement);
+        getRegexFromElement(const Xml::Element & xmlElement) const;
 
         std::list<Attribute *>
-        attributes();
+        attributes() const;
 
     protected:
         std::regex mRegex;

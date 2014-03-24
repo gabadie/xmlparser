@@ -63,16 +63,28 @@ namespace Xsd
         initialize(const Xml::Document & xmlDoc);
 
         static void
-        addType(std::string & typeName, const Type * const type);
+        addType(const std::string & typeName, const Type * const type);
 
         static void
-        addTypedElement(std::string & elementName, std::string & typeName);
+        addTypedElement(const std::string & elementName, const std::string & typeName);
 
         static void
-        addAttribute(std::string & attributeName, const Attribute * const attribute);
+        addAttribute(const std::string & attributeName, const Attribute * const attribute);
 
         static void
-        addTypedAttribute(std::string & attributeName, std::string & typeName);
+        addTypedAttribute(const std::string & attributeName, const std::string & typeName);
+
+        static Type * const
+        getType(const std::string & typeName)
+
+        static Type * const
+        getElementType(const std::string & elementName);
+
+        static Attribute * const
+        getAttribute(const std::string & attributeName);
+
+        static Type * const
+        getAttributeType(const std::string & attributeName);
 
     protected:
         /**

@@ -1,5 +1,5 @@
 #include "XsdAttribute.hpp"
-#include "XsdDocument.hpp"
+#include "XsdChecker.hpp"
 
 #ifdef APP_DEBUG
 #include <cassert>
@@ -20,7 +20,7 @@ namespace Xsd
     }
 
     Attribute
-    Attribute::parseAttribute(Xml::Element xmlElement, std::map<std::string, Attribute const *> attributesMap, std::map<std::string, std::string> attributesTypesMap) const
+    Attribute::parseAttribute(Xml::Element xmlElement)
     {
         bool required = false;
         std::string attributeName;

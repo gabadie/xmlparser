@@ -16,7 +16,7 @@ namespace Xsd
         Xsd::Checker.addType(name, &this);
     }
 
-    Type::Type(const Xml::Element & xmlElement, std::string & name):
+    Type::Type(const Xml::Element & xmlElement, const std::string & name):
     {
         mRegex = getRegexFromElement(xmlElement);
         Xsd::Checker.addType(name, &this);
@@ -28,7 +28,7 @@ namespace Xsd
     }
 
     static std::string
-    Type::parseComplexType(const Xml::Element & xmlElement)
+    Type::parseComplexType(const Xml::Element & xmlElement) const
     {
         std::string regex = "";
 
@@ -68,7 +68,7 @@ static const std::string MAX_OCC_ATTR = "maxOccurs";
     }
 
     static std::string
-    Type::getRegexFromElement(const Xml::Element & xmlElement)
+    Type::getRegexFromElement(const Xml::Element & xmlElement) const
     {
         std::string name = xmlElement.attribute("name");
         std::string ref = xmlElement.attribute("ref");
@@ -112,7 +112,7 @@ static const std::string MAX_OCC_ATTR = "maxOccurs";
     }
 
     std::list<Attribute *>
-    attributes()
+    attributes() const
     {
         return mAttributes;
     }
