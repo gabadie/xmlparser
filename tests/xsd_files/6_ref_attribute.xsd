@@ -4,6 +4,7 @@
         <xs:complexType>
             <xs:element name="address">
                 <xs:complexType>
+                    <xs:attribute name="patate" type="xs:string"/>
                     <xs:attribute ref="validity" use="required"/>
                 </xs:complexType>
         </xs:complexType>
