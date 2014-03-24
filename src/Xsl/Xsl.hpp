@@ -1,6 +1,8 @@
 #include <vector>
+#include <map>
 
 #include "../Xml/XmlNode.hpp"
+#include "../Xml/XmlText.hpp"
 
 namespace Xsl {
 
