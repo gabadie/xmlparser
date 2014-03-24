@@ -16,7 +16,7 @@ Xml::Document xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) {
     
 }
 
-void applyDefaultTemplate(Xml::Node* context, Vector<Node*> resultNodes) {
+void applyDefaultTemplate(Xml::Node* context, Vector< Xml::Node*> resultNodes) {
     // TODO : faire ça autrement...
     if (isinstance(context, Text)) {
         resultNodes.push(context);
@@ -36,7 +36,7 @@ void applyDefaultTemplate(Xml::Node* context, Vector<Node*> resultNodes) {
     }
 }
 
-void applyTemplate (const Xml::Element& xslTemplate, const Xml::Node* context, Vector<Node*> resultNodes) {
+void applyTemplate (const Xml::Element& xslTemplate, const Xml::Node* context, Vector< Xml::Node*> resultNodes) {
     // Attention, ici on parcours des éléments XSL, et pas le document XML qu'on transforme
     for (auto node : xslTemplate.children()) {
         if (node.iselement() && node.namespace() != 'xsl') {

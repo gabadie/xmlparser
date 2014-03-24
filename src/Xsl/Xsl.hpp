@@ -1,5 +1,6 @@
 #include <vector>
 #include <map>
+using namespace std;
 
 #include "../Xml/XmlNode.hpp"
 #include "../Xml/XmlText.hpp"
@@ -13,9 +14,8 @@ namespace Xsl {
 
     std::map<std::string, Instruction*> xslInstructions;
 
-    Xml::Document xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc );
+    void xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) ;
 
-    std::vector <Xml::Node*> applyDefaultTemplate(Xml::Node* context, std::vector<Xml::Node*> resultNodes);
+    void applyDefaultTemplate(const Xml::Node* context, const Xml::Document& xslDoc, vector< Xml::Node*> resultNodes) ;
 
-    std::vector <Xml::Node*> applyTemplate (const Xml::Element& xslTemplate, const Xml::Node* context, std::vector<Xml::Node*> resultNodes);
-}
+    void applyTemplate (const Xml::Node* context, const Xml::Document& xslDoc, vector< Xml::Node*> resultNodes,   const Xml::Element& xslTemplate) ;
