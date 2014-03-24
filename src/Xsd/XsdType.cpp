@@ -14,13 +14,13 @@ namespace Xsd
     }
 
     void
-    Type::parseTypeFromComplexType(XmlElement xmlElement)
+    Type::parseTypeFromComplexType(Xml::XmlElement xmlElement)
     {
 
     }
 
     std::string
-    Type::getRegexFromElement(XmlElement xmlElement)
+    Type::getRegexFromElement(Xml::XmlElement xmlElement)
     {
         map<std::string,std::string>::iterator itName = xmlElement.mAttributes.find('name');
         map<std::string,std::string>::iterator itRef = xmlElement.mAttributes.find('ref');

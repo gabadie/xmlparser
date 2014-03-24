@@ -25,13 +25,13 @@ namespace Xsd
          * Create the type regex
          */
         void
-        ParseTypeFromComplexType(XmlElement xmlElement);
+        ParseTypeFromComplexType(Xml::XmlElement xmlElement);
 
         /**
          * Create the regex for an element
          */
         void
-        getRegexFromElement(XmlElement xmlElement);
+        getRegexFromElement(Xml::XmlElement xmlElement);
 
     protected:
         std::string mRegex;
