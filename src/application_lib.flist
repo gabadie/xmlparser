@@ -15,4 +15,3 @@ Xml/XmlParserError.cpp
 Xml/XmlParserInput.cpp
 Xml/XmlProcessingInstruction.cpp
 Xml/XmlText.cpp
-Xsl/Xsl.cpp
