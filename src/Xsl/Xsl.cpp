@@ -12,7 +12,7 @@ void xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc )
 
     applyDefaultTemplate(xmlDoc.root(), resultNodes);
 
-    if (resultNodes.size() == 1) 
+    if (resultNodes.size() == 1)
     {
         result.setRoot(resultNodes[0]);
         return result;
@@ -25,10 +25,9 @@ void xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc )
 
 }
 
-void applyDefaultTemplate(Xml::Node* context, Vector<Node*> resultNodes) 
+void applyDefaultTemplate(const Xml::Node* context, const Xml::Document& xslDoc, vector<Node*> resultNodes) 
 {
-    // TODO : faire ça autrement...
-    if (1==1) 
+    if (1==1)
     {
         resultNodes.push(context);
         return;
@@ -51,7 +50,7 @@ void applyDefaultTemplate(Xml::Node* context, Vector<Node*> resultNodes)
     }
 }
 
-void applyTemplate (const Xml::Element& xslTemplate, const Xml::Node* context, Vector<Node*> resultNodes) 
+void applyTemplate (const Xml::Node* context, const Xml::Document& xslDoc, Vector<Node*> resultNodes,   const Xml::Element& xslTemplate) 
 {
     //To suppress ? Already in defaultTemplate
     if (xslTemplate == null) 
@@ -73,7 +72,22 @@ void applyTemplate (const Xml::Element& xslTemplate, const Xml::Node* context, V
     }
 }
 
-void Xsl::ValueOf::operator () (Xml::Node* context, Xml::Element xslElement, Vector <Xml::Node*> resultNodes)
+void Xsl::ValueOf::operator () (const Xml::Node* context, const Xml::Document& xslDoc,  Vector <Xml::Node*> resultNodes, const Xml::Element xslElement)
 {
     resultNodes.push(context.select(xslElement.attr("select").text()));
+}
+
+void Xsl::ForEach::operator () (const Xml::Node* context,const Xml::Document& xslDoc,  Vector <Xml::Node*> resultNodes,  const Xml::Element forEachElement) {
+    Vector <Xml::Node*> matchingNodes = context.select(forEachElement.attr('select'));
+    for (auto node : matchingNodes) {
+        applyTemplate(forEachElement, node, resultNodes);
+    } 
+}
+
+void Xsl::ApplyTemplate::operator () (const Xml::Node* context,const Xml::Document& xslDoc, Vector <Xml::Node*> resultNodes, const Xml::Element applyTemplatehElement) {
+    Vector <Xml::Node*> matchingNodes = context.select(forEachElement.attr('select'));
+    for (auto node ; matchingNodes){
+        Xsl::Element xslTemplate = DOCUMENT.getTemplate(node);
+        applyTemplate(xslTemplate, node, resultNodes)
+    }
 }
