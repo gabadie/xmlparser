@@ -1,10 +1,20 @@
-# ------------------------------------------------------------------------------ Application's configuration
+# ------------------------------------------------------------------------------ RE2 dependency
 
+RE2_DIR = re2/
+RE2_OBJ_DIR = $(RE2_DIR)obj/
+RE2_LIBRARY = $(RE2_OBJ_DIR)libre2.a
+RE2_INCLUDE = $(RE2_DIR)
+
+$(RE2_LIBRARY):
+	$(call history_rule,compiling external library,$@)
+	$(CMD_PREFIX)make -C $(RE2_DIR) $(patsubst $(RE2_DIR)%,%,$@) > /dev/null
+
+# ------------------------------------------------------------------------------ Application's configuration
 
 # ------------------------------------------------------------ default configuration
 override config=debug
 
-PROJECT_CXXFLAGS := -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR) -std=c++11
+PROJECT_CXXFLAGS := -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR) -std=c++11 -I $(RE2_INCLUDE)
 PROJECT_BISONFLAGS := --debug
 PROJECT_FLEXFLAGS := --debug
 
@@ -63,6 +73,8 @@ $(APP_EXEC_BINARIES): CXXFLAGS += $(PROJECT_CXXFLAGS)
 $(APP_EXEC_TARGET): $(APP_OBJECT_BINARIES) $(APP_EXEC_BINARIES)
 $(APP_EXEC_TARGET): LDFLAGS += $(APP_OBJECT_BINARIES) $(APP_EXEC_BINARIES)
 
+$(APP_EXEC_TARGET): $(RE2_LIBRARY)
+$(APP_EXEC_TARGET): LDFLAGS += $(RE2_LIBRARY)
 
 # ------------------------------------------------------------------------------ Application's tests
 
@@ -83,6 +95,8 @@ $(TEST_APP_TARGETS): $(APP_OBJECT_BINARIES)
 $(TEST_APP_TARGETS): LDFLAGS += $(APP_OBJECT_BINARIES)
 $(TEST_APP_TARGETS): LDFLAGS += $(PROJECT_LDFLAGS)
 
+$(TEST_APP_TARGETS): $(RE2_LIBRARY)
+$(TEST_APP_TARGETS): LDFLAGS += $(RE2_LIBRARY)
 
 # ------------------------------------------------------------------------------ Application's integration tests
 
