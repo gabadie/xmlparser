@@ -1,11 +1,25 @@
 #include "XsdType.hpp"
-
+#include "XsdChecker.hpp"
 
 namespace Xsd
 {
-    Type::Type()
+    Type::Type(const Xml::Element & xmlElement)
     {
-        mRegex = "";
+        mName = xmlElement.attribute(Checker.NAME_ATTR);
+
+        if(mName == null)
+        {
+            Checker.throwMissingAttributeException(Checker.COMPLEX_TYP_ELT, Checker.NAME_ATTR);
+        }
+
+        mRegex = getRegexFromElement(xmlElement);
+        Xsd::Checker.addType(name, &this);
+    }
+
+    Type::Type(const Xml::Element & xmlElement, std::string & name):
+    {
+        mRegex = getRegexFromElement(xmlElement);
+        Xsd::Checker.addType(name, &this);
     }
 
     Type::~Type()
@@ -13,14 +27,48 @@ namespace Xsd
 
     }
 
-    void
-    Type::parseTypeFromComplexType(Xml::Element xmlElement)
+    static std::string
+    Type::parseComplexType(const Xml::Element & xmlElement)
     {
+        std::string regex = "";
 
+
+static const std::string NAME_ATTR = "name";
+static const std::string TYPE_ATTR = "type";
+static const std::string REF_ATTR = "ref";
+static const std::string USE_ATTR = "use";
+static const std::string MIN_OCC_ATTR = "minOccurs";
+static const std::string MAX_OCC_ATTR = "maxOccurs";
+
+        for (std::list<Xml::Element>::const_iterator ci = xmlElement.elements().begin(); ci != xmlElement.elements().end(); ++ci)
+        {
+            if(ci->name().equals(Checker.SEQUENCE_ELT))
+            {
+                std
+            }
+            else if(ci->name().equals(Checker.CHOICE_ELT)
+            {
+
+            }
+            else if(ci->name().equals(Checker.ELEMENT_ELT)
+            {
+
+            }
+            else if(ci->name().equals(Checker.ATTRIBUTE_ELT)
+            {
+                mAttributes.push_back(new Xsd::Attribute(*ci));
+            }
+            else
+            {
+                Checker.throwInvalidElementException(Checker.COMPLEX_TYPE_ELT, ci->name());
+            }
+        }
+
+        return regex;
     }
 
-    std::string
-    Type::getRegexFromElement(Xml::Element xmlElement)
+    static std::string
+    Type::getRegexFromElement(const Xml::Element & xmlElement)
     {
         std::string name = xmlElement.attribute("name");
         std::string ref = xmlElement.attribute("ref");
@@ -61,5 +109,11 @@ namespace Xsd
         // Create the regex
         regex = "<(" + attributeName + ">){" + minOccurs + "})((<" + attributeName + ">?){" + maxOccurs + "}";
         return regex;
+    }
+
+    std::list<Attribute *>
+    attributes()
+    {
+        return mAttributes;
     }
 }

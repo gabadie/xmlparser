@@ -19,24 +19,31 @@ namespace Xsd
     protected:
         /**
          * Constructor
+         * @param xmlElement XML ComplexType element
          */
-        Type();
+        Type(const Xml::Element & xmlElement);
+
+        Type(const Xml::Element & xmlElement, std::string & name);
 
         /**
          * Create the type regex
          */
-        void
-        parseTypeFromComplexType(Xml::Element xmlElement);
+        static std::string
+        parseComplexType(const Xml::Element & xmlElement);
 
         /**
          * Create the regex for an element
          */
-        std::string
-        getRegexFromElement(Xml::Element xmlElement);
+        static std::string
+        getRegexFromElement(const Xml::Element & xmlElement);
+
+        std::list<Attribute *>
+        attributes();
 
     protected:
-        std::string mRegex;
-
+        std::regex mRegex;
+        std::string mName;
+        std::list<Attribute *> mAttributes;
     };
  }
 

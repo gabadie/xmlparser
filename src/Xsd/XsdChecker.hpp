@@ -25,10 +25,21 @@ namespace Xsd
     class Checker
     {
     public :
-        /**
-         * Constructor
-         */
-        Checker(Xml::Document * xmlDoc);
+        static const std::string SCHEMA_ELT = "schema";
+        static const std::string ELEMENT_ELT = "element";
+        static const std::string ATTRIBUTE_ELT = "attribute";
+        static const std::string COMPLEX_TYP_ELT = "complexType";
+        static const std::string SEQUENCE_ELT = "sequence";
+        static const std::string CHOICE_ELT = "choice";
+
+        static const std::string NAME_ATTR = "name";
+        static const std::string TYPE_ATTR = "type";
+        static const std::string REF_ATTR = "ref";
+        static const std::string USE_ATTR = "use";
+        static const std::string MIN_OCC_ATTR = "minOccurs";
+        static const std::string MAX_OCC_ATTR = "maxOccurs";
+
+        static const std::string ROOT = "root";
 
         /**
          * Destructor
@@ -41,9 +52,47 @@ namespace Xsd
         bool
         isValid(Xml::Document * xmlDoc);
 
+        std::string getStringTypeValue();
+
+        std::string getDateTypeValue();
+
+        static Checker
+        getInstance();
+
+        static void
+        initialize(const Xml::Document & xmlDoc);
+
+        static void
+        addType(std::string & typeName, const Type * const type);
+
+        static void
+        addTypedElement(std::string & elementName, std::string & typeName);
+
+        static void
+        addAttribute(std::string & attributeName, const Attribute * const attribute);
+
+        static void
+        addTypedAttribute(std::string & attributeName, std::string & typeName);
+
     protected:
-        Xml::Document * mXsdDoc;
-        Type * mRootType;
+        /**
+         * Constructor
+         */
+        Checker(const Xml::Document & xmlDoc);
+
+        /**
+         * Unique instance
+         */
+        static Checker instance;
+
+        static const std::string STRING_TYPE_VALUE = "string";
+        static const std::string DATE_TYPE_VALUE = "date";
+
+        std::string namespacePrefix;
+        std::string stringTypeValue;
+        std::string dateTypeValue;
+
+        Xml::Document & mXsdDoc;
 
         typesMap mTypes;
         elementsTypesMap mElementsTypes;
