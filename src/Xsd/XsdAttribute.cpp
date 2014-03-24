@@ -20,7 +20,7 @@ namespace Xsd
     }
 
     Attribute
-    Attribute::parseAttribute(Xml::Element xmlElement) const
+    Attribute::parseAttribute(Xml::Element xmlElement, std::map<std::string, Attribute const *> attributesMap, std::map<std::string, std::string> attributesTypesMap) const
     {
         bool required = false;
         std::string attributeName;
@@ -36,7 +36,7 @@ namespace Xsd
             // Add attribute to attribute type map
             if(type != "")
             {
-                Xsd::attributesTypesMap.insert(std::pair<std::string,std::string>(attributeName, type);
+                attributesTypesMap.insert(std::pair<std::string,std::string>(attributeName, type));
             }
             else
             {
@@ -65,7 +65,7 @@ namespace Xsd
 
         if(name != "") {
             // Add attribute to the attribute map
-            Xsd::attributesMap.insert(std::pair<std::string, Attribute const *>(attributeName, &attr));
+            attributesMap.insert(std::pair<std::string, Attribute const *>(attributeName, &attr));
         }
 
         return attr;
