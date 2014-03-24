@@ -14,56 +14,52 @@ namespace Xsd
     }
 
     void
-    Type::parseTypeFromComplexType(Xml::XmlElement xmlElement)
+    Type::parseTypeFromComplexType(Xml::Element xmlElement)
     {
 
     }
 
     std::string
-    Type::getRegexFromElement(Xml::XmlElement xmlElement)
+    Type::getRegexFromElement(Xml::Element xmlElement)
     {
-        map<std::string,std::string>::iterator itName = xmlElement.mAttributes.find('name');
-        map<std::string,std::string>::iterator itRef = xmlElement.mAttributes.find('ref');
-        map<std::string,std::string>::iterator itMin = xmlElement.mAttributes.find('minOccurs');
-        map<std::string,std::string>::iterator itMax = xmlElement.mAttributes.find('maxOccurs');
-        bool hasName = (itName != xmlElement.mAttributes.end());
-        bool hasRef = (itRef != xmlElement.mAttributes.end());
-        bool hasMin = (itMin != xmlElement.mAttributes.end());
-        bool hasMax = (itMax != xmlElement.mAttributes.end());
+        std::string name = xmlElement.attribute("name");
+        std::string ref = xmlElement.attribute("ref");
+        std::string min = xmlElement.attribute("minOccurs");
+        std::string max = xmlElement.attribute("maxOccurs");
 
-        std:string regex;
-        std:string name;
-        string minOccurs = "1";
-        string maxOccurs = "*";
+        std::string regex;
+        std::string attributeName;
+        std::string minOccurs = "1";
+        std::string maxOccurs = "*";
 
         // Get the element name
-        if(hasName)
+        if(name != "")
         {
-            name = (*itName).second;
+            attributeName = name;
         }
-        else if(hasRef)
+        else if(ref != "")
         {
-            name = (*itRef).second;
+            attributeName = ref;
         }
         else
         {
             // TODO Gestion exception
-            name = "";
-            cout << "Error : Attribute element doesn't have any name attribute" << endl;
+            attributeName = "";
+            std::cout << "Error : Attribute element doesn't have any name attribute" << std::endl;
         }
 
         // Get the occurence
-        if(hasMin)
+        if(min != "")
         {
-            minOccurs = (*itMin).second;
+            minOccurs = min;
         }
-        if(hasMax)
+        if(max != "")
         {
-            maxOccurs = (*itMax).second;
+            maxOccurs = max;
         }
 
         // Create the regex
-        regex = "<(" + name + ">){" + minOccurs + "})((<" + name + ">?){" + maxOccurs + "}";
+        regex = "<(" + attributeName + ">){" + minOccurs + "})((<" + attributeName + ">?){" + maxOccurs + "}";
         return regex;
     }
 }

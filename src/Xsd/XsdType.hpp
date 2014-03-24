@@ -3,6 +3,7 @@
 
 #include "../Xml/XmlElement.hpp"
 #include <string>
+#include <map>
 
 namespace Xsd
 {
@@ -25,13 +26,13 @@ namespace Xsd
          * Create the type regex
          */
         void
-        ParseTypeFromComplexType(Xml::XmlElement xmlElement);
+        parseTypeFromComplexType(Xml::Element xmlElement);
 
         /**
          * Create the regex for an element
          */
-        void
-        getRegexFromElement(Xml::XmlElement xmlElement);
+        std::string
+        getRegexFromElement(Xml::Element xmlElement);
 
     protected:
         std::string mRegex;

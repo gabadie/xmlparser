@@ -19,60 +19,53 @@ namespace Xsd
 
     }
 
-    Attribute::parseAttribute(Xml::XmlElement xmlElement):
+    Attribute
+    Attribute::parseAttribute(Xml::Element xmlElement) const
     {
         bool required = false;
-        std::string name;
-        map<std::string,std::string>::iterator itName = xmlElement.mAttributes.find('name');
-        map<std::string,std::string>::iterator itRef = xmlElement.mAttributes.find('ref');
-        map<std::string,std::string>::iterator itType = xmlElement.mAttributes.find('type');
-        map<std::string,std::string>::iterator itRequired = xmlElement.mAttributes.find('use');
+        std::string attributeName;
 
-        bool hasName, hasRef, hasType, hasRequired;
-        hasName = (itName != xmlElement.mAttributes.end());
-        hasRef = (itRef != xmlElement.mAttributes.end());
-        hasType = (itType != xmlElement.mAttributes.end());
-        hasRequired = (itRequired != xmlElement.mAttributes.end());
+        std::string name = xmlElement.attribute("name");
+        std::string ref = xmlElement.attribute("ref");
+        std::string type = xmlElement.attribute("type");
+        std::string use = xmlElement.attribute("use");
 
-
-        if(hasName)
+        if(name != "")
         {
-            name = (*itName).second;
+            attributeName = name;
             // Add attribute to attribute type map
-            if(hasType)
+            if(type != "")
             {
-                Xsd::attributesTypesMap.insert(std::pair<std::string,std::string>(name, (*itType).second);
+                Xsd::attributesTypesMap.insert(std::pair<std::string,std::string>(attributeName, type);
             }
             else
             {
                 // TODO Gestion exception
-                cout << "Error : Attribute element doesn't have any type attribute" << endl;
+                std::cout << "Error : Attribute element doesn't have any type attribute" << std::endl;
             }
         }
-        else if(hasRef)
+        else if(ref != "")
         {
-            name = (*itRef).second;
+            attributeName = ref;
         }
         else
         {
             // TODO Gestion exception
             name = "";
-            cout << "Error : Attribute element doesn't have any name attribute" << endl;
+            std::cout << "Error : Attribute element doesn't have any name attribute" << std::endl;
         }
 
-        if(hasRequired)
+        if(use == "required")
         {
-            if((*itRequired).seconde == "required")
-            {
-                required = true;
-            }
+            required = true;
         }
 
-        Attribute attr(name, required);
 
-        if(hasName) {
+        Attribute attr(attributeName, required);
+
+        if(name != "") {
             // Add attribute to the attribute map
-            Xsd::attributesMap.insert(std::pair<std::string, Attribute const *>(name,attr));
+            Xsd::attributesMap.insert(std::pair<std::string, Attribute const *>(attributeName, &attr));
         }
 
         return attr;

@@ -26,7 +26,7 @@ namespace Xsd
             virtual ~Attribute();
 
             Attribute
-            parseAttribute(Xml::XmlElement xmlElement) const;
+            parseAttribute(Xml::Element xmlElement) const;
 
         protected:
             std::string mName;
