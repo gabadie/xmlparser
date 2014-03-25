@@ -17,6 +17,7 @@ override config=debug
 PROJECT_CXXFLAGS := -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR) -std=c++11 -I $(RE2_INCLUDE)
 PROJECT_BISONFLAGS := --debug
 PROJECT_FLEXFLAGS := --debug
+PROJECT_LDFLAGS := -lpthread
 
 # ------------------------------------------------------------ debug configuration
 $(call trash_configs, debug)
@@ -75,7 +76,7 @@ $(APP_EXEC_TARGET): LDFLAGS += $(APP_OBJECT_BINARIES) $(APP_EXEC_BINARIES)
 
 $(APP_EXEC_TARGET): $(RE2_LIBRARY)
 $(APP_EXEC_TARGET): LDFLAGS += $(RE2_LIBRARY)
-
+$(APP_EXEC_TARGET): LDFLAGS += $(PROJECT_LDFLAGS)
 # ------------------------------------------------------------------------------ Application's tests
 
 TEST_APP_FILES := $(call filelist,tests/test.flist)
