@@ -38,7 +38,7 @@ namespace Xsd
     Type::parseComplexType(const Xml::Element & xmlElement, const std::string & separator, bool eltSeqChoice)
     {
         bool eltParsed = false;
-        std::string regex = "";
+        std::string regex = "", tmpRegex;
 
         for (std::list<Xml::Element>::const_iterator ci = xmlElement.elements().begin(); ci != xmlElement.elements().end(); ++ci)
         {
@@ -50,11 +50,14 @@ namespace Xsd
             {
                 parseComplexType(*ci, "|", true);
             }
-            else if(ci->name().equals(Checker.ELEMENT_ELT)
+            else if(ci->name().equals(Checker.ELEMENT_ELT) && (eltSeqChoice || !eltParsed))
             {
-
+                eltParsed = true;
+                tmpRegex += getRegexFromElement(*ci);
+                Checker.addTypedElement()
+                regex += tmpRegex;
             }
-            else if(ci->name().equals(Checker.ATTRIBUTE_ELT)
+            else if(ci->name().equals(Checker.ATTRIBUTE_ELT))
             {
                 mAttributes.push_back(new Xsd::Attribute(*ci));
             }
@@ -96,8 +99,62 @@ namespace Xsd
         return occursAttrValue;
     }
 
+    static bool
+    Type::isReference(const Xml::Element & xmlElement)
+    {
+        std::string notFound = "";
+        std::string name = xmlElement.attribute(Checker.NAME_ATTR);
+        std::string ref = xmlElement.attribute(Checker.REF_ATTR);
+
+        // Name and ref attributes
+        if(name.equals(notFound) && !ref.equals(notFound))
+        {
+            return true;
+        }
+        else
+        {
+            Checker.throwMissingAttributeException(Checker.ELEMENT_ELT, Checker.NAME_ATTR);
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the regex of an element, adds its type and type relation to the maps if it's not a ref
+     */
     static std::string
-    Type::getRegexFromElement(const Xml::Element & xmlElement)
+    Type::parseElement(const Xml::Element & xmlElement)
+    {
+        std::string regex;
+
+        // Name and ref attributes
+        if(isReference(xmlElement))
+        {
+            regex = getRegexFromOccurs(xmlElement, xmlElement.attribute(Checker.REF_ATTR));
+        }
+        else
+        {
+            //TODO : appel recursif et gestion du type de l'elt
+            regex = getRegexFromOccurs(xmlElement, xmlElement.attribute(Checker.NAME_ATTR));
+        }
+        //
+        if(!ref)
+        {
+            //TODO big pb x2 :
+            //- on est récursif mais on descend pas dans la définition des elts contenus dans un elt
+            //- on gère pas les occurs pour les choice et seq
+            //- on parse pas les attrs type des elts
+        }
+
+        return regex;
+    }
+
+    /**
+     * Modify and returns the element regex given in parameter in order to add
+     * regex expression for the occurs attributes values
+     */
+    static std::string
+    Type::getRegexFromOccurs(const Xml::Element & xmlElement, const std::string & eltRegex)
     {
         std::string notFound = "", regex;
         std::string name = xmlElement.attribute(Checker.NAME_ATTR);
@@ -137,20 +194,16 @@ namespace Xsd
         }
 
         // Name and ref attributes
-        if(name.equals(notFound) && !ref.equals(notFound))
+        if(isReference(xmlElement))
         {
             name = ref;
         }
-        else
-        {
-            Checker.throwMissingAttributeException(Checker.ELEMENT_ELT, Checker.NAME_ATTR);
-        }
 
         // Create the regex
-        regex = "(<" + name + ">){" + minOccurs + "}";
+        regex = "(<" + eltRegex + ">){" + minOccurs + "}";
         if(!supOccurs.equals("0"))
         {
-            regex += "((<" + name + ">?){" + supOccurs + "})";
+            regex += "((<" + eltRegex + ">?){" + supOccurs + "})";
         }
 
         return regex;
