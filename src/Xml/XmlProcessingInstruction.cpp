@@ -19,6 +19,18 @@ namespace Xml
 
     }
 
+    ProcessingInstruction::ProcessingInstruction(ProcessingInstruction const & piTocopy) :
+        DocumentNode(),
+        mAttributes(piTocopy.mAttributes)
+    {
+    }
+
+    Node *
+    ProcessingInstruction::clone()
+    {
+        return new ProcessingInstruction(*this);
+    }
+
     std::string const &
     ProcessingInstruction::attribute(std::string const & name) const
     {

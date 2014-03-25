@@ -37,6 +37,12 @@ namespace Xml
         ~Element();
 
         /**
+         * Override of clone abstract method
+         */
+        Node *
+        clone();
+
+        /**
          * Tells whether or not the element has the given node in
          * its children recursively.
          *
