@@ -19,24 +19,24 @@ namespace Xsl {
 
     class ValueOf : public Instruction
     {
-        virtual void operator () (Xml::Node* context, const Xml::Document& xslDoc,  vector <Xml::Node*> resultNodes, const Xml::Element xslElement);
+        virtual void operator () (Xml::Node* context, const Xml::Document& xslDoc,  vector <Xml::Node*> &resultNodes, const Xml::Element xslElement);
     };
 
     class ForEach: public Instruction
     {
-        virtual void operator () (Xml::Node* context,const Xml::Document& xslDoc,  vector <Xml::Node*> resultNodes,  const Xml::Element forEachElement);
+        virtual void operator () (Xml::Node* context,const Xml::Document& xslDoc,  vector <Xml::Node*> &resultNodes,  const Xml::Element forEachElement);
     };
 
     class ApplyTemplate: public Instruction
     {
-        virtual void operator () (const Xml::Node* context,const Xml::Document& xslDoc, vector <Xml::Node*> resultNodes, const Xml::Element applyTemplateElement);
+        virtual void operator () (const Xml::Node* context,const Xml::Document& xslDoc, vector <Xml::Node*> &resultNodes, const Xml::Element applyTemplateElement);
 
     };
 
     Xml::Document* xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) ;
 
-    void applyDefaultTemplate( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> resultNodes) ;
+    void applyDefaultTemplate( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes) ;
 
-    void applyTemplate ( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> resultNodes, Xml::Element& xslTemplate) ;
+    void applyTemplate ( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes, Xml::Element& xslTemplate) ;
 }
 #endif //_H_XSL_XSL

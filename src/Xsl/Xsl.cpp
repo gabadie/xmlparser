@@ -2,12 +2,13 @@
 //demander si besoin de regex
 #include <vector>
 #include <map>
+#include <iostream>
 
 #include "./Xsl.hpp"
 
 std::map<std::string, Xsl::Instruction*> xslInstructions;
 
-Xml::Document* xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc )
+Xml::Document* Xsl::xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc )
 {
     Xml::Document* result = new Xml::Document();
     vector<Xml::Node*> resultNodes;
@@ -25,7 +26,7 @@ Xml::Document* xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc )
     }
 }
 
-void Xsl::applyDefaultTemplate(Xml::Node* context, Xml::Document& xslDoc, vector<Xml::Node*> resultNodes)
+void Xsl::applyDefaultTemplate(Xml::Node* context, Xml::Document& xslDoc, vector<Xml::Node*> &resultNodes)
 {
     // Debug only
 
@@ -53,7 +54,7 @@ void Xsl::applyDefaultTemplate(Xml::Node* context, Xml::Document& xslDoc, vector
     }
 }
 
-void applyTemplate (Xml::Node* context, Xml::Document& xslDoc, vector<Xml::Node*> resultNodes,    Xml::Element& xslTemplate)
+void applyTemplate (Xml::Node* context, Xml::Document& xslDoc, vector<Xml::Node*> &resultNodes,    Xml::Element& xslTemplate)
 {
     //To suppress ? Already in defaultTemplate
     if (&xslTemplate == nullptr)
@@ -76,12 +77,12 @@ void applyTemplate (Xml::Node* context, Xml::Document& xslDoc, vector<Xml::Node*
 
 }
 
-void Xsl::ValueOf::operator () (Xml::Node* context, const Xml::Document& xslDoc,  vector <Xml::Node*> resultNodes, const Xml::Element xslElement)
+void Xsl::ValueOf::operator () (Xml::Node* context, const Xml::Document& xslDoc,  vector <Xml::Node*> &resultNodes, const Xml::Element xslElement)
 {
    /* resultNodes.push_back(context.select(xslElement.attr("select").text()));*/
 }
 
-void Xsl::ForEach::operator () (Xml::Node* context,const Xml::Document& xslDoc,  vector <Xml::Node*> resultNodes,  const Xml::Element forEachElement)
+void Xsl::ForEach::operator () (Xml::Node* context,const Xml::Document& xslDoc,  vector <Xml::Node*> &resultNodes,  const Xml::Element forEachElement)
  {
    /* vector <Xml::Node*> matchingNodes = context.select(forEachElement.attr('select'));
     for (auto node : matchingNodes) {
@@ -89,7 +90,7 @@ void Xsl::ForEach::operator () (Xml::Node* context,const Xml::Document& xslDoc, 
     } */
 }
 
- void Xsl::ApplyTemplate::operator () (const Xml::Node* context,const Xml::Document& xslDoc, vector <Xml::Node*> resultNodes, const Xml::Element applyTemplateElement)
+ void Xsl::ApplyTemplate::operator () (const Xml::Node* context,const Xml::Document& xslDoc, vector <Xml::Node*> &resultNodes, const Xml::Element applyTemplateElement)
 {
     /*vector <Xml::Node*> matchingNodes = context.select(forEachElement.attr('select'));
     for (auto node ; matchingNodes){

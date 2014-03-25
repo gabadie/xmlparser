@@ -8,6 +8,7 @@
 void
 testXslTransform()
 {
+
     // xml
     std::string xmlContent (xml_code(
         <root>
@@ -25,6 +26,7 @@ testXslTransform()
 
     Xml::Document * xmlDoc = Xml::parse(xmlContent, &xmlLog);
 
+
     // xsl
     std::string xslContent (xml_code(
         <xsl:stylesheet>
@@ -36,6 +38,15 @@ testXslTransform()
     Xml::Log xslLog;
     Xml::Document * xslDoc = Xml::parse(xslContent, &xslLog);
 
+
+
+    Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc);
+
+    // for (auto c : result->children())
+    // {
+    //     std::cerr << *c << std::endl;
+    // }
+
     delete xmlDoc;
     delete xslDoc;
 }
@@ -43,5 +54,7 @@ testXslTransform()
 int
 main()
 {
+   testXslTransform();
+
     return 0;
 }
