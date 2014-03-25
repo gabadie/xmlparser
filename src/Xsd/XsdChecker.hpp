@@ -79,7 +79,7 @@ namespace Xsd
         addTypedAttribute(const std::string & attributeName, const std::string & typeName);
 
         Type * const
-        getType(const std::string & typeName)
+        getType(const std::string & typeName);
 
         Type * const
         getElementType(const std::string & elementName);
@@ -89,6 +89,17 @@ namespace Xsd
 
         Type * const
         getAttributeType(const std::string & attributeName);
+
+        static void
+        throwInvalidElementException(const std::string & received, const std::string & expected);
+
+        static void
+        throwMissingAttributeException(const std::string & element, const std::string & missingAttr);
+
+        static void
+        throwInvalidAttributeValueException(const std::string & element, const std::string & attr, const std::string & invalidValue);
+
+
 
     protected:
         /**
@@ -105,7 +116,7 @@ namespace Xsd
         std::string stringTypeValue;
         std::string dateTypeValue;
 
-        Xml::Document & mXsdDoc;
+        const Xml::Document * const mXsdDoc;
 
         typesMap mTypes;
         elementsTypesMap mElementsTypes;
