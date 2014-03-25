@@ -15,6 +15,12 @@ namespace Xml
 
     }
 
+    Node *
+    Text::clone()
+    {
+        return new Text(this->mText);
+    }
+
     void
     Text::exportToStream(std::ostream & stream, std::size_t level,
         std::string const & indent) const

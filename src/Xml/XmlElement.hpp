@@ -37,6 +37,12 @@ namespace Xml
         ~Element();
 
         /**
+         * Override of clone abstract method
+         */
+        Node *
+        clone();
+
+        /**
          * Gets the children nodes of the element.
          *
          * @return The children nodes of the element

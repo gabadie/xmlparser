@@ -43,6 +43,16 @@ namespace Xml
         void
         detach();
 
+        /**
+        * Clones the Xml Node
+        *
+        * @return A new Xml Node tha has the same attributes as the object that have been cloned
+        */
+        virtual
+        Node *
+        clone() = 0;
+
+
     protected:
         // Pointer to the parent object
         Object * mParent;

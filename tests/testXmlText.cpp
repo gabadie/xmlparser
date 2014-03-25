@@ -83,7 +83,13 @@ testXmlTextParsing()
         Xml::Log log;
         Xml::Document * doc = Xml::parse(content, &log);
 
-        test_assert(doc == 0);
+        test_assert(doc != nullptr);
+
+        test_assert(doc->root() != nullptr);
+        test_assert(doc->root()->name() == "hello");
+        test_assert(doc->root()->text() == "World");
+
+        delete doc;
     }
 
     {
@@ -97,8 +103,13 @@ testXmlTextParsing()
         Xml::Log log;
         Xml::Document * doc = Xml::parse(content, &log);
 
-        // TODO: bug to fix
-        //test_assert(doc == 0);
+        test_assert(doc != nullptr);
+
+        test_assert(doc->root() != nullptr);
+        test_assert(doc->root()->name() == "hello");
+        test_assert(doc->root()->text() == "Hello");
+
+        delete doc;
     }
 }
 

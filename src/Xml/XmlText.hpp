@@ -22,6 +22,12 @@ namespace Xml
          */
         ~Text() override;
 
+        /**
+         * Override of clone abstract method
+         */
+        Node *
+        clone();
+
     protected:
         /**
          * Constructor

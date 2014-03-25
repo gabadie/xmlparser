@@ -26,6 +26,18 @@ namespace Xml
         ~ProcessingInstruction() override;
 
         /**
+         * Copy constructor
+         */
+         ProcessingInstruction(ProcessingInstruction const & piTocopy);
+
+
+        /**
+         * Override of clone abstract method
+         */
+        Node *
+        clone();
+
+        /**
          * Gets the value of an attribute by name
          *
          * @param name Name of the attribute to get.
