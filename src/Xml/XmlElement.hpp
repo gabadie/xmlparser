@@ -210,7 +210,7 @@ namespace Xml
          * @return True if found, false otherwise.
          */
         bool
-        hasChild(Node * node) const override;
+        hasChild(Node const * node) const override;
 
     protected:
         std::string mName;         ///< Name of the element

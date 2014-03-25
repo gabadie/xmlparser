@@ -144,7 +144,7 @@ namespace Xml
          */
         virtual
         bool
-        hasChild(Node * node) const;
+        hasChild(Node const * node) const;
 
 
         friend class Xml::Document;

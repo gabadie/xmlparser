@@ -129,7 +129,7 @@ namespace Xml
          * @return True if found, false otherwise.
          */
         bool
-        hasChild(Node * node) const override;
+        hasChild(Node const * node) const override;
 
     protected:
         Element * mRoot;     ///< Root of the XML document

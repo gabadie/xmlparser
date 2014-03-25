@@ -373,7 +373,7 @@ namespace Xml
     }
 
     bool
-    Element::hasChild(Node * node) const
+    Element::hasChild(Node const * node) const
     {
         for(auto const & c : mChildren)
         {

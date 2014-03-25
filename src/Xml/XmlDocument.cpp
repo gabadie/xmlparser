@@ -181,7 +181,7 @@ namespace Xml
     }
 
     bool
-    Document::hasChild(Node * node) const
+    Document::hasChild(Node const * node) const
     {
         for(auto const & c : mChildren)
         {

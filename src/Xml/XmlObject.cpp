@@ -66,7 +66,7 @@ namespace Xml
     }
 
     bool
-    Object::hasChild(Node *) const
+    Object::hasChild(Node const *) const
     {
         /*
          * Object::hasChild is overloaded in Xml::Document and Xml::Element.
