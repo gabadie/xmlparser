@@ -32,6 +32,7 @@ namespace Xsd
 
     }
 
+    //Should work, still have to check the algorithm for choice or sequence inside choice or sequence
     static std::string
     Type::parseComplexType(const Xml::Element & xmlElement, std::string separator, bool eltSeqChoice)
     {
@@ -192,15 +193,6 @@ namespace Xsd
             {
                 throw new XSDConstructionException("Error: type attribute or element cannot be found for " + Checker::ELEMENT_ELT + " element");
             }
-        }
-        //
-        if(!ref)
-        {
-            //TODO big pb x2 :
-            //- on est récursif mais on descend pas dans la définition des elts contenus dans un elt
-            //- on gère pas les occurs pour les choice et seq
-            //- on parse pas les attrs type des elts
-            //- gérer les new type
         }
 
         return regex;
