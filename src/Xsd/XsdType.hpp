@@ -43,7 +43,10 @@ namespace Xsd
          * Create the regex for an element
          */
         static std::string
-        getRegexFromElement(const Xml::Element & xmlElement) const;
+        getRegexFromElement(const Xml::Element & xmlElement);
+
+        static std::string
+    Type::getRegexFromOccurs(const Xml::Element & xmlElement, const std::string & eltRegex)
 
         std::list<Attribute *>
         attributes() const;
