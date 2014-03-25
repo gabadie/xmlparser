@@ -2,6 +2,7 @@
 #define _H_XSD_ATTRIBUTE
 
 #include <string>
+#include "../Xml/XmlElement.hpp"
 
 namespace Xsd
 {

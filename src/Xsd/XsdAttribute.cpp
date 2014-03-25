@@ -15,6 +15,19 @@ namespace Xsd
         init(name, required, typeName, ref);
     }
 
+    void
+    Attribute::init(const std::string & name, bool required, const std::string & typeName, bool ref)
+    {
+        mName = name;
+        mRequired = required;
+        Xsd::Checker::addAttribute(name, this);
+        if(!ref)
+        {
+            Xsd::Checker::getInstance().addTypedAttribute(name, typeName);
+        }
+
+    }
+
     static Attribute * const
     Attribute::parseAttribute(const Xml::Element & xmlElement);
     {
@@ -63,17 +76,5 @@ namespace Xsd
 
 
         init(name, required, type, hasRef);
-    }
-
-    void
-    Attribute::init(const std::string & name, bool required, const std::string & typeName, bool ref)
-    {
-        mName = name;
-        mRequired = required;
-        Xsd::Checker::getInstance().addAttribute(name, this);
-        if(!ref)
-        {
-            Xsd::Checker.getInstance().addTypedAttribute(name, typeName);
-        }
     }
 }

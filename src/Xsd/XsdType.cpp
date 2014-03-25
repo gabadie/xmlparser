@@ -238,8 +238,8 @@ namespace Xsd
         if((minOccurs.compare(UNBOUNDED_EXP_REG) == 0) && (supOccurs.compare(UNBOUNDED_EXP_REG) == 0))
         {
             stringstream out;
-            out << (std::stoi(supOccurs) - std::stoi(minOccurs);
-            supOccurs = out.str();
+            std::out << (std::stoi(supOccurs) - std::stoi(minOccurs);
+            supOccurs = std::out.str();
         }
 
         // Name and ref attributes
