@@ -220,6 +220,10 @@ namespace Xml
         NodeList mChildren;        ///< Children elements
 
         friend XML_BISON_MAIN();
+        friend class Xsl::Instruction;
+        friend class Xsl::ValueOf;
+        friend class Xsl::ForEach;
+        friend class Xsl::ApplyTemplate;
     };
 }
 
