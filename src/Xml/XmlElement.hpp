@@ -118,12 +118,12 @@ namespace Xml
         appendText(std::string const & text);
 
         /**
-         * Deletes a child node.
+         * Removes a child node.
          *
          * @return True is the element has been removed, false otherwise.
          */
         bool
-        remove(Node * node);
+        remove(Node * node) override;
 
         /**
          * Gets the name of the element

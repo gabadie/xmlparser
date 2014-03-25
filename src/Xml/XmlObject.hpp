@@ -89,6 +89,15 @@ namespace Xml
         void
         appendProcessingInstruction(ProcessingInstruction * pi);
 
+        /**
+         * Removes a child node.
+         *
+         * @return True is the element has been removed, false otherwise.
+         */
+        virtual
+        bool
+        remove(Node * node);
+
     protected:
         /**
          * Constructor

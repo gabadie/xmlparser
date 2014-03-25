@@ -11,7 +11,10 @@ namespace Xml
 
     Node::~Node()
     {
-
+        if (mParent != nullptr)
+        {
+            mParent->remove(this);
+        }
     }
 
     Document const *

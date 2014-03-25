@@ -36,6 +36,19 @@ namespace Xml
     }
 
     bool
+    Object::remove(Node * node)
+    {
+        /*
+         * Object::remove is overloaded in Xml::Document and Xml::Element.
+         * but other classes don't because they are not supposed to have
+         * children elements
+         */
+        app_unreachable();
+
+        return false;
+    }
+
+    bool
     Object::isElement() const
     {
         return false;

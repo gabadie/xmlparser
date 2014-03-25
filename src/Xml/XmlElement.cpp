@@ -162,17 +162,21 @@ namespace Xml
     bool
     Element::remove(Node * node)
     {
-        auto it = std::find(std::begin(mChildren), std::end(mChildren), node);
+        app_assert(node != 0);
 
-        if(it != std::end(mChildren))
+        if (node->mParent != this)
         {
-            node->mParent = nullptr;
-            delete node;
-            mChildren.erase(it);
-            return true;
+            return false;
         }
 
-        return false;
+        auto it = std::find(std::begin(mChildren), std::end(mChildren), node);
+
+        app_assert(it != std::end(mChildren));
+
+        mChildren.erase(it);
+        node->mParent = nullptr;
+
+        return true;
     }
 
     std::string const &

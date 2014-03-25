@@ -67,6 +67,14 @@ namespace Xml
         }
 
         /**
+         * Removes a child node.
+         *
+         * @return True is the element has been removed, false otherwise.
+         */
+        bool
+        remove(Node * node) override;
+
+        /**
          * Sets the root element of the document
          *
          * @param root New root of the document
