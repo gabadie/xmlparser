@@ -16,11 +16,11 @@ namespace Xsd
     }
 
     void
-    Attribute:init(const std::string & name, bool required, const std::string & typeName, bool ref)
+    Attribute::init(const std::string & name, bool required, const std::string & typeName, bool ref)
     {
         mName = name;
         mRequired = required;
-        Xsd::Checker::addAttribute(name, &this);
+        Xsd::Checker::addAttribute(name, this);
         if(!ref)
         {
             Xsd::Checker::getInstance().addTypedAttribute(name, typeName);

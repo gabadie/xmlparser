@@ -207,7 +207,7 @@ namespace Xsd
     Checker::getAttributeType(const std::string & attributeName)
     {
         std::string typeName = attributesTypesMap.find(attributeName);
-        if(type == attributesTypesMap::end)
+        if(typeName == attributesTypesMap::end)
         {
             return NULL;
         }
