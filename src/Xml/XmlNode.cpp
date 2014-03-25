@@ -1,3 +1,5 @@
+
+#include "../AppDebug.hpp"
 #include "XmlNode.hpp"
 
 namespace Xml
@@ -11,7 +13,7 @@ namespace Xml
 
     Node::~Node()
     {
-
+        detach();
     }
 
     Document const *
@@ -24,6 +26,21 @@ namespace Xml
     Node::parent() const
     {
         return mParent;
+    }
+
+    void
+    Node::detach()
+    {
+        if (mParent == nullptr)
+        {
+            return;
+        }
+
+#ifdef APP_DEBUG
+        app_assert(mParent->remove(this) == true);
+#else
+        mParent->remove(this);
+#endif
     }
 
     std::string const &

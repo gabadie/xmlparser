@@ -196,7 +196,7 @@ misc:
             $$->push_back($2);
         }
     } |
-    /* vide */
+    /* empty */
     {
         /* ---------------------------------------------------- empty misc */
         /*
@@ -271,11 +271,45 @@ atts:
         free($2);
         free($4);
     } |
-    /* vide */
+    /* empty */
     {
-        /* ---------------------------------------------------- element with children */
         $$ = new Xml::Element::AttributesMap();
+    } |
+
+    /* Handle Xml::Element's attributes parsing errors */
+
+    /* Conflit décalage/réduction à cause des règles "atts NOM EGAL" et "atts VALEUR"
+     Ce conflit est safe car Bison est greedy et va matcher "atts NOM EGAL VALEUR" en priorité
+     et non "atts NOM EGAL" puis "atts VALEUR" */
+    atts NOM EGAL
+    {
+        Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + std::string($2) + "=");
+        $$ = $1;
+        free($2);
+    } |
+    atts EGAL VALEUR
+    {
+        Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + "=" + std::string($3));
+        $$ = $1;
+        free($3);
+    } |
+    atts VALEUR
+    {
+        Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + std::string($2));
+        $$ = $1;
+        free($2);
     };
+
+    /* Errors not handled */
+    /*
+    atts NOM
+    {
+        $$ = $1;
+    } |
+    atts NOM EGAL NOM
+    {
+        $$ = $1;
+    }; /**/
 
 item:
     element
@@ -306,7 +340,7 @@ content:
         $$ = $1;
         $$->push_back($2);
     } |
-    /* vide */
+    /* empty */
     {
         /* ---------------------------------------------------- element's content end */
         $$ = new std::list<Xml::Node *>();

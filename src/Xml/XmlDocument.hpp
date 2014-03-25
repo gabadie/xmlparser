@@ -67,6 +67,14 @@ namespace Xml
         }
 
         /**
+         * Removes a child node.
+         *
+         * @return True is the element has been removed, false otherwise.
+         */
+        bool
+        remove(Node * node) override;
+
+        /**
          * Sets the root element of the document
          *
          * @param root New root of the document
@@ -111,6 +119,17 @@ namespace Xml
          */
         void
         appendNode(Node * node) override;
+
+        /**
+         * Tells whether or not the element has the given node in
+         * its children recursively.
+         *
+         * @param node Node to find
+         *
+         * @return True if found, false otherwise.
+         */
+        bool
+        hasChild(Node const * node) const override;
 
     protected:
         Element * mRoot;     ///< Root of the XML document

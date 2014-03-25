@@ -84,6 +84,14 @@ testXmlNodeDeletion()
     {
         test_assert(root.elements().size() == 1);
         test_assert(root.elements()[0]->name() == "child2");
+        test_assert(c1->parent() == nullptr);
+    }
+
+    delete c1;
+    delete c2;
+
+    {
+        test_assert(root.elements().size() == 0);
     }
 }
 

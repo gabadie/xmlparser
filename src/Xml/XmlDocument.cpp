@@ -61,6 +61,34 @@ namespace Xml
         return mChildren;
     }
 
+    bool
+    Document::remove(Node * node)
+    {
+        app_assert(node != 0);
+
+        if (node->mParent != this)
+        {
+            return false;
+        }
+
+        {
+            auto it = std::find(std::begin(mChildren), std::end(mChildren), node);
+
+            app_assert(it != std::end(mChildren));
+
+            mChildren.erase(it);
+        }
+
+        if (node == (Node *) mRoot)
+        {
+            mRoot = nullptr;
+        }
+
+        node->mParent = nullptr;
+
+        return true;
+    }
+
     void
     Document::setRoot(Element * root)
     {
@@ -69,35 +97,32 @@ namespace Xml
             return;
         }
 
-        if(root != nullptr)
+        if(root == nullptr)
         {
-            // If there is already a root node...
-            if(mRoot != nullptr)
-            {
-                auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
+            delete mRoot;
 
-                app_assert(it != std::end(mChildren));
+            return;
+        }
 
-                // ...we delete it
-                delete mRoot;
+        // If there is already a root node...
+        if(mRoot != nullptr)
+        {
+            auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
 
-                // and replaces it by the new one
-                *it = root;
-                root->mParent = this;
-            }
-            else
-            {
-                this->appendNode(root);
-            }
+            app_assert(it != std::end(mChildren));
+
+            // ...we delete it
+            mRoot->mParent = nullptr;
+            delete mRoot;
+
+            // and replaces it by the new one
+            *it = root;
+            root->mParent = this;
         }
         else
         {
-            auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
-            mChildren.erase(it);
-            delete mRoot;
+            this->appendNode(root);
         }
-
-        mRoot = root;
     }
 
     bool
@@ -124,6 +149,7 @@ namespace Xml
             auto const & c = mChildren[i];
 
             app_assert(c != nullptr);
+            app_assert(c->mParent == this);
 
             c->exportToStream(stream, level, indent);
 
@@ -137,20 +163,13 @@ namespace Xml
         app_assert(documentNode != nullptr);
         app_assert(documentNode->contentText() == ""); // make sure we are not appending a Xml::Text
 
-        app_assert(
-            std::find(std::begin(mChildren), std::end(mChildren), documentNode)
-            == std::end(mChildren)
-        );
-
-        app_assert(mRoot == nullptr || !mRoot->hasChild(documentNode));
+        documentNode->detach();
 
         // A document has only one Xml::Element
         if (documentNode->isElement())
         {
             if (mRoot != nullptr)
             {
-                auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
-                mChildren.erase(it);
                 delete mRoot;
             }
 
@@ -161,4 +180,28 @@ namespace Xml
         documentNode->mParent = this;
     }
 
+    bool
+    Document::hasChild(Node const * node) const
+    {
+        for(auto const & c : mChildren)
+        {
+            app_assert(c != nullptr);
+            app_assert(c->mParent == this);
+
+            if(c == node)
+            {
+                return true;
+            }
+
+            if(c->isElement())
+            {
+                if(c->hasChild(node))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

@@ -2,7 +2,7 @@
 # List of the application's tests
 #
 
-testDocument.cpp
+testXmlDocument.cpp
 testParsing.cpp
 testRE2.cpp
 testXmlComment.cpp

@@ -48,29 +48,6 @@ namespace Xml
     }
 
 
-    bool
-    Element::hasChild(Node * node) const
-    {
-        for(auto const & c : mChildren)
-        {
-            if(c == node)
-            {
-                app_assert(node->mParent == this);
-                return true;
-            }
-
-            if(c->isElement())
-            {
-                if(static_cast<Element *>(c)->hasChild(node))
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     Element::NodeList const  &
     Element::children() const
     {
@@ -83,6 +60,9 @@ namespace Xml
         ElementList elements;
         for(auto const & c : mChildren)
         {
+            app_assert(c != nullptr);
+            app_assert(c->mParent == this);
+
             if(c->isElement())
             {
                 elements.push_back(static_cast<Element const *>(c));
@@ -97,6 +77,9 @@ namespace Xml
         ElementList elements;
         for(auto const & c : mChildren)
         {
+            app_assert(c != nullptr);
+            app_assert(c->mParent == this);
+
             if(c->isElement())
             {
                 auto const element = static_cast<Element const *>(c);
@@ -117,6 +100,7 @@ namespace Xml
         for(auto const & c : mChildren)
         {
             app_assert(c != nullptr);
+            app_assert(c->mParent == this);
 
             std::string const text = c->contentText();
 
@@ -148,6 +132,9 @@ namespace Xml
     {
         for (auto node : mChildren)
         {
+            app_assert(node != nullptr);
+            app_assert(node->mParent == this);
+
             node->mParent = nullptr;
             delete node;
         }
@@ -170,17 +157,21 @@ namespace Xml
     bool
     Element::remove(Node * node)
     {
-        auto it = std::find(std::begin(mChildren), std::end(mChildren), node);
+        app_assert(node != 0);
 
-        if(it != std::end(mChildren))
+        if (node->mParent != this)
         {
-            node->mParent = nullptr;
-            delete node;
-            mChildren.erase(it);
-            return true;
+            return false;
         }
 
-        return false;
+        auto it = std::find(std::begin(mChildren), std::end(mChildren), node);
+
+        app_assert(it != std::end(mChildren));
+
+        mChildren.erase(it);
+        node->mParent = nullptr;
+
+        return true;
     }
 
     std::string const &
@@ -253,6 +244,7 @@ namespace Xml
             for(auto const & c : mChildren)
             {
                 app_assert(c != nullptr);
+                app_assert(c->mParent == this);
 
                 if(!c->isElement())
                 {
@@ -361,6 +353,7 @@ namespace Xml
         for(auto const & c : mChildren)
         {
             app_assert(c != nullptr);
+            app_assert(c->mParent == this);
 
             c->exportToStream(stream, level + 1, indent);
             stream << "\n";
@@ -380,13 +373,36 @@ namespace Xml
     {
         app_assert(node != nullptr);
         app_assert(node != this);
-        app_assert(
-            std::find(std::begin(mChildren), std::end(mChildren), node)
-            == std::end(mChildren)
-        );
+
+        node->detach();
 
         mChildren.push_back(node);
         node->mParent = this;
+    }
+
+    bool
+    Element::hasChild(Node const * node) const
+    {
+        for(auto const & c : mChildren)
+        {
+            app_assert(c != nullptr);
+            app_assert(c->mParent == this);
+
+            if(c == node)
+            {
+                return true;
+            }
+
+            if(c->isElement())
+            {
+                if(static_cast<Element *>(c)->hasChild(node))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
 

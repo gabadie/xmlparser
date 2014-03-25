@@ -37,6 +37,11 @@ namespace Xml
         Object const *
         parent() const override final;
 
+        /**
+         * Detaches the node from his parent if one
+         */
+        void
+        detach();
 
         /**
         * Clones the Xml Node
