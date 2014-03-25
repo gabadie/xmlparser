@@ -39,7 +39,7 @@ namespace Xml
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
 
-    protected:
+    private:
         std::string const mContent;
 
         friend class Xml::Object;

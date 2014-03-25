@@ -110,7 +110,7 @@ namespace Xml
         setAttribute(char const * name, char const * value,
             KeyValues && ...keyValues);
 
-    protected:
+    private:
         std::string mName;         ///< Name of the PI
         AttributesMap mAttributes; ///< Attributes of the element
 

@@ -131,7 +131,7 @@ namespace Xml
         bool
         hasChild(Node const * node) const override;
 
-    protected:
+    private:
         Element * mRoot;     ///< Root of the XML document
         NodesList mChildren; ///< Children nodes
         //DocType mDocType;  ///< DocType of the XML document //TODO
