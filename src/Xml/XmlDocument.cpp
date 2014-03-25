@@ -167,7 +167,8 @@ namespace Xml
             == std::end(mChildren)
         );
 
-        app_assert(mRoot == nullptr || !mRoot->hasChild(documentNode));
+        //app_assert(mRoot == nullptr || !mRoot->hasChild(documentNode));
+        // TODO: detache element
 
         // A document has only one Xml::Element
         if (documentNode->isElement())
@@ -184,4 +185,27 @@ namespace Xml
         documentNode->mParent = this;
     }
 
+    bool
+    Document::hasChild(Node * node) const
+    {
+        for(auto const & c : mChildren)
+        {
+            app_assert(node->mParent == this);
+
+            if(c == node)
+            {
+                return true;
+            }
+
+            if(c->isElement())
+            {
+                if(c->hasChild(node))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

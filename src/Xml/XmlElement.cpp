@@ -40,29 +40,6 @@ namespace Xml
     }
 
 
-    bool
-    Element::hasChild(Node * node) const
-    {
-        for(auto const & c : mChildren)
-        {
-            if(c == node)
-            {
-                app_assert(node->mParent == this);
-                return true;
-            }
-
-            if(c->isElement())
-            {
-                if(static_cast<Element *>(c)->hasChild(node))
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     Element::NodeList const  &
     Element::children() const
     {
@@ -383,6 +360,30 @@ namespace Xml
 
         mChildren.push_back(node);
         node->mParent = this;
+    }
+
+    bool
+    Element::hasChild(Node * node) const
+    {
+        for(auto const & c : mChildren)
+        {
+            app_assert(c->mParent == this);
+
+            if(c == node)
+            {
+                return true;
+            }
+
+            if(c->isElement())
+            {
+                if(static_cast<Element *>(c)->hasChild(node))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
 
