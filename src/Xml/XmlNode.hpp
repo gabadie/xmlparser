@@ -15,12 +15,6 @@ namespace Xml
     class Node : public Object
     {
     public:
-
-        /**
-         * Constructor
-         */
-        Node();
-
         /**
          * Destructor
          */
@@ -48,8 +42,11 @@ namespace Xml
         // Pointer to the parent object
         Object * mParent;
 
-        friend class Xml::Document;
-        friend class Xml::Element;
+
+        /**
+         * Constructor
+         */
+        Node();
 
         /**
          * Gets the content text if is a Xml::Text
@@ -57,6 +54,13 @@ namespace Xml
         virtual
         std::string const &
         contentText() const;
+
+
+        friend class Xml::Document;
+        friend class Xml::DocumentNode;
+        friend class Xml::Element;
+        friend class Xml::Text;
+
     };
 
 }

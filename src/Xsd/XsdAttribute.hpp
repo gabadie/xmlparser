@@ -2,6 +2,7 @@
 #define _H_XSD_ATTRIBUTE
 
 #include <string>
+#include <utility>
 
 #include "XsdType.hpp"
 
@@ -14,7 +15,7 @@ namespace Xsd
      */
     class Attribute
     {
-        public :
+        public:
             /**
              * Constructor
              */
@@ -24,6 +25,9 @@ namespace Xsd
              * Destructor
              */
             virtual ~Attribute();
+
+            Attribute
+            parseAttribute(Xml::XmlElement xmlElement) const;
 
         protected:
             std::string mName;

@@ -24,7 +24,7 @@ namespace Xml
         mAttributes(),
         mChildren()
     {
-
+        app_assert(name != "");
     }
 
     Element::~Element()
@@ -47,6 +47,7 @@ namespace Xml
         {
             if(c == node)
             {
+                app_assert(node->mParent == this);
                 return true;
             }
 
@@ -98,24 +99,6 @@ namespace Xml
             }
         }
         return elements;
-    }
-
-    Element const *
-    Element::parentElement() const
-    {
-        auto parent = mParent;
-
-        while(parent != nullptr)
-        {
-            if(parent->isElement())
-            {
-                return static_cast<Element const *>(parent);
-            }
-
-            parent = parent->parent();
-        }
-
-        return nullptr;
     }
 
     std::string
@@ -201,6 +184,8 @@ namespace Xml
     void
     Element::setName(std::string const & name)
     {
+        app_assert(name != "");
+
         mName = name;
     }
 
@@ -217,6 +202,8 @@ namespace Xml
     void
     Element::setAttribute(std::string const & name, std::string const & value)
     {
+        app_assert(name != "");
+
         mAttributes[name] = value;
     }
 

@@ -4,4 +4,12 @@
 
 testDocument.cpp
 testParsing.cpp
+testRE2.cpp
+testXmlComment.cpp
+testXmlElement.cpp
+testXmlElementParsing.cpp
+testXmlNode.cpp
+testXmlProcessingInstruction.cpp
+testXmlText.cpp
 testXPath.cpp
+testXsl.cpp

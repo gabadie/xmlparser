@@ -75,14 +75,6 @@ namespace Xml
         elements(std::string const & tag) const;
 
         /**
-         * Get the parent element of the element
-         *
-         * @return The parent element if found, nullptr otherwise.
-         */
-        Element const *
-        parentElement() const;
-
-        /**
          * Get the text content of the element
          *
          * @return The text content of the element
