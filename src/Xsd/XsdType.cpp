@@ -19,20 +19,20 @@ namespace Xsd
         }
 
         mRegex = getRegexFromElement(xmlElement);
-        Checker.addType(name, this);
+        Checker::getInstance().addType(name, this);
     }
 
     Type::Type(const Xml::Element & xmlElement, const std::string & name)
     {
         mRegex = getRegexFromElement(xmlElement);
-        Checker.addType(name, this);
+        Checker::getInstance().addType(name, this);
     }
 
 
-    Type::Type(const std::string & name, const std::string & const regex, std::list<Attribute *> attrs):
+    Type::Type(const std::string & name, const std::string & regex, std::list<Attribute *> attrs):
         mRegex(regex), mAttributes(attrs)
     {
-        Checker.addType(name, this);
+        Checker::getInstance().addType(name, this);
     }
 
     Type::~Type()

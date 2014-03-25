@@ -43,7 +43,7 @@ namespace Xsd
 
         if(!(xsdDoc.root()->attribute(NAME_ATTR).compare(SCHEMA_ELT) == 0))
         {
-            throwInvalidElementException(xsdDoc.root().attribute(NAME_ATTR), SCHEMA_ELT);
+            throwInvalidElementException(xsdDoc.root()->attribute(NAME_ATTR), SCHEMA_ELT);
         }
 
         namespacePrefix = "TODO";
