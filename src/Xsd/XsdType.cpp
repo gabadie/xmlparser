@@ -130,7 +130,7 @@ namespace Xsd
         std::string ref = xmlElement.attribute(Checker::REF_ATTR);
 
         // Name and ref attributes
-        if((name.compare(notFound) == 0) && (!ref.compare(notFound) == 0))
+        if((name.compare(notFound) == 0) && (ref.compare(notFound) != 0))
         {
             return true;
         }
@@ -179,7 +179,7 @@ namespace Xsd
             else if(xmlElement.elements().size() > 0)
             {
                 Xml::Element & typeElement = xmlElement.elements().front();
-                if(!typeElement.name().compare(Checker::COMPLEX_TYPE_ELEMENT))
+                if(typeElement.name().compare(Checker::COMPLEX_TYPE_ELEMENT) == 0)
                 {
                     parseComplexType(*ci, "", true);
                 }
