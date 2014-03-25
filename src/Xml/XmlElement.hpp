@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <re2/re2.h>
 
 #include "XmlForward.hpp"
 #include "XmlDocumentNode.hpp"

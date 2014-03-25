@@ -35,28 +35,20 @@ namespace Xsd
     }
 
     static std::string
-    Type::parseComplexType(const Xml::Element & xmlElement) const
+    Type::parseComplexType(const Xml::Element & xmlElement, const std::string & separator, bool eltSeqChoice)
     {
-        //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (refaire)
+        bool eltParsed = false;
         std::string regex = "";
-
-
-static const std::string NAME_ATTR = "name";
-static const std::string TYPE_ATTR = "type";
-static const std::string REF_ATTR = "ref";
-static const std::string USE_ATTR = "use";
-static const std::string MIN_OCC_ATTR = "minOccurs";
-static const std::string MAX_OCC_ATTR = "maxOccurs";
 
         for (std::list<Xml::Element>::const_iterator ci = xmlElement.elements().begin(); ci != xmlElement.elements().end(); ++ci)
         {
             if(ci->name().equals(Checker.SEQUENCE_ELT))
             {
-                std
+                parseComplexType(*ci, "", true);
             }
-            else if(ci->name().equals(Checker.CHOICE_ELT)
+            else if(ci->name().equals(Checker.CHOICE_ELT))
             {
-
+                parseComplexType(*ci, "|", true);
             }
             else if(ci->name().equals(Checker.ELEMENT_ELT)
             {
