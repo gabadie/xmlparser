@@ -160,13 +160,14 @@ miscitem:
     COMMENT
     {
         /* ---------------------------------------------------- comment node */
-        $$ = (Xml::Node *) new Xml::Comment(std::string($1));
+        $$ = static_cast<Xml::Node *>(new Xml::Comment(std::string($1)));
 
         /*
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
          */
         free($1);
     };
+
 
 misc:
     misc miscitem
@@ -195,6 +196,12 @@ misc:
              */
             $$->push_back($2);
         }
+    } |
+    misc DONNEES
+    {
+        Xml::parserSyntaxError(std::string("Text found outside root: ") + "\"" + std::string($2) + "\"");
+        $$ = nullptr;
+        free($2);
     } |
     /* empty */
     {
@@ -278,24 +285,24 @@ atts:
 
     /* Handle Xml::Element's attributes parsing errors */
 
-    /* Conflit décalage/réduction à cause des règles "atts NOM EGAL" et "atts VALEUR"
-     Ce conflit est safe car Bison est greedy et va matcher "atts NOM EGAL VALEUR" en priorité
-     et non "atts NOM EGAL" puis "atts VALEUR" */
+    /* Shift/reduce warning caused by the rules "atts NOM EGAL" et "atts VALEUR"
+     This conflict is safe because Bison is greedy and will match "atts NOM EGAL VALEUR" first
+     instead of "atts NOM EGAL" and "atts VALEUR" */
     atts NOM EGAL
     {
-        Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + std::string($2) + "=");
+        Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + "\"" + std::string($2) + "=\"");
         $$ = $1;
         free($2);
     } |
     atts EGAL VALEUR
     {
-        Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + "=" + std::string($3));
+        Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + "\"=" + std::string($3) + "\"");
         $$ = $1;
         free($3);
     } |
     atts VALEUR
     {
-        Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + std::string($2));
+        Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + "\"" + std::string($2) + "\"");
         $$ = $1;
         free($2);
     };
@@ -315,12 +322,12 @@ item:
     element
     {
         /* ---------------------------------------------------- element in another element */
-        $$ = (Xml::Node *) $1;
+        $$ = static_cast<Xml::Node *>($1);
     } |
     DONNEES
     {
         /* ---------------------------------------------------- text in an element */
-        $$ = (Xml::Node *) new Xml::Text(std::string($1));
+        $$ = static_cast<Xml::Node *>(new Xml::Text(std::string($1)));
 
         /*
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.

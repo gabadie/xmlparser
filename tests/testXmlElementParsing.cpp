@@ -133,6 +133,8 @@ testXmlElementParsingBadAttributes()
     auto balise1 = doc->root()->elements("balise1");
     auto balise2 = doc->root()->elements("balise2");
 
+    // If the following tests don't pass, see in XmlParser.y the rule "atts"
+    // The error may be caused by a shift/reduce conflict.
     test_assert(balise1.size() == 1);
     test_assert(balise2.size() == 1);
     test_assert(balise1[0]->attribute("attr4") == "value4");
