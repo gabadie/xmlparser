@@ -116,6 +116,8 @@ namespace Xml
         Element * mRoot;     ///< Root of the XML document
         NodesList mChildren; ///< Children nodes
         //DocType mDocType;  ///< DocType of the XML document //TODO
+        std::string mVersionInfo; ///< Version of the xml
+        std::string mEncoding; ///< Encoding format
 
         friend XML_BISON_MAIN();
     };
