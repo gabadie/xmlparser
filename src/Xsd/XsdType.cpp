@@ -3,6 +3,11 @@
 
 namespace Xsd
 {
+
+    const std::string TYPE_SUFFIX = "TYPE";
+    const std::string UNBOUNDED = "unbounded";
+    const std::string UNBOUNDED_EXP_REG = "*";
+
     Type::Type(const Xml::Element & xmlElement)
     {
         std::string name = xmlElement.attribute(Checker.NAME_ATTR);

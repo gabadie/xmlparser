@@ -56,9 +56,9 @@ namespace Xsd
         std::string mRegex;
         std::list<Attribute *> mAttributes;
 
-        static const std::string TYPE_SUFFIX = "TYPE";
-        static const std::string UNBOUNDED = "unbounded";
-        static const std::string UNBOUNDED_EXP_REG = "*";
+        static const std::string TYPE_SUFFIX;
+        static const std::string UNBOUNDED;
+        static const std::string UNBOUNDED_EXP_REG;
     };
  }
 

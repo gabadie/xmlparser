@@ -11,9 +11,14 @@
 namespace Xsd
 {
     Attribute::Attribute(const std::string & name, bool required, const std::string & typeName, bool ref):
-        mName(name),
-        mRequired(required)
     {
+        init(name, required, typeName, ref);
+    }
+
+    Attribute:init(const std::string & name, bool required, const std::string & typeName, bool ref)
+    {
+        mName = name;
+        mRequired = required;
         Xsd::Checker.addAttribute(name, &this); {
         if(!ref)
         {
@@ -23,7 +28,7 @@ namespace Xsd
 
     Attribute::Attribute(const Xml::Element & xmlElement);
     {
-        bool required = false, ref = false;
+        bool required = false, hasRef = false;
         std::string notFound = "";
         std::string name = xmlElement.attribute(Checker.NAME_ATTR);
         std::string ref = xmlElement.attribute(Checker.REF_ATTR);
@@ -36,7 +41,7 @@ namespace Xsd
             if(!type.compare(notFound) && Xsd::Type.isSimpleType(type))
             {
                     std::vector<std::string> tokens;
-                    boost::algorithm::split(tokens, type, is_any_of(":"));
+                    boost::algorithm::split(tokens, type, boost::algorithm::is_any_of(":"));
             }
             else
             {
@@ -46,7 +51,7 @@ namespace Xsd
         else if(!ref.compare(notFound))
         {
             name = ref;
-            ref = true;
+            hasRef = true;
         }
         else
         {
@@ -55,7 +60,7 @@ namespace Xsd
 
         if(!use.compare(notFound))
         {
-            if(use.compare(USE_REQUIRED_VALUE))
+            if(use.compare(Checker.USE_REQUIRED_VALUE))
             {
                 required = true;
             }
@@ -66,10 +71,6 @@ namespace Xsd
         }
 
 
-        this(name, required, type, ref);
-    }
-
-    Attribute::~Attribute()
-    {
+        init(name, required, typeName, hasRef);
     }
 }

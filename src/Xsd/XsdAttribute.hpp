@@ -20,16 +20,18 @@ namespace Xsd
              */
             Attribute(const Xml::Element & xmlElement);
 
-            Attribute(const std::string & name, bool required);
+            Attribute(const std::string & name, bool required, const std::string & typeName, bool ref);
 
             /**
              * Destructor
              */
-            virtual ~Attribute();
+            virtual ~Attribute() {}
 
         protected:
             std::string mName;
             bool mRequired;
+
+            init(const std::string & name, bool required, const std::string & typeName, bool ref);
     };
 }
 
