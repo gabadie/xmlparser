@@ -38,7 +38,7 @@ void applyDefaultTemplate(Xml::Node* context, Xml::Document& xslDoc, vector<Xml:
         return;
     }
 
-    for (auto child : context->children())
+    for (auto child : (Element*)context->children())
     {
         Xml::Element xslTemplate = xslDoc.getTemplate(child);
 
