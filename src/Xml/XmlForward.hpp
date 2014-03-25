@@ -19,6 +19,20 @@ namespace Xml
 
 }
 
+namespace Xsl
+{
+
+    /*
+     * Namespace's classes
+     */
+    class Instruction;
+    class ValueOf;
+    class ForEach;
+    class ApplyTemplate; 
+
+
+}
+
 /*
  * Bison parser
  */

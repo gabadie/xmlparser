@@ -113,7 +113,7 @@ element:
     emptytag
     {
         /* ---------------------------------------------------- empty element */
-        /* TODO */
+        $$ = $1;
     } |
     stag content etag
     {
@@ -126,7 +126,7 @@ element:
 
         for(Xml::Node * node : *$2)
         {
-            if (node == 0)
+            if (node == nullptr)
             {
                 continue;
             }
@@ -147,7 +147,7 @@ element:
             Xml::parserSemanticError("unexpected </" + *$3 + "> (it should have been </" + $1->name() + ">)");
 
             delete $$;
-            $$ = 0;
+            $$ = nullptr;
         }
 
         /*
@@ -196,7 +196,7 @@ misc:
             $$->push_back($2);
         }
     } |
-    /* vide */
+    /* empty */
     {
         /* ---------------------------------------------------- empty misc */
         /*
@@ -209,8 +209,15 @@ emptytag:
     INF NOM atts SLASH SUP
     {
         /* ---------------------------------------------------- empty element tag */
-        /* TODO: empty tag */
-        $$ = nullptr;
+        $$ = new Xml::Element(std::string($2));
+
+        for(auto const & p : *$3)
+        {
+            $$->setAttribute(p.first, p.second);
+        }
+
+        free($2);
+        delete $3;
     };
 
 stag:
@@ -218,6 +225,14 @@ stag:
     {
         /* ---------------------------------------------------- nonempty element start tag */
         $$ = new Xml::Element(std::string($2));
+
+        for(auto const & p : *$3)
+        {
+            $$->setAttribute(p.first, p.second);
+        }
+
+        free($2);
+        delete $3;
     } |
     INF NOM COLON NOM atts SUP
     {
@@ -256,11 +271,45 @@ atts:
         free($2);
         free($4);
     } |
-    /* vide */
+    /* empty */
     {
-        /* ---------------------------------------------------- element with children */
         $$ = new Xml::Element::AttributesMap();
+    } |
+
+    /* Handle Xml::Element's attributes parsing errors */
+
+    /* Conflit décalage/réduction à cause des règles "atts NOM EGAL" et "atts VALEUR"
+     Ce conflit est safe car Bison est greedy et va matcher "atts NOM EGAL VALEUR" en priorité
+     et non "atts NOM EGAL" puis "atts VALEUR" */
+    atts NOM EGAL
+    {
+        Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + std::string($2) + "=");
+        $$ = $1;
+        free($2);
+    } |
+    atts EGAL VALEUR
+    {
+        Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + "=" + std::string($3));
+        $$ = $1;
+        free($3);
+    } |
+    atts VALEUR
+    {
+        Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + std::string($2));
+        $$ = $1;
+        free($2);
     };
+
+    /* Errors not handled */
+    /*
+    atts NOM
+    {
+        $$ = $1;
+    } |
+    atts NOM EGAL NOM
+    {
+        $$ = $1;
+    }; /**/
 
 item:
     element
@@ -291,7 +340,7 @@ content:
         $$ = $1;
         $$->push_back($2);
     } |
-    /* vide */
+    /* empty */
     {
         /* ---------------------------------------------------- element's content end */
         $$ = new std::list<Xml::Node *>();
@@ -325,7 +374,7 @@ yyrestart(FILE * input_file);
 Xml::Document *
 Xml::parse(std::istream & xmlContent, Xml::Log * log)
 {
-    Xml::Document * e = 0;
+    Xml::Document * e = nullptr;
 
     {
         Xml::Log tmpLog;

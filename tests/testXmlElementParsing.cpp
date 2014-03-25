@@ -84,6 +84,64 @@ testXmlElementParsingBadClose()
     delete doc;
 }
 
+void
+testXmlElementParsingAttributes()
+{
+    std::string content (xml_code(
+        <hello>
+            <balise1 attr1="value1">
+            </balise1>
+            <balise2 attr2="value2" attr3="value3">
+            </balise2>
+        </hello>
+    ));
+    Xml::Log log;
+
+    Xml::Document * doc = Xml::parse(content, &log);
+
+    test_assert(doc != nullptr);
+
+    auto balise1 = doc->root()->elements("balise1");
+    auto balise2 = doc->root()->elements("balise2");
+
+    test_assert(balise1.size() == 1);
+    test_assert(balise2.size() == 1);
+    test_assert(balise1[0]->attribute("attr1") == "value1");
+    test_assert(balise2[0]->attribute("attr2") == "value2");
+    test_assert(balise2[0]->attribute("attr3") == "value3");
+
+    delete doc;
+}
+
+void
+testXmlElementParsingBadAttributes()
+{
+    std::string content (xml_code(
+        <hello>
+            <balise1 ="value1" attr4="value4" "value5" "value7" attr6="value6">
+            </balise1>
+            <balise2 attr2= attr3="value3">
+            </balise2>
+        </hello>
+    ));
+    Xml::Log log;
+
+    Xml::Document * doc = Xml::parse(content, &log);
+
+    test_assert(doc != nullptr);
+
+    auto balise1 = doc->root()->elements("balise1");
+    auto balise2 = doc->root()->elements("balise2");
+
+    test_assert(balise1.size() == 1);
+    test_assert(balise2.size() == 1);
+    test_assert(balise1[0]->attribute("attr4") == "value4");
+    test_assert(balise1[0]->attribute("attr6") == "value6");
+    test_assert(balise2[0]->attribute("attr2") == "");
+    test_assert(balise2[0]->attribute("attr3") == "value3");
+
+    delete doc;
+}
 
 int
 main()
@@ -91,6 +149,8 @@ main()
     testXmlElementParsingBasic();
     testXmlElementParsingUnclosed();
     testXmlElementParsingBadClose();
+    testXmlElementParsingAttributes();
+    testXmlElementParsingBadAttributes();
 
     return 0;
 }
