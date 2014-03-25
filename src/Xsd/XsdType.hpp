@@ -31,6 +31,9 @@ namespace Xsd
         static std::string
         parseComplexType(const Xml::Element & xmlElement, std::string separator, bool eltSeqChoice);
 
+        bool
+        isValid(const Xml::Element & element);
+
         /**
          * Create the type regex
          */
