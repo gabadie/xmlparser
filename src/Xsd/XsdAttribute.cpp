@@ -21,7 +21,7 @@ namespace Xsd
         }
     }
 
-    Attribute(const Xml::Element & xmlElement);
+    Attribute::Attribute(const Xml::Element & xmlElement);
     {
         bool required = false, ref = false;
         std::string notFound = "";
@@ -30,10 +30,10 @@ namespace Xsd
         std::string type = xmlElement.attribute(Checker.TYPE_ATTR);
         std::string use = xmlElement.attribute(Checker.USE_ATTR);
 
-        if(!name.equals(notFound))
+        if(!name.compare(notFound))
         {
             // Add an attribute to the attribute type map
-            if(!type.equals(notFound) && Xsd::Type.isSimpleType(type))
+            if(!type.compare(notFound) && Xsd::Type.isSimpleType(type))
             {
                     std::vector<std::string> tokens;
                     boost::algorithm::split(tokens, type, is_any_of(":"));
@@ -43,7 +43,7 @@ namespace Xsd
                 Checker.throwInvalidAttributeValueException(name, Checker.TYPE_ATTR, type);
             }
         }
-        else if(!ref.equals(notFound))
+        else if(!ref.compare(notFound))
         {
             name = ref;
             ref = true;
@@ -53,9 +53,9 @@ namespace Xsd
             Checker.throwMissingAttributeException(name, Checker.TYPE_ATTR);
         }
 
-        if(!use.equals(notFound))
+        if(!use.compare(notFound))
         {
-            if(use.equals(USE_REQUIRED_VALUE))
+            if(use.compare(USE_REQUIRED_VALUE))
             {
                 required = true;
             }

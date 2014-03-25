@@ -50,19 +50,19 @@ static const std::string MAX_OCC_ATTR = "maxOccurs";
 
         for (std::list<Xml::Element>::const_iterator ci = xmlElement.elements().begin(); ci != xmlElement.elements().end(); ++ci)
         {
-            if(ci->name().equals(Checker.SEQUENCE_ELT))
+            if(ci->name().compare(Checker.SEQUENCE_ELT))
             {
                 std
             }
-            else if(ci->name().equals(Checker.CHOICE_ELT)
+            else if(ci->name().compare(Checker.CHOICE_ELT)
             {
 
             }
-            else if(ci->name().equals(Checker.ELEMENT_ELT)
+            else if(ci->name().compare(Checker.ELEMENT_ELT)
             {
 
             }
-            else if(ci->name().equals(Checker.ATTRIBUTE_ELT)
+            else if(ci->name().compare(Checker.ATTRIBUTE_ELT)
             {
                 mAttributes.push_back(new Xsd::Attribute(*ci));
             }
@@ -78,13 +78,13 @@ static const std::string MAX_OCC_ATTR = "maxOccurs";
     static bool
     isSimpleType(const std::string & type)
     {
-        return type.equals(checker..getInstance().getStringTypeValue())
-            || type.equals(checker..getInstance().getDateTypeValue());
+        return type.compare(checker..getInstance().getStringTypeValue())
+            || type.compare(checker..getInstance().getDateTypeValue());
     }
 
     static std::string getOccursFromElement(const Xml::Element & xmlElement, const std::string & occursAttrName, const std::string & occursAttrValue)
     {
-        if(occurs.equals(UNBOUNDED))
+        if(occurs.compare(UNBOUNDED))
         {
             return UNBOUNDED_EXP_REG;
         }
@@ -111,10 +111,10 @@ static const std::string MAX_OCC_ATTR = "maxOccurs";
         std::string name = xmlElement.attribute(Checker.NAME_ATTR);
         std::string ref = xmlElement.attribute(Checker.REF_ATTR);
         std::string minOccurs = xmlElement.attribute(Checker.MIN_OCC_ATTR);
-        std::string maxOccurs = xmlElement.attribute(Checker.MAX_OCC_ATTR);
+        std::string supOccurs = xmlElement.attribute(Checker.MAX_OCC_ATTR);
 
         // Min and max occurs attributes
-        if(!minOccurs.equals(notFound))
+        if(!minOccurs.compare(notFound))
         {
             minOccurs = getOccursFromElement(xmlElement, Checker.MIN_OCC_ATTR, sMinOccurs);
         }
@@ -123,7 +123,7 @@ static const std::string MAX_OCC_ATTR = "maxOccurs";
             minOccurs = "1";
         }
 
-        if(!supOccurs.equals(notFound))
+        if(!supOccurs.compare(notFound))
         {
             supOccurs = getOccursFromElement(xmlElement, Checker.MAX_OCC_ATTR, supOccurs);
         }
@@ -132,12 +132,12 @@ static const std::string MAX_OCC_ATTR = "maxOccurs";
             supOccurs = "0";
         }
 
-        if(minOccurs.equals(UNBOUNDED_EXP_REG) && !supOccurs.equals(UNBOUNDED_EXP_REG)
-            || (!supOccurs.equals(UNBOUNDED_EXP_REG) && std::stoi(supOccurs) < std::stoi(minOccurs)))
+        if(minOccurs.compare(UNBOUNDED_EXP_REG) && !supOccurs.compare(UNBOUNDED_EXP_REG)
+            || (!supOccurs.compare(UNBOUNDED_EXP_REG) && std::stoi(supOccurs) < std::stoi(minOccurs)))
         {
             throw new XSDConstructionException("Error: " Checker.MIN_OCC_ATTR + " attribute value is higher than " + Checker.MAX_OCC_ATTR + " value");
         }
-        if(minOccurs.equals(UNBOUNDED_EXP_REG) && supOccurs.equals(UNBOUNDED_EXP_REG))
+        if(minOccurs.compare(UNBOUNDED_EXP_REG) && supOccurs.compare(UNBOUNDED_EXP_REG))
         {
             stringstream out;
             out << (std::stoi(supOccurs) - std::stoi(minOccurs);
@@ -145,7 +145,7 @@ static const std::string MAX_OCC_ATTR = "maxOccurs";
         }
 
         // Name and ref attributes
-        if(name.equals(notFound) && !ref.equals(notFound))
+        if(name.compare(notFound) && !ref.compare(notFound))
         {
             name = ref;
         }
@@ -156,7 +156,7 @@ static const std::string MAX_OCC_ATTR = "maxOccurs";
 
         // Create the regex
         regex = "(<" + name + ">){" + minOccurs + "}";
-        if(!supOccurs.equals("0"))
+        if(!supOccurs.compare("0"))
         {
             regex += "((<" + name + ">?){" + supOccurs + "})";
         }
