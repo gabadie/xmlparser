@@ -353,10 +353,8 @@ namespace Xml
     {
         app_assert(node != nullptr);
         app_assert(node != this);
-        app_assert(
-            std::find(std::begin(mChildren), std::end(mChildren), node)
-            == std::end(mChildren)
-        );
+
+        node->detach();
 
         mChildren.push_back(node);
         node->mParent = this;

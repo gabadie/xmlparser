@@ -162,13 +162,7 @@ namespace Xml
         app_assert(documentNode != nullptr);
         app_assert(documentNode->contentText() == ""); // make sure we are not appending a Xml::Text
 
-        app_assert(
-            std::find(std::begin(mChildren), std::end(mChildren), documentNode)
-            == std::end(mChildren)
-        );
-
-        //app_assert(mRoot == nullptr || !mRoot->hasChild(documentNode));
-        // TODO: detache element
+        documentNode->detach();
 
         // A document has only one Xml::Element
         if (documentNode->isElement())
