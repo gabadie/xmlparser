@@ -37,6 +37,10 @@ namespace Xml
         Object const *
         parent() const override final;
 
+        virtual
+        Node
+        clone() = 0;
+
 
     protected:
         // Pointer to the parent object

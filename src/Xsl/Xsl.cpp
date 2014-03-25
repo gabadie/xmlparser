@@ -11,13 +11,12 @@ std::map<std::string, Xsl::Instruction*> xslInstructions;
 Xml::Document* Xsl::xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc )
 {
     Xml::Document* result = new Xml::Document();
-    vector<Xml::Node*> resultNodes;
 
-    Xsl::applyDefaultTemplate(xmlDoc.root(), xslDoc, resultNodes);
+    Xml::Node* root = Xsl::applyDefaultTemplate(xmlDoc.root(), xslDoc);
 
     try
     {
-        result->setRoot((Xml::Element*) resultNodes[0]);
+        result->setRoot((Xml::Element*) root);
         return result;
     }
     catch(...)
@@ -26,56 +25,63 @@ Xml::Document* Xsl::xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc )
     }
 }
 
-void Xsl::applyDefaultTemplate(Xml::Node* context, Xml::Document& xslDoc, vector<Xml::Node*> &resultNodes)
+Xml::Node* Xsl::applyDefaultTemplate(Xml::Node* context, Xml::Document& xslDoc)
 {
     // Debug only
-
-    if (1==1)
+    if (!context->isElement())
     {
-        resultNodes.push_back(context);
-        return;
+        return &();
     }
 
+    // We create a new element
+    Xml::Element* resultNode = new Xml::Element(context->name());
+
+    // We generate its children
     for (auto child : ((Xml::Element*)context)->children())
     {
-        /*Xml::Element xslTemplate = xslDoc.getTemplate(child);
+        Xml::Node* resultChild;
 
+        Xml::Element xslTemplate = xslDoc.getTemplate(child);
         if (xslTemplate == 0)
         {
-            applyDefaultTemplate(context, xslDoc, resultNodes);
-            return ;
+            resultChild = applyDefaultTemplate(child, xslDoc, resultNodes);
+            resultNode->children().push_back(resultChild);
         }
         else
         {
-           applyTemplate(child, xslDoc, resultNodes, xslTemplate);
-           return ;
-        }*/
-        Xsl::applyDefaultTemplate(context, xslDoc, resultNodes);
+           vector<Xml::Node*> generatedChildren = applyTemplate(child, xslDoc, resultChildren, xslTemplate);
+           resultNode->setChildren( generatedChildren.end(), resultNode->children().begin(), resultNode->children().end() );
+        }
     }
+
+    return resultNode;
 }
 
-void applyTemplate (Xml::Node* context, Xml::Document& xslDoc, vector<Xml::Node*> &resultNodes,    Xml::Element& xslTemplate)
+
+vector<Xml::Node*>  applyTemplate (Xml::Node* context, vector<Xml::Node*> resultNodes, Xml::Document& xslDoc, Xml::Element& xslTemplate)
 {
-    //To suppress ? Already in defaultTemplate
+    vector<Xml::Node*>  resultNodes;
+
     if (&xslTemplate == nullptr)
     {
-        return Xsl::applyDefaultTemplate(context, xslDoc, resultNodes);
+        return Xsl::applyDefaultTemplate(context, xslDoc);
     }
 
     // Attention, ici on parcours des éléments XSL, et pas le document XML qu'on transforme
     for (Xml::Node* node : xslTemplate.children())
     {
-       /* if (node->isElement() && node->namespace() == "xsl")
+        if (node->isElement() && node->namespace() == "xsl")
         {
             (*xslInstructions[((Xml::Element*) node)->name()])(context, xslDoc, resultNodes, node);
         }
         else
-        {*/
+        {
             resultNodes.push_back(node);
-        /*}*/
+        }
     }
 
 }
+
 
 void Xsl::ValueOf::operator () (Xml::Node* context, const Xml::Document& xslDoc,  vector <Xml::Node*> &resultNodes, const Xml::Element xslElement)
 {
