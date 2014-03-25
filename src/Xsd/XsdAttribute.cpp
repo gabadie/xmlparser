@@ -28,7 +28,8 @@ namespace Xsd
 
     }
 
-    Attribute::Attribute(const Xml::Element & xmlElement):
+    static Attribute * const
+    Attribute::parseAttribute(const Xml::Element & xmlElement);
     {
         bool required = false, hasRef = false;
         std::string notFound = "";
@@ -44,6 +45,7 @@ namespace Xsd
             {
                     std::vector<std::string> tokens;
                     boost::algorithm::split(tokens, type, boost::algorithm::is_any_of(":"));
+                    Checker::getInstance().addTypedElement(name, tokens.back());
             }
             else
             {

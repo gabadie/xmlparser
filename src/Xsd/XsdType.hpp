@@ -29,13 +29,19 @@ namespace Xsd
         ~Type();
 
         static std::string
-        parseComplexType(const Xml::Element & xmlElement, const std::string & separator, bool eltSeqChoice);
+        parseComplexType(const Xml::Element & xmlElement, std::string separator, bool eltSeqChoice);
 
         /**
          * Create the type regex
          */
         static bool
         isSimpleType(const std::string & type);
+
+        static bool
+        getNameOrRef(const std::string & type);
+
+        static bool
+        isReference(const Xml::Element & xmlElement);
 
         static const Type *
         parseSimpleType(const std::string & type);
@@ -55,7 +61,7 @@ namespace Xsd
     protected:
 
         std::string mRegex;
-        std::list<Attribute *> mAttributes;
+        std::list<Attribute * const> mAttributes;
 
         static const std::string TYPE_SUFFIX;
         static const std::string UNBOUNDED;
