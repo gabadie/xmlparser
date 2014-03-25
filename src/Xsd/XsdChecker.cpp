@@ -9,25 +9,25 @@
 namespace Xsd
 {
 
-        const std::string Xsd::SCHEMA_ELT = "schema";
-        const std::string Xsd::ELEMENT_ELT = "element";
-        const std::string Xsd::ATTRIBUTE_ELT = "attribute";
-        const std::string Xsd::COMPLEX_TYP_ELT = "complexType";
-        const std::string Xsd::SEQUENCE_ELT = "sequence";
-        const std::string Xsd::CHOICE_ELT = "choice";
+    const std::string SCHEMA_ELT = "schema";
+    const std::string ELEMENT_ELT = "element";
+    const std::string ATTRIBUTE_ELT = "attribute";
+    const std::string COMPLEX_TYP_ELT = "complexType";
+    const std::string SEQUENCE_ELT = "sequence";
+    const std::string CHOICE_ELT = "choice";
 
-        const std::string Xsd::NAME_ATTR = "name";
-        const std::string Xsd::TYPE_ATTR = "type";
-        const std::string Xsd::REF_ATTR = "ref";
-        const std::string Xsd::USE_ATTR = "use";
-        const std::string Xsd::MIN_OCC_ATTR = "minOccurs";
-        const std::string Xsd::MAX_OCC_ATTR = "maxOccurs";
+    const std::string NAME_ATTR = "name";
+    const std::string TYPE_ATTR = "type";
+    const std::string REF_ATTR = "ref";
+    const std::string :USE_ATTR = "use";
+    const std::string MIN_OCC_ATTR = "minOccurs";
+    const std::string MAX_OCC_ATTR = "maxOccurs";
 
-        const std::string Xsd::ROOT = "root";
+    const std::string ROOT = "root";
 
-        const std::string Xsd::STRING_TYPE_VALUE = "string";
-        const std::string Xsd::DATE_TYPE_VALUE = "date";
-        const std::string Xsd::USE_REQUIRED_VALUE = "required";
+    const std::string STRING_TYPE_VALUE = "string";
+    const std::string DATE_TYPE_VALUE = "date";
+    const std::string USE_REQUIRED_VALUE = "required";
 
     Checker::Checker(const Xml::Document & xsdDoc):
         mXsdDoc(xsdDoc),
@@ -39,9 +39,9 @@ namespace Xsd
         new Type(DATE_TYPE_VALUE, "[0-9]{2}-[0-9]{2}-[0-9]{4}", NULL);
         new Type(STRING_TYPE_VALUE, "*", NULL);
 
-        if(!xsdDoc.attribute(NAME_ATTR).compare(SCHEMA_ELT))
+        if(!xsdDoc.root().attribute(NAME_ATTR).compare(SCHEMA_ELT))
         {
-            throwInvalidElementException(xsdDoc.attribute(NAME_ATTR), SCHEMA_ELT);
+            throwInvalidElementException(xsdDoc.root().attribute(NAME_ATTR), SCHEMA_ELT);
         }
 
         namespacePrefix = "TODO";

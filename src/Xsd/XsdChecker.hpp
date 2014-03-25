@@ -24,7 +24,7 @@ namespace Xsd
      */
     class Checker
     {
-    public :
+    public:
         static const std::string SCHEMA_ELT;
         static const std::string ELEMENT_ELT;
         static const std::string ATTRIBUTE_ELT;

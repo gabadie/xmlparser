@@ -70,8 +70,8 @@ namespace Xsd
     static bool
     isSimpleType(const std::string & type)
     {
-        return type.compare(checker..getInstance().getStringTypeValue())
-            || type.compare(checker..getInstance().getDateTypeValue());
+        return type.compare(Checker..getInstance().getStringTypeValue())
+            || type.compare(Checker..getInstance().getDateTypeValue());
     }
 
     static std::string getOccursFromElement(const Xml::Element & xmlElement, const std::string & occursAttrName, const std::string & occursAttrValue)
@@ -88,7 +88,7 @@ namespace Xsd
                 throw new Exception();
             }
         }
-        catch(Exception e)
+        catch(const std::exception& e)
         {
             Checker.throwInvalidAttributeValueException(Checker.ELEMENT_ELT, occursAttrName, occursAttrValue);
         }
@@ -100,8 +100,8 @@ namespace Xsd
     Type::getRegexFromElement(const Xml::Element & xmlElement)
     {
         std::string notFound = "", regex;
-        std::string name = xmlElement.attribute(Checker.NAME_ATTR);
-        std::string ref = xmlElement.attribute(Checker.REF_ATTR);
+        std::string name = xmlElement.attribute(Xsd::Checker.NAME_ATTR);
+        std::string ref = xmlElement.attribute(Xsd::Checker.REF_ATTR);
         std::string minOccurs = xmlElement.attribute(Checker.MIN_OCC_ATTR);
         std::string supOccurs = xmlElement.attribute(Checker.MAX_OCC_ATTR);
 
