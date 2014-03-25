@@ -1,19 +1,42 @@
+#ifndef _H_XSL_XSL
+#define _H_XSL_XSL
+
 #include <vector>
+#include <map>
+using namespace std;
 
 #include "../Xml/XmlNode.hpp"
+#include "../Xml/XmlText.hpp"
+#include "../Xml/XmlDocument.hpp"
 
 namespace Xsl {
 
     class Instruction
     {
-        virtual void operator () (Xml::Element * xslElement, Xml::Node* XmlContext);
+        virtual void operator () (Xml::Element * xslElement, Xml::Node* XmlContext) = 0;
     };
 
-    std::map<std::string, Instruction*> xslInstructions;
 
-    Xml::Document xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc );
+    class ValueOf : public Instruction
+    {
+        virtual void operator () (Xml::Node* context, const Xml::Document& xslDoc,  vector <Xml::Node*> &resultNodes, const Xml::Element xslElement);
+    };
 
-    std::vector <Xml::Node*> applyDefaultTemplate(Xml::Node* context, std::vector<Xml::Node*> resultNodes);
+    class ForEach: public Instruction
+    {
+        virtual void operator () (Xml::Node* context,const Xml::Document& xslDoc,  vector <Xml::Node*> &resultNodes,  const Xml::Element forEachElement);
+    };
 
-    std::vector <Xml::Node*> applyTemplate (const Xml::Element& xslTemplate, const Xml::Node* context, std::vector<Xml::Node*> resultNodes);
+    class ApplyTemplate: public Instruction
+    {
+        virtual void operator () (const Xml::Node* context,const Xml::Document& xslDoc, vector <Xml::Node*> &resultNodes, const Xml::Element applyTemplateElement);
+
+    };
+
+    Xml::Document* xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) ;
+
+    void applyDefaultTemplate( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes) ;
+
+    void applyTemplate ( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes, Xml::Element& xslTemplate) ;
 }
+#endif //_H_XSL_XSL

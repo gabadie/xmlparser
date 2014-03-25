@@ -25,25 +25,25 @@ namespace Xsd
     class Checker
     {
     public :
-        static const std::string SCHEMA_ELT = "schema";
-        static const std::string ELEMENT_ELT = "element";
-        static const std::string ATTRIBUTE_ELT = "attribute";
-        static const std::string COMPLEX_TYP_ELT = "complexType";
-        static const std::string SEQUENCE_ELT = "sequence";
-        static const std::string CHOICE_ELT = "choice";
+        static const std::string SCHEMA_ELT;
+        static const std::string ELEMENT_ELT;
+        static const std::string ATTRIBUTE_ELT;
+        static const std::string COMPLEX_TYP_ELT;
+        static const std::string SEQUENCE_ELT;
+        static const std::string CHOICE_ELT;
 
-        static const std::string NAME_ATTR = "name";
-        static const std::string TYPE_ATTR = "type";
-        static const std::string REF_ATTR = "ref";
-        static const std::string USE_ATTR = "use";
-        static const std::string MIN_OCC_ATTR = "minOccurs";
-        static const std::string MAX_OCC_ATTR = "maxOccurs";
+        static const std::string NAME_ATTR;
+        static const std::string TYPE_ATTR;
+        static const std::string REF_ATTR;
+        static const std::string USE_ATTR;
+        static const std::string MIN_OCC_ATTR;
+        static const std::string MAX_OCC_ATTR;
 
-        static const std::string ROOT = "root";
+        static const std::string ROOT;
 
-        static const std::string STRING_TYPE_VALUE = "string";
-        static const std::string DATE_TYPE_VALUE = "date";
-        static const std::string USE_REQUIRED_VALUE = "required";
+        static const std::string STRING_TYPE_VALUE;
+        static const std::string DATE_TYPE_VALUE;
+        static const std::string USE_REQUIRED_VALUE;
 
         static Checker
         getInstance();
