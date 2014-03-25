@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <sstream>
 #include <string>
+#include <re2/re2.h>
 
 #include "../src/Xsd/XsdChecker.hpp"
 
@@ -11,7 +12,7 @@ using namespace Xsd;
 
 std::string xmlFolder = "xml_files";
 std::string xsdFolder = "xsd_files";
-std::regex invalidFileRegexp("^[0-9]*_err_.*$");
+std::string invalidFileRegexp = "^[0-9]*_err_.*$";
 
 std::string
 getFilePath(std::string folderPath, std::string fileName)
@@ -52,7 +53,7 @@ test_validation()
     {
         xmlFilePath = getFilePath(xmlFolder, ent->d_name);
         std::cout << "test" <<std::endl;
-        if (std::regex_match(std::string(ent->d_name), invalidFileRegexp))
+        if (RE2::FullMatch(std::string(ent->d_name), invalidFileRegexp))
         {
             xsdFilePath = getXsdFileNameFromXmlError(ent->d_name);
             valid = false;
@@ -93,10 +94,10 @@ int
 main()
 {
     std::string fnames[] = {"foo.txt", "bar.txt", "baz.dat", "zoidberg"};
-    std::regex txt_regex("[a-z]+\\.txt");
+    std::string txt_regex("[a-z]+\\.txt");
 
     for (const auto &fname : fnames) {
-        std::cout << fname << ": " << std::regex_match(fname, txt_regex) << '\n';
+        std::cout << fname << ": " << RE2::FullMatch(fname, txt_regex) << '\n';
     }
     //std::regex expression(".*");
     //std::string test("test");
@@ -104,7 +105,7 @@ main()
 
     //TODO test XSD construction
     test_construction();
-    //test_validation();
+    test_validation();
 
     return 0;
 }

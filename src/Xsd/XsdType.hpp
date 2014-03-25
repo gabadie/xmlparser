@@ -4,6 +4,7 @@
 #include "../Xml/XmlElement.hpp"
 #include <string>
 #include <map>
+#include <re2/re2.h>
 
 namespace Xsd
 {
@@ -26,6 +27,9 @@ namespace Xsd
         virtual
         ~Type();
 
+        static std::string
+        parseComplexType(const Xml::Element & xmlElement, const std::string & separator, bool eltSeqChoice);
+
         /**
          * Create the type regex
          */
@@ -46,7 +50,7 @@ namespace Xsd
 
     protected:
 
-        std::regex mRegex;
+        std::string mRegex;
         std::list<Attribute *> mAttributes;
 
         static const std::string TYPE_SUFFIX = "TYPE";
