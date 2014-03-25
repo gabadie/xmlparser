@@ -198,6 +198,7 @@ testXmlElementParsingWoContentBad()
 
     delete doc;
 }
+
 int
 main()
 {
