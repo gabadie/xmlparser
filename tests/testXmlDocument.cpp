@@ -15,6 +15,8 @@
 #include "../src/Xml/XmlProcessingInstruction.hpp"
 #include "../src/Xml/XmlText.hpp"
 
+#if 0
+
 void
 testXmlDocument()
 {
@@ -48,59 +50,6 @@ testXmlDocument()
         test_assert(oss.str() == formattedComment);
     }
 
-    // Add a root to the xml document
-    {
-        std::string name = "root";
-        auto root = new Xml::Element(name);
-
-        doc.setRoot(root);
-        test_assert(root->parent() == &doc);
-        test_assert(doc.children().size() == 3);
-
-        {
-            auto xmlRoot = dynamic_cast<Xml::Element *>(doc.children()[2]);
-            test_assert(xmlRoot != nullptr);
-            test_assert(xmlRoot == root);
-        }
-
-        {
-            auto xmlRoot = doc.root();
-            test_assert(xmlRoot != nullptr);
-            test_assert(xmlRoot == root);
-        }
-    }
-
-    // Replace the xml document's root
-    {
-        std::string name = "new_root";
-        auto root = new Xml::Element(name);
-
-        doc.setRoot(root);
-        test_assert(root->parent() == &doc);
-        test_assert(doc.children().size() == 3);
-
-        {
-            auto xmlRoot = dynamic_cast<Xml::Element *>(doc.children()[2]);
-            test_assert(xmlRoot != nullptr);
-            test_assert(xmlRoot == root);
-        }
-
-        {
-            auto xmlRoot = doc.root();
-            test_assert(xmlRoot != nullptr);
-            test_assert(xmlRoot == root);
-        }
-
-        {
-            auto xmlElt1 = new Xml::Element("child1");
-            root->append(xmlElt1);
-
-            test_assert(xmlElt1->parent() == root);
-            test_assert(xmlElt1->document()->root() != nullptr);
-            test_assert(xmlElt1->document()->root() == root);
-        }
-    }
-
     // Add a comment after the xml tree
     std::string endComment = "This is a comment at the end of the XML document.";
     doc.appendComment(endComment);
@@ -117,10 +66,62 @@ testXmlDocument()
     }
 }
 
+#endif
+
+void
+testXmlDocumentRoot()
+{
+    {
+        auto root = new Xml::Element("root");
+        Xml::Document doc(root);
+
+        {
+            test_assert(root->parent() == &doc);
+            test_assert(doc.children().size() == 1);
+            test_assert(doc.root() == root);
+        }
+
+        auto newRoot = new Xml::Element("root");
+
+        doc.appendNode(newRoot);
+
+        {
+            test_assert(newRoot->parent() == &doc);
+            test_assert(doc.children().size() == 1);
+            test_assert(doc.root() == newRoot);
+        }
+    }
+
+    {
+        Xml::Document doc;
+        auto root = new Xml::Element("root");
+
+        {
+            test_assert(doc.root() == nullptr);
+        }
+
+        doc.setRoot(root);
+
+        {
+            test_assert(root->parent() == &doc);
+            test_assert(doc.children().size() == 1);
+            test_assert(doc.root() == root);
+        }
+
+        doc.setRoot(nullptr);
+
+        {
+            test_assert(doc.children().size() == 0);
+            test_assert(doc.root() == nullptr);
+        }
+    }
+}
+
 int
 main()
 {
-    testXmlDocument();
+    //testXmlDocument();
+    testXmlDocumentRoot();
 
     return 0;
 }
