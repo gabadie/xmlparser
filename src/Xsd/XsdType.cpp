@@ -8,16 +8,9 @@ namespace Xsd
     const std::string UNBOUNDED = "unbounded";
     const std::string UNBOUNDED_EXP_REG = "*";
 
-    Type::Type(const Xml::Element & xmlElement)
+    Type::Type(const Xml::Element & xmlElement, const std::string & name)
     {
-        std::string name = xmlElement.attribute(Checker.NAME_ATTR);
-
-        if(name == null)
-        {
-            name = xmlElement.parentElement->attribute(Checker.NAME_ATTR) + TYPE_SUFFIX;
-        }
-
-        mRegex = getRegexFromElement(xmlElement);
+        mRegex = parseComplexType(xmlElement, "", false, );
         Xsd::Checker.addType(name, &this);
     }
 
@@ -31,7 +24,7 @@ namespace Xsd
     Type::Type(const std::string & name, const std::string & const regex, std::list<Attribute *> attrs):
         mRegex(regex), mAttributes(attrs)
     {
-        Xsd::Checker.addType(name, &this);
+        Xsd::Checker::addType(name, &this);
     }
 
     Type::~Type()
@@ -40,31 +33,41 @@ namespace Xsd
     }
 
     static std::string
-    Type::parseComplexType(const Xml::Element & xmlElement) const
+    Type::parseComplexType(const Xml::Element & xmlElement, std::string separator, bool eltSeqChoice)
     {
         bool eltParsed = false;
-        std::string regex = "", tmpRegex;
+        std::string regex = "(";
+
+        if(ci->attribute(Checker::MIXED_ATTR).compare("true") == 0)
+        {
+            separator += ".*";
+        }
 
         for (std::list<Xml::Element>::const_iterator ci = xmlElement.elements().begin(); ci != xmlElement.elements().end(); ++ci)
         {
             if(ci->name().compare(Checker.SEQUENCE_ELT))
             {
-                parseComplexType(*ci, "", true);
+                regex += getRegexFromOccurs(*ci, parseComplexType(*ci, "", true)) + separator;
             }
             else if(ci->name().compare(Checker.CHOICE_ELT)
             {
-                parseComplexType(*ci, "|", true);
+                regex += getRegexFromOccurs(*ci, parseComplexType(*ci, "|", true)) + separator;
             }
-            else if(ci->name().compare(Checker.ELEMENT_ELT) && (eltSeqChoice || !eltParsed))
+            else if(ci->name().compare(Checker.ELEMENT_ELT))
             {
-                eltParsed = true;
-                tmpRegex += getRegexFromElement(*ci);
-                Checker.addTypedElement()
-                regex += tmpRegex;
+                if(eltSeqChoice || !eltParsed)
+                {
+                    eltParsed = true;
+                    regex += parseElement(*ci) + separator;
+                }
+                else
+                {
+                    Checker.throwInvalidElementException(Checker.ELEMENT_ELT, getNameOrRef(*ci);
+                }
             }
             else if(ci->name().compare(Checker.ATTRIBUTE_ELT))
             {
-                mAttributes.push_back(new Xsd::Attribute(*ci));
+                mAttributes.push_back(Xsd::Attribute.parseAttribute(*ci));
             }
             else
             {
@@ -72,7 +75,12 @@ namespace Xsd
             }
         }
 
-        return regex;
+        if(regex.back() == '|')
+        {
+            regex = regex.substr(0, regex.size()-1);
+        }
+
+        return regex + ")";
     }
 
     static bool
@@ -105,6 +113,16 @@ namespace Xsd
     }
 
     static bool
+    Type::getNameOrRef(const Xml::Element & xmlElement)
+    {
+        if(isReference(xmlElement))
+        {
+            return xmlElement.attribute(Checker.REF_ATTR);
+        }
+        return xmlElement.attribute(Checker.NAME_ATTR);
+    }
+
+    static bool
     Type::isReference(const Xml::Element & xmlElement)
     {
         std::string notFound = "";
@@ -126,21 +144,54 @@ namespace Xsd
 
     /**
      * Returns the regex of an element, adds its type and type relation to the maps if it's not a ref
+     * The regex does not contain the validation for the element children, it's only about the element name or ref itself
      */
     static std::string
     Type::parseElement(const Xml::Element & xmlElement)
     {
-        std::string regex;
+        bool ref = false;
+        std::string regex, name;
 
         // Name and ref attributes
         if(isReference(xmlElement))
         {
-            regex = getRegexFromOccurs(xmlElement, xmlElement.attribute(Checker.REF_ATTR));
+            name = xmlElement.attribute(Checker.REF_ATTR);
+            ref = true;
         }
         else
         {
-            //TODO : appel recursif et gestion du type de l'elt
-            regex = getRegexFromOccurs(xmlElement, xmlElement.attribute(Checker.NAME_ATTR));
+            name = xmlElement.attribute(Checker.NAME_ATTR);
+        }
+
+        regex = getRegexFromOccurs(xmlElement, name);
+
+        if(!ref)
+        {
+            //Type manaement
+            std::string type = xmlElement.attribute(Checker.TYPE_ATTR);
+            if(!type.compare("") && Xsd::Type.isSimpleType(type))
+            {
+                std::vector<std::string> tokens;
+                boost::algorithm::split(tokens, type, boost::algorithm::is_any_of(":"));
+                Checker::getInstance().addTypedElement(name, tokens.back());
+
+            }
+            else if(xmlElement.elements().size() > 0)
+            {
+                Xml::Element & typeElement = xmlElement.elements().front();
+                if(!typeElement.name().compare(Checker::COMPLEX_TYPE_ELEMENT))
+                {
+                    parseComplexType(*ci, "", true);
+                }
+                else
+                {
+                    throw new XSDConstructionException("Error: type attribute or element cannot be found for " + Checker::ELEMENT_ELT + " element");
+                }
+            }
+            else
+            {
+                throw new XSDConstructionException("Error: type attribute or element cannot be found for " + Checker::ELEMENT_ELT + " element");
+            }
         }
         //
         if(!ref)
@@ -149,6 +200,7 @@ namespace Xsd
             //- on est récursif mais on descend pas dans la définition des elts contenus dans un elt
             //- on gère pas les occurs pour les choice et seq
             //- on parse pas les attrs type des elts
+            //- gérer les new type
         }
 
         return regex;

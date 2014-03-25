@@ -15,18 +15,8 @@ namespace Xsd
         init(name, required, typeName, ref);
     }
 
-    Attribute:init(const std::string & name, bool required, const std::string & typeName, bool ref)
-    {
-        mName = name;
-        mRequired = required;
-        Xsd::Checker.addAttribute(name, &this); {
-        if(!ref)
-        {
-            Xsd::Checker.getInstance().addTypedAttribute(name, type);
-        }
-    }
-
-    Attribute::Attribute(const Xml::Element & xmlElement);
+    static Attribute * const
+    Attribute::parseAttribute(const Xml::Element & xmlElement);
     {
         bool required = false, hasRef = false;
         std::string notFound = "";
@@ -42,6 +32,7 @@ namespace Xsd
             {
                     std::vector<std::string> tokens;
                     boost::algorithm::split(tokens, type, boost::algorithm::is_any_of(":"));
+                    Checker::getInstance().addTypedElement(name, tokens.back());
             }
             else
             {
@@ -72,5 +63,16 @@ namespace Xsd
 
 
         init(name, required, typeName, hasRef);
+    }
+
+    Attribute:init(const std::string & name, bool required, const std::string & typeName, bool ref)
+    {
+        mName = name;
+        mRequired = required;
+        Xsd::Checker.addAttribute(name, &this); {
+        if(!ref)
+        {
+            Xsd::Checker.getInstance().addTypedAttribute(name, type);
+        }
     }
 }

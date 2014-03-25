@@ -19,7 +19,8 @@ namespace Xsd
     const std::string NAME_ATTR = "name";
     const std::string TYPE_ATTR = "type";
     const std::string REF_ATTR = "ref";
-    const std::string :USE_ATTR = "use";
+    const std::string USE_ATTR = "use";
+    const std::string MIXED_ATTR = "mixed";
     const std::string MIN_OCC_ATTR = "minOccurs";
     const std::string MAX_OCC_ATTR = "maxOccurs";
 
@@ -54,7 +55,7 @@ namespace Xsd
         throw NotImplementedYet("TODO : gestion namespace !!!!!");
 
         //Building intermediary structure from xmlDoc
-        Xsd::Type * rootType = new Xsd::Type(xsdDoc);
+        Xsd::Type::parseComplexType(xsdDoc.root(), "|", true));
 
         //TODO
         //Check if every reference is linked to a type or an attribute
