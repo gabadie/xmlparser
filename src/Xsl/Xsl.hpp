@@ -13,7 +13,7 @@ namespace Xsl {
 
     class Instruction
     {
-        virtual void operator () (Xml::Element * xslElement, Xml::Node* XmlContext);
+        virtual void operator () (Xml::Element * xslElement, Xml::Node* XmlContext) = 0;
     };
 
 
@@ -33,14 +33,10 @@ namespace Xsl {
 
     };
 
-    std::map<std::string, Instruction*> xslInstructions;
-
     Xml::Document* xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) ;
 
-    void applyDefaultTemplate( Xml::Node* context, const Xml::Document& xslDoc, vector< Xml::Node*> resultNodes) ;
+    void applyDefaultTemplate( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> resultNodes) ;
 
-    void applyTemplate ( Xml::Node* context, const Xml::Document& xslDoc, vector< Xml::Node*> resultNodes,   Xml::Element& xslTemplate) ;
-
-
+    void applyTemplate ( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> resultNodes, Xml::Element& xslTemplate) ;
 }
 #endif //_H_XSL_XSL
