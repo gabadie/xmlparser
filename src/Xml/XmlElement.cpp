@@ -52,6 +52,9 @@ namespace Xml
         ElementList elements;
         for(auto const & c : mChildren)
         {
+            app_assert(c != nullptr);
+            app_assert(c->mParent == this);
+
             if(c->isElement())
             {
                 elements.push_back(static_cast<Element const *>(c));
@@ -66,6 +69,9 @@ namespace Xml
         ElementList elements;
         for(auto const & c : mChildren)
         {
+            app_assert(c != nullptr);
+            app_assert(c->mParent == this);
+
             if(c->isElement())
             {
                 auto const element = static_cast<Element const *>(c);
@@ -86,6 +92,7 @@ namespace Xml
         for(auto const & c : mChildren)
         {
             app_assert(c != nullptr);
+            app_assert(c->mParent == this);
 
             std::string const text = c->contentText();
 
@@ -117,6 +124,9 @@ namespace Xml
     {
         for (auto node : mChildren)
         {
+            app_assert(node != nullptr);
+            app_assert(node->mParent == this);
+
             node->mParent = nullptr;
             delete node;
         }
@@ -226,6 +236,7 @@ namespace Xml
             for(auto const & c : mChildren)
             {
                 app_assert(c != nullptr);
+                app_assert(c->mParent == this);
 
                 if(!c->isElement())
                 {
@@ -334,6 +345,7 @@ namespace Xml
         for(auto const & c : mChildren)
         {
             app_assert(c != nullptr);
+            app_assert(c->mParent == this);
 
             c->exportToStream(stream, level + 1, indent);
             stream << "\n";
@@ -365,6 +377,7 @@ namespace Xml
     {
         for(auto const & c : mChildren)
         {
+            app_assert(c != nullptr);
             app_assert(c->mParent == this);
 
             if(c == node)

@@ -149,6 +149,7 @@ namespace Xml
             auto const & c = mChildren[i];
 
             app_assert(c != nullptr);
+            app_assert(c->mParent == this);
 
             c->exportToStream(stream, level, indent);
 
@@ -184,7 +185,8 @@ namespace Xml
     {
         for(auto const & c : mChildren)
         {
-            app_assert(node->mParent == this);
+            app_assert(c != nullptr);
+            app_assert(c->mParent == this);
 
             if(c == node)
             {
