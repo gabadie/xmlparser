@@ -79,13 +79,13 @@ namespace Xsd
     static bool
     isSimpleType(const std::string & type)
     {
-        return (type.compare(Checker::.getInstance().getStringTypeValue()) == 0)
-            || (type.compare(Checker::.getInstance().getDateTypeValue()) == 0);
+        return (type.compare(Checker::getInstance().getStringTypeValue()) == 0)
+            || (type.compare(Checker::getInstance().getDateTypeValue()) == 0);
     }
 
     static std::string getOccursFromElement(const Xml::Element & xmlElement, const std::string & occursAttrName, const std::string & occursAttrValue)
     {
-        if(occurs.compare(UNBOUNDED) == 0)
+        if(occursAttrValue.compare(UNBOUNDED) == 0)
         {
             return UNBOUNDED_EXP_REG;
         }
