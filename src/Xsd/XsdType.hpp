@@ -2,6 +2,7 @@
 #define _H_XSD_TYPE
 
 #include "../Xml/XmlElement.hpp"
+#include "XsdAttribute.hpp"
 #include <string>
 #include <map>
 #include <re2/re2.h>
@@ -19,7 +20,7 @@ namespace Xsd
 
         Type(const Xml::Element & xmlElement, const std::string & name);
 
-        Type(const std::string & const regex, std::list<Attribute *> attrs);
+        Type(const std::string & name, const std::string & regex, std::list<Attribute *> attrs);
 
          /**
          * Destructor
@@ -52,7 +53,7 @@ namespace Xsd
         getRegexFromElement(const Xml::Element & xmlElement);
 
         static std::string
-        getRegexFromOccurs(const Xml::Element & xmlElement, const std::string & eltRegex)
+        getRegexFromOccurs(const Xml::Element & xmlElement, const std::string & eltRegex);
 
         std::list<Attribute *>
         attributes() const;

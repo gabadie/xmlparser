@@ -20,15 +20,15 @@ namespace Xsd
     {
         bool required = false, hasRef = false;
         std::string notFound = "";
-        std::string name = xmlElement.attribute(Checker.NAME_ATTR);
-        std::string ref = xmlElement.attribute(Checker.REF_ATTR);
-        std::string type = xmlElement.attribute(Checker.TYPE_ATTR);
-        std::string use = xmlElement.attribute(Checker.USE_ATTR);
+        std::string name = xmlElement.attribute(Checker::NAME_ATTR);
+        std::string ref = xmlElement.attribute(Checker::REF_ATTR);
+        std::string type = xmlElement.attribute(Checker::TYPE_ATTR);
+        std::string use = xmlElement.attribute(Checker::USE_ATTR);
 
-        if(!name.compare(notFound))
+        if(!(name.compare(notFound) == 0))
         {
             // Add an attribute to the attribute type map
-            if(!type.compare(notFound) && Xsd::Type.isSimpleType(type))
+            if(!(type.compare(notFound) == 0) && Xsd::Type::isSimpleType(type))
             {
                     std::vector<std::string> tokens;
                     boost::algorithm::split(tokens, type, boost::algorithm::is_any_of(":"));
@@ -36,43 +36,44 @@ namespace Xsd
             }
             else
             {
-                Checker.throwInvalidAttributeValueException(name, Checker.TYPE_ATTR, type);
+                Checker::throwInvalidAttributeValueException(name, Checker::TYPE_ATTR, type);
             }
         }
-        else if(!ref.compare(notFound))
+        else if(!(ref.compare(notFound) == 0))
         {
             name = ref;
             hasRef = true;
         }
         else
         {
-            Checker.throwMissingAttributeException(name, Checker.TYPE_ATTR);
+            Checker::throwMissingAttributeException(name, Checker::TYPE_ATTR);
         }
 
-        if(!use.compare(notFound))
+        if(!(use.compare(notFound) == 0))
         {
-            if(use.compare(Checker.USE_REQUIRED_VALUE))
+            if(use.compare(Checker::USE_REQUIRED_VALUE) == 0)
             {
                 required = true;
             }
             else
             {
-                Checker.throwInvalidAttributeValueException(name, Checker.USE_ATTR, use);
+                Checker::throwInvalidAttributeValueException(name, Checker::USE_ATTR, use);
             }
         }
 
 
-        init(name, required, typeName, hasRef);
+        init(name, required, type, hasRef);
     }
 
-    Attribute:init(const std::string & name, bool required, const std::string & typeName, bool ref)
+    void
+    Attribute::init(const std::string & name, bool required, const std::string & typeName, bool ref)
     {
         mName = name;
         mRequired = required;
-        Xsd::Checker.addAttribute(name, &this); {
+        Xsd::Checker::getInstance().addAttribute(name, this);
         if(!ref)
         {
-            Xsd::Checker.getInstance().addTypedAttribute(name, type);
+            Xsd::Checker.getInstance().addTypedAttribute(name, typeName);
         }
     }
 }

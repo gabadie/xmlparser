@@ -31,18 +31,20 @@ namespace Xsd
     const std::string USE_REQUIRED_VALUE = "required";
 
     Checker::Checker(const Xml::Document & xsdDoc):
-        mXsdDoc(xsdDoc),
+        mXsdDoc(&xsdDoc),
         mTypes(),
         mElementsTypes(),
         mAttributes(),
         mAttributesTypes()
     {
-        new Type(DATE_TYPE_VALUE, "[0-9]{2}-[0-9]{2}-[0-9]{4}", NULL);
-        new Type(STRING_TYPE_VALUE, "*", NULL);
+        const std::string dateRegex = "[0-9]{2}-[0-9]{2}-[0-9]{4}";
+        const std::string stringRegex = "*";
+        new Type(DATE_TYPE_VALUE, dateRegex, std::NULL);
+        new Type(STRING_TYPE_VALUE, stringRegex, std::NULL);
 
-        if(!xsdDoc.root().attribute(NAME_ATTR).compare(SCHEMA_ELT))
+        if(!(xsdDoc.root()->attribute(NAME_ATTR).compare(SCHEMA_ELT) == 0))
         {
-            throwInvalidElementException(xsdDoc.root().attribute(NAME_ATTR), SCHEMA_ELT);
+            throwInvalidElementException(xsdDoc.root()->attribute(NAME_ATTR), SCHEMA_ELT);
         }
 
         namespacePrefix = "TODO";

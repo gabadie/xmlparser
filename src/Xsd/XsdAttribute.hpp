@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include "XsdType.hpp"
-
 namespace Xsd
 {
     class Type;
@@ -32,6 +30,7 @@ namespace Xsd
             std::string mName;
             bool mRequired;
 
+            void
             init(const std::string & name, bool required, const std::string & typeName, bool ref);
     };
 }
