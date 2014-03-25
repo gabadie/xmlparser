@@ -5,11 +5,11 @@ namespace Xsd
 {
     Type::Type(const Xml::Element & xmlElement)
     {
-        mName = xmlElement.attribute(Checker.NAME_ATTR);
+        std::string name = xmlElement.attribute(Checker.NAME_ATTR);
 
-        if(mName == null)
+        if(name == null)
         {
-            Checker.throwMissingAttributeException(Checker.COMPLEX_TYP_ELT, Checker.NAME_ATTR);
+            name = xmlElement.parentElement->attribute(Checker.NAME_ATTR) + TYPE_SUFFIX;
         }
 
         mRegex = getRegexFromElement(xmlElement);
@@ -22,6 +22,13 @@ namespace Xsd
         Xsd::Checker.addType(name, &this);
     }
 
+
+    Type::Type(const std::string & name, const std::string & const regex, std::list<Attribute *> attrs):
+        mRegex(regex), mAttributes(attrs)
+    {
+        Xsd::Checker.addType(name, &this);
+    }
+
     Type::~Type()
     {
 
@@ -30,6 +37,7 @@ namespace Xsd
     static std::string
     Type::parseComplexType(const Xml::Element & xmlElement) const
     {
+        //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (refaire)
         std::string regex = "";
 
 
@@ -67,47 +75,92 @@ static const std::string MAX_OCC_ATTR = "maxOccurs";
         return regex;
     }
 
-    static std::string
-    Type::getRegexFromElement(const Xml::Element & xmlElement) const
+    static bool
+    isSimpleType(const std::string & type)
     {
-        std::string name = xmlElement.attribute("name");
-        std::string ref = xmlElement.attribute("ref");
-        std::string min = xmlElement.attribute("minOccurs");
-        std::string max = xmlElement.attribute("maxOccurs");
+        return type.equals(checker..getInstance().getStringTypeValue())
+            || type.equals(checker..getInstance().getDateTypeValue());
+    }
 
-        std::string regex;
-        std::string attributeName;
-        std::string minOccurs = "1";
-        std::string maxOccurs = "*";
-
-        // Get the element name
-        if(name != "")
+    static std::string getOccursFromElement(const Xml::Element & xmlElement, const std::string & occursAttrName, const std::string & occursAttrValue)
+    {
+        if(occurs.equals(UNBOUNDED))
         {
-            attributeName = name;
+            return UNBOUNDED_EXP_REG;
         }
-        else if(ref != "")
+
+        try
         {
-            attributeName = ref;
+            if(std::stoi(occursAttrValue) < 0)
+            {
+                throw new Exception();
+            }
+        }
+        catch(Exception e)
+        {
+            Checker.throwInvalidAttributeValueException(Checker.ELEMENT_ELT, occursAttrName, occursAttrValue);
+        }
+
+        return occursAttrValue;
+    }
+
+    static std::string
+    Type::getRegexFromElement(const Xml::Element & xmlElement)
+    {
+        std::string notFound = "", regex;
+        std::string name = xmlElement.attribute(Checker.NAME_ATTR);
+        std::string ref = xmlElement.attribute(Checker.REF_ATTR);
+        std::string minOccurs = xmlElement.attribute(Checker.MIN_OCC_ATTR);
+        std::string maxOccurs = xmlElement.attribute(Checker.MAX_OCC_ATTR);
+
+        // Min and max occurs attributes
+        if(!minOccurs.equals(notFound))
+        {
+            minOccurs = getOccursFromElement(xmlElement, Checker.MIN_OCC_ATTR, sMinOccurs);
         }
         else
         {
-            // TODO Gestion exception
-            attributeName = "";
-            std::cout << "Error : Attribute element doesn't have any name attribute" << std::endl;
+            minOccurs = "1";
         }
 
-        // Get the occurence
-        if(min != "")
+        if(!supOccurs.equals(notFound))
         {
-            minOccurs = min;
+            supOccurs = getOccursFromElement(xmlElement, Checker.MAX_OCC_ATTR, supOccurs);
         }
-        if(max != "")
+        else
         {
-            maxOccurs = max;
+            supOccurs = "0";
+        }
+
+        if(minOccurs.equals(UNBOUNDED_EXP_REG) && !supOccurs.equals(UNBOUNDED_EXP_REG)
+            || (!supOccurs.equals(UNBOUNDED_EXP_REG) && std::stoi(supOccurs) < std::stoi(minOccurs)))
+        {
+            throw new XSDConstructionException("Error: " Checker.MIN_OCC_ATTR + " attribute value is higher than " + Checker.MAX_OCC_ATTR + " value");
+        }
+        if(minOccurs.equals(UNBOUNDED_EXP_REG) && supOccurs.equals(UNBOUNDED_EXP_REG))
+        {
+            stringstream out;
+            out << (std::stoi(supOccurs) - std::stoi(minOccurs);
+            supOccurs = out.str();
+        }
+
+        // Name and ref attributes
+        if(name.equals(notFound) && !ref.equals(notFound))
+        {
+            name = ref;
+        }
+        else
+        {
+            Checker.throwMissingAttributeException(Checker.ELEMENT_ELT, Checker.NAME_ATTR);
         }
 
         // Create the regex
-        regex = "<(" + attributeName + ">){" + minOccurs + "})((<" + attributeName + ">?){" + maxOccurs + "}";
+        regex = "(<" + name + ">){" + minOccurs + "}";
+        if(!supOccurs.equals("0"))
+        {
+            regex += "((<" + name + ">?){" + supOccurs + "})";
+        }
+
         return regex;
     }
 

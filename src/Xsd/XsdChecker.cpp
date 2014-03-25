@@ -15,15 +15,17 @@ namespace Xsd
         mAttributes(),
         mAttributesTypes()
     {
+        new Type(DATE_TYPE_VALUE, "[0-9]{2}-[0-9]{2}-[0-9]{4}", NULL);
+        new Type(STRING_TYPE_VALUE, "*", NULL);
+
         if(!xsdDoc.attribute(NAME_ATTR).equals(SCHEMA_ELT))
         {
             throwInvalidElementException(xsdDoc.attribute(NAME_ATTR), SCHEMA_ELT);
         }
 
-
         namespacePrefix = "TODO";
-        stringTypeValue = "TODO";
-        dateTypeValue = "TODO";
+        stringTypeValue = namespacePrefix + ":" + STRING_TYPE_VALUE;
+        dateTypeValue = namespacePrefix + ":" + DATE_TYPE_VALUE;
 
         //Check that the root element has xmlns:MYPREFIX="http://www.w3.org/2001/XMLSchema"
         //or noNamespaceSchemaLocation
@@ -32,6 +34,9 @@ namespace Xsd
 
         //Building intermediary structure from xmlDoc
         Xsd::Type * rootType = new Xsd::Type(xsdDoc);
+
+        //TODO
+        //Check if every reference is linked to a type or an attribute
 
     }
 
@@ -65,12 +70,17 @@ namespace Xsd
 
     static void throwInvalidElementException(const std::string & received, const std::string & expected)
     {
-        throw new XSDConstructionException("Invalid XSD root element received :" + received + " (" + expected + " expected");
+        throw new XSDConstructionException("Error: Invalid XSD root element received :" + received + " (" + expected + " expected");
     }
 
     static void throwMissingAttributeException(const std::string & element, const std::string & missingAttr)
     {
-        throw new XSDConstructionException("Missing attribute for " + element + " element: " + missingAttr);
+        throw new XSDConstructionException("Error: Missing attribute for " + element + " element: " + missingAttr);
+    }
+
+    static void throwInvalidAttributeValueException(const std::string & element, const std::string & attr, const std::string & invalidValue)
+    {
+        throw new XSDConstructionException("Error: Invalid " + attr + " attribute value for " + element + " element: " + invalidValue);
     }
 
     static void
@@ -113,51 +123,71 @@ namespace Xsd
         return dateTypeValue;
     }
 
-    static void
+    void
     Checker::addType(const std::string & typeName, const Type * const type)
     {
-        typesMap.insert(typeName, type);
+        typesMap.insert(std::pair<std::string, Type const *>(typeName, type));
     }
 
-    static void
+    void
     Checker::addTypedElement(const std::string & elementName, const std::string & typeName)
     {
-        elementsTypesMap.insert(elementName, typeName);
+        elementsTypesMap.insert(std::pair<std::string, std::string>(elementName, typeName));
     }
 
-    static void
+    void
     Checker::addAttribute(const std::string & attributeName, const Attribute * const attribute)
     {
-        attributesMap.insert(attributeName, attribute);
+        attributesMap.insert(std::pair<std::string, Attribute const *>(attributeName, attribute));
     }
 
-    static void
+    void
     Checker::addTypedAttribute(const std::string & attributeName, const std::string & typeName)
     {
-        attributesTypesMap.insert(attributeName, typeName);
+        attributesTypesMap.insert(std::pair<std::string, std::string>(attributeName, typeName));
     }
 
-    static Type * const
+    Type * const
     Checker::getType(const std::string & typeName)
     {
-        return typesMap[typeName];
+        Type * type = typesMap.find(typeName);
+        if(type == typesMap::end)
+        {
+            return NULL;
+        }
+        return type;
     }
 
-    static Type * const
+    Type * const
     Checker::getElementType(const std::string & elementName)
     {
-        return getType(elementsTypesMap[elementName]);
+        std::string typeName = elementsTypesMap.find(elementName);
+        if(type == elementsTypesMap::end)
+        {
+            return NULL;
+        }
+        return getType(typeName);
     }
 
-    static Attribute * const
+    Attribute * const
     Checker::getAttribute(const std::string & attributeName)
     {
-        return attributesMap[attributeName];
+        Type * type = attributesMap.find(attributeName);
+        if(type == attributesMap::end)
+        {
+            return NULL;
+        }
+        return type;
     }
 
-    static Type * const
+    Type * const
     Checker::getAttributeType(const std::string & attributeName)
     {
-        return getType(attributesTypesMap[attributeName]);
+        std::string typeName = attributesTypesMap.find(attributeName);
+        if(type == attributesTypesMap::end)
+        {
+            return NULL;
+        }
+        return getType(typeName);
     }
 }

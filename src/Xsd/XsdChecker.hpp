@@ -41,6 +41,16 @@ namespace Xsd
 
         static const std::string ROOT = "root";
 
+        static const std::string STRING_TYPE_VALUE = "string";
+        static const std::string DATE_TYPE_VALUE = "date";
+        static const std::string USE_REQUIRED_VALUE = "required";
+
+        static Checker
+        getInstance();
+
+        static void
+        initialize(const Xml::Document & xmlDoc);
+
         /**
          * Destructor
          */
@@ -56,34 +66,28 @@ namespace Xsd
 
         std::string getDateTypeValue();
 
-        static Checker
-        getInstance();
-
-        static void
-        initialize(const Xml::Document & xmlDoc);
-
-        static void
+        void
         addType(const std::string & typeName, const Type * const type);
 
-        static void
+        void
         addTypedElement(const std::string & elementName, const std::string & typeName);
 
-        static void
+        void
         addAttribute(const std::string & attributeName, const Attribute * const attribute);
 
-        static void
+        void
         addTypedAttribute(const std::string & attributeName, const std::string & typeName);
 
-        static Type * const
+        Type * const
         getType(const std::string & typeName)
 
-        static Type * const
+        Type * const
         getElementType(const std::string & elementName);
 
-        static Attribute * const
+        Attribute * const
         getAttribute(const std::string & attributeName);
 
-        static Type * const
+        Type * const
         getAttributeType(const std::string & attributeName);
 
     protected:
@@ -93,12 +97,9 @@ namespace Xsd
         Checker(const Xml::Document & xmlDoc);
 
         /**
-         * Unique instance
+         * Unique private instance
          */
         static Checker instance;
-
-        static const std::string STRING_TYPE_VALUE = "string";
-        static const std::string DATE_TYPE_VALUE = "date";
 
         std::string namespacePrefix;
         std::string stringTypeValue;

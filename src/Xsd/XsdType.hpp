@@ -10,13 +10,6 @@ namespace Xsd
     class Type
     {
     public:
-         /**
-         * Destructor
-         */
-        virtual
-        ~Type();
-
-    protected:
         /**
          * Constructor
          * @param xmlElement XML ComplexType element
@@ -25,11 +18,22 @@ namespace Xsd
 
         Type(const Xml::Element & xmlElement, const std::string & name);
 
+        Type(const std::string & const regex, std::list<Attribute *> attrs);
+
+         /**
+         * Destructor
+         */
+        virtual
+        ~Type();
+
         /**
          * Create the type regex
          */
-        static std::string
-        parseComplexType(const Xml::Element & xmlElement) const;
+        static bool
+        isSimpleType(const std::string & type);
+
+        static const Type *
+        parseSimpleType(const std::string & type);
 
         /**
          * Create the regex for an element
@@ -41,9 +45,13 @@ namespace Xsd
         attributes() const;
 
     protected:
+
         std::regex mRegex;
-        std::string mName;
         std::list<Attribute *> mAttributes;
+
+        static const std::string TYPE_SUFFIX = "TYPE";
+        static const std::string UNBOUNDED = "unbounded";
+        static const std::string UNBOUNDED_EXP_REG = "*";
     };
  }
 

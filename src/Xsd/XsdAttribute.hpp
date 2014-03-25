@@ -18,15 +18,14 @@ namespace Xsd
             /**
              * Constructor
              */
+            Attribute(const Xml::Element & xmlElement);
+
             Attribute(const std::string & name, bool required);
 
             /**
              * Destructor
              */
             virtual ~Attribute();
-
-            Attribute
-            parseAttribute(const Xml::Element & xmlElement) const;
 
         protected:
             std::string mName;
