@@ -113,7 +113,7 @@ element:
     emptytag
     {
         /* ---------------------------------------------------- empty element */
-        /* TODO */
+        $$ = $1;
     } |
     stag content etag
     {
@@ -126,7 +126,7 @@ element:
 
         for(Xml::Node * node : *$2)
         {
-            if (node == 0)
+            if (node == nullptr)
             {
                 continue;
             }
@@ -147,7 +147,7 @@ element:
             Xml::parserSemanticError("unexpected </" + *$3 + "> (it should have been </" + $1->name() + ">)");
 
             delete $$;
-            $$ = 0;
+            $$ = nullptr;
         }
 
         /*
@@ -209,8 +209,15 @@ emptytag:
     INF NOM atts SLASH SUP
     {
         /* ---------------------------------------------------- empty element tag */
-        /* TODO: empty tag */
-        $$ = nullptr;
+        $$ = new Xml::Element(std::string($2));
+
+        for(auto const & p : *$3)
+        {
+            $$->setAttribute(p.first, p.second);
+        }
+
+        free($2);
+        delete $3;
     };
 
 stag:
@@ -218,6 +225,14 @@ stag:
     {
         /* ---------------------------------------------------- nonempty element start tag */
         $$ = new Xml::Element(std::string($2));
+
+        for(auto const & p : *$3)
+        {
+            $$->setAttribute(p.first, p.second);
+        }
+
+        free($2);
+        delete $3;
     } |
     INF NOM COLON NOM atts SUP
     {
@@ -325,7 +340,7 @@ yyrestart(FILE * input_file);
 Xml::Document *
 Xml::parse(std::istream & xmlContent, Xml::Log * log)
 {
-    Xml::Document * e = 0;
+    Xml::Document * e = nullptr;
 
     {
         Xml::Log tmpLog;
