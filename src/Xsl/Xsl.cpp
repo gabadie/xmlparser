@@ -8,7 +8,7 @@
 
 std::map<std::string, Xsl::Instruction*> xslInstructions;
 
-void xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) 
+void xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc )
 {
 
     Xml::Document result = new Xml::Document();
@@ -21,8 +21,7 @@ void xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc )
         result.setRoot(resultNodes[0]);
         return result;
     }
-
-    else 
+    else
     {
         throw Exception();
     }
@@ -31,6 +30,9 @@ void xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc )
 
 void applyDefaultTemplate(const Xml::Node* context, const Xml::Document& xslDoc, vector<Node*> resultNodes) 
 {
+
+    // Debug only
+
     if (1==1)
     {
         resultNodes.push(context);
@@ -41,7 +43,7 @@ void applyDefaultTemplate(const Xml::Node* context, const Xml::Document& xslDoc,
     {
         Xsl::Element xslTemplate = this.getTemplate(child);
 
-        if (xslTemplate == null) 
+        if (xslTemplate == 0)
         {
             applyDefaultTemplate(context, resultNodes);
             return ;
@@ -57,23 +59,24 @@ void applyDefaultTemplate(const Xml::Node* context, const Xml::Document& xslDoc,
 void applyTemplate (const Xml::Node* context, const Xml::Document& xslDoc, vector<Node*> resultNodes,   const Xml::Element& xslTemplate) 
 {
     //To suppress ? Already in defaultTemplate
-    if (xslTemplate == null) 
+    if (xslTemplate == null)
     {
         return applyDefaultTemplate(context, resultNodes);
     }
 
     // Attention, ici on parcours des éléments XSL, et pas le document XML qu'on transforme
-    for (auto node : xslTemplate.children()) 
+    for (Xml::Node* node : xslTemplate.children())
     {
-        if (node.iselement() && node.namespace() != "xsl") 
+        if (node->isElement() && node->namespace() == "xsl")
+        {
+            (*xslInstructions[((Xml::Element*) node)->name()])(context, node, resultNodes);
+        }
+        else
         {
             resultNodes.push(node);
         }
-        else 
-        {
-            xslInstructions[node->name()]->(context, node, resultNodes);
-        }
     }
+
 }
 
 void Xsl::ValueOf::operator () (const Xml::Node* context, const Xml::Document& xslDoc,  vector <Xml::Node*> resultNodes, const Xml::Element xslElement)
