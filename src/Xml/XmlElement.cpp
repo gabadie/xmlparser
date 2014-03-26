@@ -18,9 +18,10 @@
 
 namespace Xml
 {
-    Element::Element(std::string const & name):
+    Element::Element(std::string const & name, std::string const & namespaceName):
         DocumentNode(),
         mName(name),
+        mNamespaceName(namespaceName),
         mAttributes(),
         mChildren()
     {
@@ -186,6 +187,27 @@ namespace Xml
         app_assert(name != "");
 
         mName = name;
+    }
+
+    std::string const &
+    Element::namespaceName() const
+    {
+        return mNamespaceName;
+    }
+
+    void
+    Element::setNamespaceName(std::string const & namespaceName)
+    {
+        app_assert(namespaceName != "");
+
+        mNamespaceName = namespaceName;
+    }
+
+    std::string
+    Element::tag() const
+    {
+        std::string tag = mNamespaceName + ":" + mName;
+        return tag;
     }
 
     std::string const &

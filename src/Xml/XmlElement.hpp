@@ -27,8 +27,9 @@ namespace Xml
          * Constructor
          *
          * @param name Name of the element
+         * @param namespace Name of the namespace
          */
-        Element(std::string const & name);
+        Element(std::string const & name, std::string const & namespaceName = std::string());
 
         /**
          * Destructor
@@ -137,6 +138,30 @@ namespace Xml
         setName(std::string const & name);
 
         /**
+         * Gets the namespace of the element
+         *
+         * @return The namespace of the element
+         */
+        std::string const &
+        namespaceName() const;
+
+        /**
+         * Set the namespace of the element
+         *
+         * @param namespace Namespace to set
+         */
+        void
+        setNamespaceName(std::string const & namespaceName);
+
+        /**
+         * Gest the namespace name and the name of the element
+         *
+         * @return the namespace name and the name
+         */
+        std::string
+        tag() const;
+
+        /**
          * Gets the value of an attribute by name
          *
          * @param name Name of the attribute to get.
@@ -220,6 +245,7 @@ namespace Xml
 
     protected:
         std::string mName;         ///< Name of the element
+        std::string mNamespaceName;    ///< Namespace of the element
         AttributesMap mAttributes; ///< Attributes of the element
         NodeList mChildren;        ///< Children elements
 

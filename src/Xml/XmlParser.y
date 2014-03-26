@@ -244,8 +244,16 @@ stag:
     INF NOM COLON NOM atts SUP
     {
         /* ---------------------------------------------------- nonempty element start tag (with namespace) */
-        /* TODO: namespaces */
-        $$ = nullptr;
+        $$ = new Xml::Element(std::string($4), std::string($2));
+
+        for(auto const & p : *$5)
+        {
+            $$->setAttribute(p.first, p.second);
+        }
+
+        free($2);
+        free($4);
+        delete $5;
     };
 
 etag:
@@ -262,8 +270,11 @@ etag:
     INF SLASH NOM COLON NOM SUP
     {
         /* ---------------------------------------------------- nonempty element end tag (with namespace) */
-        /* TODO: namespaces */
-        $$ = nullptr;
+        auto element = new Xml::Element(std::string($5), std::string($3));
+        $$ = new std::string(element->tag());
+
+        free($3);
+        free($5);
     };
 
 atts:
