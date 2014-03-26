@@ -174,8 +174,8 @@ namespace Xsd
     Type * const
     Checker::getType(const std::string & typeName)
     {
-        Type * type = typesMap.find(typeName);
-        if(type == typesMap::end)
+        Type * type = *(typesMap.find(typeName)).second;
+        if(type == typesMap.end())
         {
             return NULL;
         }
@@ -185,8 +185,8 @@ namespace Xsd
     Type * const
     Checker::getElementType(const std::string & elementName)
     {
-        std::string typeName = elementsTypesMap.find(elementName);
-        if(type == elementsTypesMap::end)
+        std::string typeName = *(elementsTypesMap.find(elementName)).second;
+        if(type == elementsTypesMap.end())
         {
             return NULL;
         }
@@ -196,19 +196,19 @@ namespace Xsd
     Attribute * const
     Checker::getAttribute(const std::string & attributeName)
     {
-        Type * type = attributesMap.find(attributeName);
-        if(type == attributesMap::end)
+        Attribute * att = *(attributesMap.find(attributeName)).second;
+        if(att == attributesMap.end())
         {
             return NULL;
         }
-        return type;
+        return att;
     }
 
     Type * const
     Checker::getAttributeType(const std::string & attributeName)
     {
-        std::string typeName = attributesTypesMap.find(attributeName);
-        if(typeName == attributesTypesMap::end)
+        std::string typeName = *(attributesTypesMap.find(attributeName)).second;
+        if(typeName == attributesTypesMap.end())
         {
             return NULL;
         }
