@@ -20,7 +20,7 @@ namespace Xsd
     {
         mName = name;
         mRequired = required;
-        Xsd::Checker::addAttribute(name, this);
+        //Xsd::Checker::addAttribute(name, this);
         if(!ref)
         {
             Xsd::Checker::getInstance().addTypedAttribute(name, typeName);
@@ -31,7 +31,7 @@ namespace Xsd
     static Attribute * const
     Attribute::parseAttribute(const Xml::Element & xmlElement);
     {
-        bool required = false, hasRef = false;
+        bool required = false, isRef = false;
         std::string notFound = "";
         std::string name = xmlElement.attribute(Checker::NAME_ATTR);
         std::string ref = xmlElement.attribute(Checker::REF_ATTR);
@@ -52,10 +52,10 @@ namespace Xsd
                 Checker::throwInvalidAttributeValueException(name, Checker::TYPE_ATTR, type);
             }
         }
-        else if(!(ref.compare(notFound) == 0))
+        else if(ref.compare(notFound) != 0)
         {
             name = ref;
-            hasRef = true;
+            isRef = true;
         }
         else
         {
@@ -74,7 +74,15 @@ namespace Xsd
             }
         }
 
+        init(name, required, type, isRef);
+    }
 
-        init(name, required, type, hasRef);
+    void
+    Checker::checkValidity(const std::string & value)
+    {
+        if(!Checker::getAttributeType(name)->isValid(value))
+        {
+            throw new XSDValidationException("Invalid attribute: " + name);
+        }
     }
 }

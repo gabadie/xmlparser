@@ -29,9 +29,48 @@ namespace Xsd
 
     Type::~Type()
     {
-
     }
 
+    void
+    Checker::isValid(const std::string & str)
+    {
+        return RE2::FullMatch(str, mRegex);
+    }
+
+
+    void
+    Checker::checkValidity(const Xml::Element & element)
+    {
+        //TODO: add function attributes() which returns the mAttributes map in Xml::Element
+        for (std::map<std::string, std::string>::iterator iterAttr = element.attributes().begin(); iterAttr != element.attributes().end(); ++iterAttr)
+        {
+            iterAttr->checkValidity(iterAttr->second);
+        }
+
+        if(!RE2::FullMatch(childrenToString(xmlElement.elements()), mRegex))
+        {
+            throw new XSDValidationException("Invalid element: " + element.name());
+        }
+
+        for (std::list<Xml::Element * const>::iterator iter = element.elements().begin(); iter != element.attributes().end(); ++iter)
+        {
+            Checker::getInstance().getElementType(iter->name())->checkValidity(*iter);
+        }
+    }
+
+
+    static std::string
+    Checker::childrenToString(list<const Element *> childrenElt)
+    {
+        std::string str = "";
+        for (std::list<const Element *>::iterator iter = childrenElt.begin(); iter != childrenElt.end(); ++iter)
+        {
+            str += "<" + iter->second.name() + ">";
+        }
+        return str;
+    }
+
+    //Should work, still have to check the algorithm for choice or sequence inside choice or sequence
     static std::string
     Type::parseComplexType(const Xml::Element & xmlElement, std::string separator, bool eltSeqChoice)
     {
@@ -130,7 +169,7 @@ namespace Xsd
         std::string ref = xmlElement.attribute(Checker::REF_ATTR);
 
         // Name and ref attributes
-        if((name.compare(notFound) == 0) && (!ref.compare(notFound) == 0))
+        if((name.compare(notFound) == 0) && (ref.compare(notFound) != 0))
         {
             return true;
         }
@@ -179,7 +218,7 @@ namespace Xsd
             else if(xmlElement.elements().size() > 0)
             {
                 Xml::Element & typeElement = xmlElement.elements().front();
-                if(!typeElement.name().compare(Checker::COMPLEX_TYPE_ELEMENT))
+                if(typeElement.name().compare(Checker::COMPLEX_TYPE_ELEMENT) == 0)
                 {
                     parseComplexType(*ci, "", true);
                 }
@@ -192,15 +231,6 @@ namespace Xsd
             {
                 throw new XSDConstructionException("Error: type attribute or element cannot be found for " + Checker::ELEMENT_ELT + " element");
             }
-        }
-        //
-        if(!ref)
-        {
-            //TODO big pb x2 :
-            //- on est récursif mais on descend pas dans la définition des elts contenus dans un elt
-            //- on gère pas les occurs pour les choice et seq
-            //- on parse pas les attrs type des elts
-            //- gérer les new type
         }
 
         return regex;

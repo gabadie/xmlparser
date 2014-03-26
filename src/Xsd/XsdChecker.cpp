@@ -8,6 +8,7 @@
 
 namespace Xsd
 {
+    //TODO: ctrl + f : "TODO"
 
     const std::string SCHEMA_ELT = "schema";
     const std::string ELEMENT_ELT = "element";
@@ -59,8 +60,7 @@ namespace Xsd
         //Building intermediary structure from xmlDoc
         Xsd::Type::parseComplexType(xsdDoc.root(), "|", true));
 
-        //TODO
-        //Check if every reference is linked to a type or an attribute
+        checkReferences();
 
     }
 
@@ -85,50 +85,75 @@ namespace Xsd
         mAttributesTypes.clear();
     }
 
-
-    static Checker
-    Checker::getInstance(const Xml::Document & xsdDoc)
+/*
+    using typesMap = std::map<std::string, Type const *>;
+    using elementsTypesMap = std::map<std::string, std::string>;
+    using attributesTypesMap = std::map<std::string, std::string>;
+*/
+    void
+    Checker::checkReferences()
     {
-        return instance;
-    }
+        //Check types, attributes and elements
+        //Check that every type from attributesTypesMap and elementsTypesMap are in typesMap
+        //Check that every attribute in every type has its type in elementsTypesMap
+        elementsTypesMap::iterator iterEltType;
+        attributesTypesMap::iterator iterAttrType;
+        Type const * type;
 
-    static void throwInvalidElementException(const std::string & received, const std::string & expected)
-    {
-        throw new XSDConstructionException("Error: Invalid XSD root element received :" + received + " (" + expected + " expected");
-    }
+        /*
+            pour tous les elts
+                check le type de l elt
 
-    static void throwMissingAttributeException(const std::string & element, const std::string & missingAttr)
-    {
-        throw new XSDConstructionException("Error: Missing attribute for " + element + " element: " + missingAttr);
-    }
+            pour tous les types
+                pour tous les attrs
+                    check le type des attrs
+        */
 
-    static void throwInvalidAttributeValueException(const std::string & element, const std::string & attr, const std::string & invalidValue)
-    {
-        throw new XSDConstructionException("Error: Invalid " + attr + " attribute value for " + element + " element: " + invalidValue);
+        for (elementsTypesMap::iterator iterEltType = elementsTypesMap.begin(); iterEltType != elementsTypesMap.end(); ++iterEltType)
+        {
+            checkExistType(iterEltType->second);
+        }
+
+        for (iterType = typesMap.begin(); iterType != typesMap.end(); ++iterType)
+        {
+            std::list<const Attribute *> attributes = iterType->second.attributes();
+            for (std::list<const Attribute *>::iterator iterAttr = attributes.begin(); iterAttr != attributes.end(); ++iterAttr)
+            {
+                checkExistType(iterAttr->second);
+            }
+        }
     }
 
     static void
-    Checker::initialize(const Xml::Document & xsdDoc)
+    Checker::checkExistType(const std::string & typeName)
     {
-        if(instance == NULL)
+        if(!existType(typeName))
         {
-            intance = Checker(xmlDoc);
+            throw new XSDConstructionException("Reference cannot be resolved: " + typeName);
         }
     }
 
-    bool
-    Checker::isValid(Xml::Document & xmlDoc)
-    {
-        std::cerr << __func__ << " : not implemented yet" << std::endl;
-        __builtin_trap();
 
+
+    static bool
+    Checker::existType(const std::string & typeName)
+    {
+        if(typesMap.find(typeName) == typesMap.end())
+        {
+            return false;
+        }
+        return true;
+    }
+
+    bool
+    Checker::isValid(Xml::Document xsdDoc)
+    {
         try
         {
-            //TODO: Algo validation
-            //Check with the namespace or noNamespaceSchemaLocation
+            getElementType(ROOT)->checkValidity(xsdDoc.root());
             return true;
         }
-        catch(XSDConstructionException e)
+        catch(XSDValidationException e)
         {
             std::cerr << e.getMessage() << std:endl;
             return false;
@@ -159,11 +184,13 @@ namespace Xsd
         elementsTypesMap.insert(std::pair<std::string, std::string>(elementName, typeName));
     }
 
+/*
     void
     Checker::addAttribute(const std::string & attributeName, const Attribute * const attribute)
     {
         attributesMap.insert(std::pair<std::string, Attribute const *>(attributeName, attribute));
     }
+*/
 
     void
     Checker::addTypedAttribute(const std::string & attributeName, const std::string & typeName)
@@ -193,6 +220,7 @@ namespace Xsd
         return getType(typeName);
     }
 
+/*
     Attribute * const
     Checker::getAttribute(const std::string & attributeName)
     {
@@ -203,6 +231,7 @@ namespace Xsd
         }
         return att;
     }
+*/
 
     Type * const
     Checker::getAttributeType(const std::string & attributeName)
@@ -213,5 +242,35 @@ namespace Xsd
             return NULL;
         }
         return getType(typeName);
+    }
+
+    static Checker
+    Checker::getInstance(const Xml::Document & xsdDoc)
+    {
+        return instance;
+    }
+
+    static void
+    Checker::initialize(const Xml::Document & xsdDoc)
+    {
+        if(instance == NULL)
+        {
+            intance = Checker(xmlDoc);
+        }
+    }
+
+    static void throwInvalidElementException(const std::string & received, const std::string & expected)
+    {
+        throw new XSDConstructionException("Error: Invalid XSD root element received :" + received + " (" + expected + " expected");
+    }
+
+    static void throwMissingAttributeException(const std::string & element, const std::string & missingAttr)
+    {
+        throw new XSDConstructionException("Error: Missing attribute for " + element + " element: " + missingAttr);
+    }
+
+    static void throwInvalidAttributeValueException(const std::string & element, const std::string & attr, const std::string & invalidValue)
+    {
+        throw new XSDConstructionException("Error: Invalid " + attr + " attribute value for " + element + " element: " + invalidValue);
     }
 }
