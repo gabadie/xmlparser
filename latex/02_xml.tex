@@ -24,6 +24,15 @@ Les hypothèse suivantes sont également formulées :
 
 
 \section{Classes}
+    \subsection{Object}
+        TODO
+
+    \subsection{Node}
+        TODO
+
+    \subsection{DocumentNode}
+        Une instance de cette classe peut être de type Element, Text Comment ou PI. Afin de garantir la cohérence de l'architecture XML, ce noeud dispose d'un pointeur sur son noeud parent.
+
     \subsection{Document}
         Cette classe contient un prolog, un élément racine de type Element et un ensemble de fils de type DocumentNode (liste pouvant contenir 0 à N éléments).
 
@@ -33,14 +42,8 @@ Les hypothèse suivantes sont également formulées :
     \subsection{ProcessingInstruction}
         En accord avec l'hypothèse énoncée précédemment, une PI ne contient qu'un nom et une liste ordonnée d'attributs
 
-    \subsection{DocumentNode}
-        Une instance de cette classe peut être de type Element, Text Comment ou PI. Afin de garantir la cohérence de l'architecture XML, ce noeud dispose d'un pointeur sur son noeud parent.
-
-    \subsection{Element}
-        Un élément XML dispose d'un nom de balise, d'un ensemble ordonné d'attributs et d'un ensemble ordonné de noeuds fils. Cet élément peut être une balise vide ($<br/>$).
-
     \subsection{Text}
         Un noeud texte est naturellement décrit par une chaîne de caractères. Celui-ci ne dérive pas de la classe MiscNode puisque, si son contenu s'apparente à celui d'un noeud Comment, il ne peut en revanche être contenu par une instance de Document. Il est alors nécessaire d'ajouter un niveau de spécialisation afin d'éviter une relation incohérente.
 
-    \subsection{ElementIterator}
-        Cet élément est dédié au parcours de l'arbre XML, de manière similaire à un parseur de type SAX.
+    \subsection{Element}
+        Un élément XML dispose d'un nom de balise, d'un ensemble ordonné d'attributs et d'un ensemble ordonné de noeuds fils. Cet élément peut être une balise vide ($<br/>$).
