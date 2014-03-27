@@ -281,7 +281,7 @@ namespace Xml
                 }
 
                 auto elt = static_cast<Element *>(c);
-                if(elt->name() == xPathQuery)
+                if(elt->tag() == xPathQuery)
                 {
                     results.push_back(elt);
                 }
