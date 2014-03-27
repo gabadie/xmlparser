@@ -35,12 +35,14 @@ testXmlElementTagname()
     Xml::Element root(name);
 
     test_assert(root.name() == name);
+    test_assert(root.tag() == name);
 
     std::string tag  = "root";
 
     root.setName(tag);
 
     test_assert(root.name() == tag);
+    test_assert(root.tag() == tag);
 }
 
 void
