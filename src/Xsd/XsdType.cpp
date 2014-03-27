@@ -10,7 +10,7 @@ namespace Xsd
 
     Type::Type(const Xml::Element & xmlElement, const std::string & name)
     {
-        mRegex = parseComplexType(xmlElement, "", false, );
+        mRegex = parseComplexType(xmlElement, "", false);
         Checker::getInstance().addType(name, this);
     }
 
