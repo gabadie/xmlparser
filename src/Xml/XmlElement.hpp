@@ -41,7 +41,7 @@ namespace Xml
          * Override of clone abstract method
          */
         Node *
-        clone();
+        clone() const;
 
         /**
          * Gets the children nodes of the element.

@@ -16,7 +16,7 @@ namespace Xml
     }
 
     Node *
-    Text::clone()
+    Text::clone() const
     {
         return new Text(this->mText);
     }

@@ -49,8 +49,8 @@ namespace Xml
         * @return A new Xml Node tha has the same attributes as the object that have been cloned
         */
         virtual
-        Node *
-        clone() = 0;
+        Node * 
+        clone() const = 0;
 
 
     protected:

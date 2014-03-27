@@ -36,13 +36,16 @@ namespace Xsl {
 
     };
 
-    Xml::Document * xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) ;
+    Xml::Document * 
+    xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) ;
+
+    Xml::Node * applyDefaultTemplate( const Xml::Node * context,  Xml::Document& xslDoc, Xml::Document& xmlDoc);
 
     const
     Xml::Element *
     getTemplate(Xml::Document& xslDoc, Xml::Document& xmlDoc, const Xml::Element* element);
 
 
-    void applyTemplate ( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes, Xml::Element * xslTemplate) ;
+    //void applyTemplate ( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes, Xml::Element * xslTemplate) ;
 }
 #endif //_H_XSL_XSL

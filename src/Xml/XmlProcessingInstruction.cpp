@@ -26,7 +26,7 @@ namespace Xml
     }
 
     Node *
-    ProcessingInstruction::clone()
+    ProcessingInstruction::clone() const
     {
         return new ProcessingInstruction(*this);
     }

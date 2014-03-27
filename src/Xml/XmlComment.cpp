@@ -16,7 +16,7 @@ namespace Xml
     }
 
     Node *
-    Comment::clone()
+    Comment::clone() const
     {
         return new Comment(this->mContent);
     }

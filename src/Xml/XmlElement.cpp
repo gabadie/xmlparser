@@ -41,7 +41,7 @@ namespace Xml
     }
 
     Node *
-    Element::clone()
+    Element::clone() const
     {
         Xml::Element* elementClone =  new Element(this->mName);
         elementClone->mAttributes = AttributesMap(this->mAttributes);

@@ -35,7 +35,7 @@ namespace Xml
          * Override of clone abstract method
          */
         Node *
-        clone();
+        clone() const;
 
         /**
          * Gets the value of an attribute by name

@@ -25,7 +25,7 @@ namespace Xml
          * Override of clone abstract method
          */
         Node *
-        clone();
+        clone() const;
 
     protected:
         /**
