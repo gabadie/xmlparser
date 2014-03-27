@@ -35,6 +35,10 @@ namespace Xsl {
 
     Xml::Document* xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) ;
 
+    const
+    Xml::Element *
+    getTemplate(Xml::Document& xslDoc, Xml::Document& xmlDoc, const Xml::Element* element);
+
     void applyDefaultTemplate( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes) ;
 
     void applyTemplate ( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes, Xml::Element& xslTemplate) ;
