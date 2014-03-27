@@ -135,9 +135,9 @@ testXmlElementClone()
 {
     std::string originalName = "origin";
     Xml::Element* origin = new Xml::Element(originalName);
-    Xml::Element* clone = (Xml::Element*) origin->clone();
+    Xml::Element* clone = dynamic_cast<Xml::Element *>(origin->clone());
 
-    test_assert(clone != 0);
+    test_assert(clone != nullptr);
     test_assert(origin->name() == clone->name());
     test_assert(clone->children().size() == 0);
 
@@ -154,6 +154,39 @@ testXmlElementClone()
     delete clone;
 }
 
+void
+testXmlElementNamespace()
+{
+    Xml::Element root("root");
+
+    auto xmlElt1_1 = new Xml::Element("elt1", "ns");
+    root.append(xmlElt1_1);
+
+    test_assert(root.elements().size() == 1);
+    test_assert(root.elements()[0] == xmlElt1_1);
+    test_assert(root.elements("ns:elt1").size() == 1);
+    test_assert(root.elements("ns:elt1")[0] == xmlElt1_1);
+
+    auto xmlElt1_2 = new Xml::Element("elt1", "ns");
+    root.append(xmlElt1_2);
+
+    test_assert(root.elements().size() == 2);
+    test_assert(root.elements()[0] == xmlElt1_1);
+    test_assert(root.elements()[1] == xmlElt1_2);
+    test_assert(root.elements("ns:elt1").size() == 2);
+    test_assert(root.elements("ns:elt1")[0] == xmlElt1_1);
+    test_assert(root.elements("ns:elt1")[1] == xmlElt1_2);
+
+    auto xmlElt2 = new Xml::Element("elt2", "namespace");
+    root.append(xmlElt2);
+
+    test_assert(root.elements().size() == 3);
+    test_assert(root.elements()[0] == xmlElt1_1);
+    test_assert(root.elements()[1] == xmlElt1_2);
+    test_assert(root.elements()[2] == xmlElt2);
+    test_assert(root.elements("namespace:elt2").size() == 1);
+    test_assert(root.elements("namespace:elt2")[0] == xmlElt2);
+}
 
 int
 main()
@@ -164,6 +197,7 @@ main()
     testXmlElementChildren();
     testXmlElementContent();
     testXmlElementClone();
+    testXmlElementNamespace();
 
     return 0;
 }
