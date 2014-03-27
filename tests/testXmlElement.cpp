@@ -188,6 +188,28 @@ testXmlElementNamespace()
     test_assert(root.elements("namespace:elt2")[0] == xmlElt2);
 }
 
+void testXmlElementMatches() {
+    Xml::Document xmlDoc;
+
+    auto root = new Xml::Element("root");
+    auto child = new Xml::Element("child");
+    auto subchild = new Xml::Element("subchild");
+
+    xmlDoc.setRoot(root);
+    root->append(child);
+    child->append(subchild);
+
+    test_assert(root->matches("/"));
+    test_assert(child->matches("child"));
+    test_assert(subchild->matches("subchild"));
+    test_assert(subchild->matches("child/subchild"));
+    test_assert(subchild->matches("root/child/subchild"));
+
+    test_assert(!child->matches("/"));
+    test_assert(!child->matches("subchild"));
+    test_assert(!subchild->matches("child/root/subchild"));
+}
+
 int
 main()
 {
@@ -198,6 +220,7 @@ main()
     testXmlElementContent();
     testXmlElementClone();
     testXmlElementNamespace();
+    testXmlElementMatches();
 
     return 0;
 }
