@@ -25,15 +25,15 @@ Les hypothèse suivantes sont également formulées :
 
 \section{Classes}
     \subsection{Object}
-        Pour optimiser et eviter au maximum la redondance de donner dans notre arbre d'h\'eritage, nous nous somme inspirer de la tres c\'elebre librarie \textit{Qt} avec sont \lstinline$QObject$. Ainsi nous avons notre \lstinline$Xml::Object$ offrant les avantages que vous trouverez dans les sous sections suivantes.
+        Pour optimiser et eviter au maximum la redondance de donner dans notre arbre d'h\'eritage de l'implementation \textit{XML}, nous nous somme inspirer de la tres c\'elebre librarie \textit{Qt} avec sont \lstinline$QObject$. Ainsi nous avons notre \lstinline$Xml::Object$ offrant les avantages que vous trouverez dans les sous sections suivantes.
 
     \subsection{Node}
         Ainsi, nous partons du principe qu'un document XML n'est en faite qu'un arbre aillant des noeux (\lstinline$Node$) \'etant des objects XML, mais de natures differents (commentaires, text, element ...). Certains de ces noeux serons des feuilles de l'arbre pour le noeux de commentaire par exemple.
 
-        C'est la d\'ej\`a un avantage du \lstinline$Xml::Object$ car chaque \lstinline$Node$ connais sont \lstinline$Object$ parent \'a l'aide de \lstinline$mParent$ pouvant etre un Element ou un Document. Ainsi, on peut \'a partir d'un noeud, retrouver le \lstinline$Document$ dans lequel il se trouve simplement en remontant l'arbre.
+        C'est la d\'ej\`a un avantage du \lstinline$Xml::Object$ car chaque \lstinline$Node$ connais sont \lstinline$Object$ parent \'a l'aide de \lstinline$mParent$ pouvant etre un \lstinline$Element$ ou un \lstinline$Document$. Ainsi, on peut \'a partir d'un noeud, retrouver le \lstinline$Document$ dans lequel il se trouve simplement en remontant l'arbre.
 
     \subsection{DocumentNode}
-        Le \lstinline$DocumentNode$ est un \lstinline$Node$, mais aillant une particulariter semantique~: seul ses classes fillent peuvent avoir pour parent, un \lstinline$Element$ par hertiage de \lstinline$Node$, mais aussi un \lstinline$Document$ au contraire de la classe \lstinline$Text$ ne pouvant avoir pour parent qu'un \lstinline$Element$.
+        Le \lstinline$DocumentNode$ est une sp\'ecialisation de \lstinline$Node$, mais aillant seulement une particularit\'e' s\'emantique~: seul ses classes fillent peuvent avoir pour parent, un \lstinline$Element$ par hertiage de \lstinline$Node$, mais aussi un \lstinline$Document$ au contraire de la classe \lstinline$Text$ ne pouvant avoir pour parent qu'un \lstinline$Element$.
 
     \subsection{Document}
         Un \lstinline$Document$ est un \lstinline$Node$ aillant une composition de \lstinline$DocumentNode$. Parmis ces \lstinline$DocumentNode$, un seul et unique \lstinline$Element$ racine compose cette liste. Mais afin de pouvoir retrouver cette racine du document en complexit\'ee $O(1)$, \lstinline$DocumentNode$ dispose aussi d'un attributs \lstinline$mRoot$ dedi\'e \`a cette tache.
@@ -41,13 +41,13 @@ Les hypothèse suivantes sont également formulées :
         Cette m\^eme liste de \lstinline$DocumentNode$ est ordonn\'ee pour pouvoir garentir l'ordre des noeux au chargement et \`a l'export du document \textit{XML}. L'\lstinline$Element$ racine compose cette liste pour eviter de gerer deux listes de noeux (ceux avant et ceux apr\`es).
 
     \subsection{Comment}
-        Contient la description d'un commentaire sous forme de chaîne de caractères.
+        \lstinline$Comment$ est un \lstinline$DocumentNode$ car il peut \^etre n'importe ou dans le document \textit{XML}~: dans un \lstinline$Element$ ou bien en dehors de l'element racine du document.
 
     \subsection{ProcessingInstruction}
-        En accord avec l'hypothèse énoncée précédemment, une PI ne contient qu'un nom et une liste ordonnée d'attributs
+        Une \lstinline$ProcessingInstruction$ est aussi un \lstinline$DocumentNode$ d'apr\'es les specifications officiel de \textit{XML}. Mais en accord avec l'hypothèse énoncée précédemment, une \lstinline$ProcessingInstruction$ ne contient qu'un nom et une map d'attributs.
 
     \subsection{Text}
-        Un noeud texte est naturellement décrit par une chaîne de caractères. Celui-ci ne dérive pas de la classe MiscNode puisque, si son contenu s'apparente à celui d'un noeud Comment, il ne peut en revanche être contenu par une instance de Document. Il est alors nécessaire d'ajouter un niveau de spécialisation afin d'éviter une relation incohérente.
+        Un noeud de texte est naturellement décrit par une chaîne de caractères \lstinline$mText$. Celui-ci ne dérive pas de la classe \lstinline$DocumentNode$ puisque, si son contenu s'apparente à celui d'un noeud Comment, il ne peut en revanche être contenu par une instance de \lstinline$Element$. D'ou la nécessit\'ee d'ajouter le niveau de spécialisation \lstinline$DocumentNode$ afin d'éviter une relation ne respectant pas les sp\'ecifications standart \textit{XML}.
 
     \subsection{Element}
         Un élément XML dispose d'un nom de balise, d'un ensemble ordonné d'attributs et d'un ensemble ordonné de noeuds fils. Cet élément peut être une balise vide ($<br/>$).
