@@ -196,7 +196,7 @@ namespace Xml
          * Tells whether or not the element matches a given (XPath-like) pattern, typically
          * the "matches" attribute of an XSL template.
          *
-         * @param pattern, an XPath-like pattern.
+         * @param pattern an XPath-like pattern.
          *
          * @return True if the element matches the given pattern, False otherwise.
          */
