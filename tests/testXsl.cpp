@@ -95,7 +95,8 @@ testGetTemplate()
 
 
     const Xml::Element* cdElement = xmlDoc->root()->elements()[0];
-    const Xml::Element* titleElement = cdElement->elements()[0];
+    const Xml::Element* titleElement = cdElement->elements("title")[0];
+    const Xml::Element* categoryElement = cdElement->elements("category")[0];
 
     const Xml::Element* titleTemplate = Xsl::getTemplate(*xslDoc, titleElement);
     test_assert(titleTemplate != nullptr);
@@ -105,8 +106,11 @@ testGetTemplate()
     test_assert(cdTemplate != nullptr);
     test_assert(cdTemplate->attribute("match") == "catalog/cd");
 
-    delete xmlDoc;
-    delete xslDoc;
+    const Xml::Element* categoryTemplate = Xsl::getTemplate(*xslDoc, categoryElement);
+    test_assert(categoryTemplate == nullptr);
+
+    free(xmlDoc);
+    free(xslDoc);
 }
 
 int
