@@ -10,26 +10,19 @@
 std::map<std::string, Xsl::Instruction*> xslInstructions;
 
 bool deeperMatch(const Xml::Element* xslTemplateA, const Xml::Element* xslTemplateB) {
-    std::string matchA = xslTemplateA->name();
-    std::string matchB = xslTemplateB->name();
+    std::string matchA = xslTemplateA->attribute("match");
+    std::string matchB = xslTemplateB->attribute("match");
     return std::count(matchA.begin(), matchA.end(), '/') > std::count(matchB.begin(), matchB.end(), '/') ;
 }
 
-const Xml::Element* Xsl::getTemplate(Xml::Document& xslDoc, Xml::Document& xmlDoc, const Xml::Element* element) {
+const Xml::Element* Xsl::getTemplate(Xml::Document& xslDoc, const Xml::Element* element) {
     const Xml::Element* curTemplate = nullptr;
 
     for (const Xml::Element* xslTemplate : xslDoc.root()->elements()) {
-        // If the currently matched template has a "deeper match", we skip the current iteration
-        if (curTemplate != nullptr && deeperMatch(curTemplate, xslTemplate)) {
-            continue;
-        }
-
-        std::list<const Xml::Element*> matchedElements = xmlDoc.root()->select(xslTemplate->attribute("match"));
-        for (const Xml::Element* matchedElement : matchedElements) {
-            if (matchedElement == element) {
-                curTemplate = xslTemplate;
-                break;
-            }
+        // If the template has a "deeper match" than the currently selected template, we choose is instead
+        if (element->matches(xslTemplate->attribute("match"))
+            && (curTemplate == nullptr || deeperMatch(xslTemplate, curTemplate))) {
+            curTemplate = xslTemplate;
         }
     }
 

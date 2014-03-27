@@ -41,9 +41,19 @@ namespace Xsl {
 
     Xml::Node * applyDefaultTemplate( const Xml::Node * context,  Xml::Document& xslDoc, Xml::Document& xmlDoc);
 
+
+    /**
+     * Returns the appropriate template (if any) that should be applied
+     * to the given element
+     *
+     * @param xslDoc The XSL document containing the templates
+     * @param element The element that the returned template should be applied to
+     *
+     * @return the template that matches the given element. If no template matches, we return nullptr
+     */
     const
     Xml::Element *
-    getTemplate(Xml::Document& xslDoc, Xml::Document& xmlDoc, const Xml::Element* element);
+    getTemplate(Xml::Document& xslDoc, const Xml::Element* element);
 
 
     //void applyTemplate ( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes, Xml::Element * xslTemplate) ;
