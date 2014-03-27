@@ -84,7 +84,7 @@ namespace Xml
             if(c->isElement())
             {
                 auto const element = static_cast<Element const *>(c);
-                if(element->mName == tag)
+                if(element->tag() == tag)
                 {
                     elements.push_back(element);
                 }
@@ -281,7 +281,7 @@ namespace Xml
                 }
 
                 auto elt = static_cast<Element *>(c);
-                if(elt->name() == xPathQuery)
+                if(elt->tag() == xPathQuery)
                 {
                     results.push_back(elt);
                 }
@@ -321,7 +321,7 @@ namespace Xml
                     }
 
                     auto elt = static_cast<Element *>(c);
-                    if(elt->name() == token)
+                    if(elt->tag() == token)
                     {
                         auto res = elt->select(xPathQuery.substr(slashPos + 1));
                         results.splice(std::end(results), res); // Concatenate the results

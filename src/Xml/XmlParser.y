@@ -7,6 +7,7 @@
 #include "XmlParser.hpp"
 #include "XmlText.hpp"
 #include "XmlComment.hpp"
+#include "XmlProcessingInstruction.hpp"
 #include "XmlParserError.hpp"
 #include "XmlParserInput.hpp"
 
@@ -48,6 +49,7 @@ void yyerror(void ** e, const char * msg);
 %type <nodeList> misc
 %type <node> item
 %type <node> miscitem
+%type <node> processinstr
 %type <str> etag
 
 
@@ -166,8 +168,28 @@ miscitem:
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
          */
         free($1);
+    } |
+    processinstr
+    {
+        /* ------------------------------------------ processing instruction */
+        $$ = $1;
     };
 
+processinstr:
+    INFSPECIAL NOM atts SUPSPECIAL
+    {
+        /* ------------------------------------------ processing instruction */
+        Xml::ProcessingInstruction * xmlpi = new Xml::ProcessingInstruction(std::string($2), "", "");
+
+        for(auto const & p : *$3)
+        {
+            xmlpi->setAttribute(p.first, p.second);
+        }
+
+        free($2);
+        delete $3;
+        $$ = xmlpi;
+    };
 
 misc:
     misc miscitem
