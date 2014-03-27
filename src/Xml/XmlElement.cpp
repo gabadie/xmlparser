@@ -333,6 +333,35 @@ namespace Xml
         return results;
     }
 
+
+    bool
+    Element::matches(std::string const & pattern) const {
+        if (pattern == "") {
+            return true;
+        }
+
+        if (pattern == "/")
+        {
+            return this->document()->root() == this;
+        }
+
+        auto slashPos = pattern.find_last_of("/");
+        if (slashPos == std::string::npos) {
+            return this->name() == pattern;
+        }
+        else {
+            auto lastToken = pattern.substr(slashPos + 1, pattern.size() - 1);
+            if (this->name() != lastToken || !this->parent()->isElement()) {
+                return false;
+            }
+            auto parent = (Xml::Element*) this->parent();
+            auto parentPattern = pattern.substr(0, slashPos);
+            return parent->matches(parentPattern);
+        }
+
+
+    }
+
     std::string
     Element::valueOf(std::string const & xPathQuery) const
     {
