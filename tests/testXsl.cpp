@@ -1,10 +1,9 @@
-#include <mk_test.h>
+
+#include "testhelper.hpp"
 
 #include "../src/Xml/XmlParser.hpp"
 #include "../src/Xsl/Xsl.hpp"
 
-#define xml_code(code) \
-    ((const char *) #code)
 void
 testXslTransform()
 {

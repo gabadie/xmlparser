@@ -26,6 +26,18 @@ namespace Xml
         ~ProcessingInstruction() override;
 
         /**
+         * Copy constructor
+         */
+         ProcessingInstruction(ProcessingInstruction const & piTocopy);
+
+
+        /**
+         * Override of clone abstract method
+         */
+        Node *
+        clone();
+
+        /**
          * Gets the value of an attribute by name
          *
          * @param name Name of the attribute to get.
@@ -110,7 +122,7 @@ namespace Xml
         setAttribute(char const * name, char const * value,
             KeyValues && ...keyValues);
 
-    protected:
+    private:
         std::string mName;         ///< Name of the PI
         AttributesMap mAttributes; ///< Attributes of the element
 

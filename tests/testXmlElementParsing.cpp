@@ -45,6 +45,42 @@ testXmlElementParsingBasic()
 }
 
 void
+testXmlElementParsingNamespace()
+{
+    std::string content (xml_code(
+        <xs:element>
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+    ));
+    Xml::Log log;
+
+    Xml::Document * doc = Xml::parse(content, &log);
+
+    test_assert(doc != 0);
+    test_assert(doc->root() != 0);
+
+    if (doc == 0 || doc->root() == 0)
+    {
+        return;
+    }
+
+    test_assert(doc->root()->name() == "element");
+    test_assert(doc->root()->namespaceName() == "xs");
+    test_assert(doc->root()->tag() == "xs:element");
+
+    test_assert(doc->root()->elements()[0]->name() == "complexType");
+    test_assert(doc->root()->elements()[0]->namespaceName() == "xs");
+    test_assert(doc->root()->elements()[0]->elements()[0]->tag() == "xs:sequence");
+    test_assert(doc->root()->elements()[0]->elements()[0]->elements()[0]->tag() == "xs:element");
+
+    delete doc;
+}
+
+void
 testXmlElementParsingUnclosed()
 {
     std::string content (xml_code(
@@ -118,7 +154,7 @@ testXmlElementParsingBadAttributes()
 {
     std::string content (xml_code(
         <hello>
-            <balise1 "value1">
+            <balise1 ="value1" attr4="value4" "value5" "value7" attr6="value6">
             </balise1>
             <balise2 attr2= attr3="value3">
             </balise2>
@@ -128,7 +164,35 @@ testXmlElementParsingBadAttributes()
 
     Xml::Document * doc = Xml::parse(content, &log);
 
-    std::cerr << log << std::endl;
+    test_assert(doc != nullptr);
+
+    auto balise1 = doc->root()->elements("balise1");
+    auto balise2 = doc->root()->elements("balise2");
+
+    // If the following tests don't pass, see in XmlParser.y the rule "atts"
+    // The error may be caused by a shift/reduce conflict.
+    test_assert(balise1.size() == 1);
+    test_assert(balise2.size() == 1);
+    test_assert(balise1[0]->attribute("attr4") == "value4");
+    test_assert(balise1[0]->attribute("attr6") == "value6");
+    test_assert(balise2[0]->attribute("attr2") == "");
+    test_assert(balise2[0]->attribute("attr3") == "value3");
+
+    delete doc;
+}
+
+void
+testXmlElementParsingWoContent()
+{
+    std::string content (xml_code(
+        <hello>
+            <balise1 attr1="value1"/>
+            <balise2 attr2="value2" attr3="value3"/>
+        </hello>
+    ));
+    Xml::Log log;
+
+    Xml::Document * doc = Xml::parse(content, &log);
 
     test_assert(doc != nullptr);
 
@@ -137,7 +201,36 @@ testXmlElementParsingBadAttributes()
 
     test_assert(balise1.size() == 1);
     test_assert(balise2.size() == 1);
-    test_assert(balise1[0]->attribute("attr1") == "");
+    test_assert(balise1[0]->attribute("attr1") == "value1");
+    test_assert(balise2[0]->attribute("attr2") == "value2");
+    test_assert(balise2[0]->attribute("attr3") == "value3");
+
+    delete doc;
+
+}
+
+void
+testXmlElementParsingWoContentBad()
+{
+    std::string content (xml_code(
+        <hello>
+            <balise1 ="value1" attr4="value4" "value5" "value7" attr6="value6"/>
+            <balise2 attr2= attr3="value3"/>
+        </hello>
+    ));
+    Xml::Log log;
+
+    Xml::Document * doc = Xml::parse(content, &log);
+
+    test_assert(doc != nullptr);
+
+    auto balise1 = doc->root()->elements("balise1");
+    auto balise2 = doc->root()->elements("balise2");
+
+    test_assert(balise1.size() == 1);
+    test_assert(balise2.size() == 1);
+    test_assert(balise1[0]->attribute("attr4") == "value4");
+    test_assert(balise1[0]->attribute("attr6") == "value6");
     test_assert(balise2[0]->attribute("attr2") == "");
     test_assert(balise2[0]->attribute("attr3") == "value3");
 
@@ -148,10 +241,13 @@ int
 main()
 {
     testXmlElementParsingBasic();
+    testXmlElementParsingNamespace();
     testXmlElementParsingUnclosed();
     testXmlElementParsingBadClose();
     testXmlElementParsingAttributes();
-    //testXmlElementParsingBadAttributes();
+    testXmlElementParsingBadAttributes();
+    testXmlElementParsingWoContent();
+    testXmlElementParsingWoContentBad();
 
     return 0;
 }

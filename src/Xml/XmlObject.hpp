@@ -89,6 +89,15 @@ namespace Xml
         void
         appendProcessingInstruction(ProcessingInstruction * pi);
 
+        /**
+         * Removes a child node.
+         *
+         * @return True is the element has been removed, false otherwise.
+         */
+        virtual
+        bool
+        remove(Node * node);
+
     protected:
         /**
          * Constructor
@@ -124,6 +133,19 @@ namespace Xml
         virtual
         void
         appendNode(Node * node);
+
+        /**
+         * Tells whether or not the element has the given node in
+         * its children recursively.
+         *
+         * @param node Node to find
+         *
+         * @return True if found, false otherwise.
+         */
+        virtual
+        bool
+        hasChild(Node const * node) const;
+
 
         friend class Xml::Document;
         friend class Xml::Element;

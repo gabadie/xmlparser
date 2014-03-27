@@ -35,12 +35,14 @@ testXmlElementTagname()
     Xml::Element root(name);
 
     test_assert(root.name() == name);
+    test_assert(root.tag() == name);
 
     std::string tag  = "root";
 
     root.setName(tag);
 
     test_assert(root.name() == tag);
+    test_assert(root.tag() == tag);
 }
 
 void
@@ -128,6 +130,30 @@ testXmlElementContent()
     test_assert(dynamic_cast<Xml::Text *>(root.children()[0]) != nullptr);
 }
 
+void
+testXmlElementClone()
+{
+    std::string originalName = "origin";
+    Xml::Element* origin = new Xml::Element(originalName);
+    Xml::Element* clone = (Xml::Element*) origin->clone();
+
+    test_assert(clone != 0);
+    test_assert(origin->name() == clone->name());
+    test_assert(clone->children().size() == 0);
+
+    std::string content = "This is the new content of the element";
+    std::string newName = "newname";
+    origin->setContent(content);
+    origin->setName(newName);
+
+    test_assert(origin->children().size() == 1);
+    test_assert(clone->children().size() == 0);
+    test_assert(origin->name() == newName && clone->name() == originalName);
+
+    free(origin);
+    free(clone);
+}
+
 
 int
 main()
@@ -137,6 +163,7 @@ main()
     testXmlElementAttributes();
     testXmlElementChildren();
     testXmlElementContent();
+    testXmlElementClone();
 
     return 0;
 }

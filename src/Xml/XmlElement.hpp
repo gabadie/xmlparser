@@ -27,8 +27,9 @@ namespace Xml
          * Constructor
          *
          * @param name Name of the element
+         * @param namespace Name of the namespace
          */
-        Element(std::string const & name);
+        Element(std::string const & name, std::string const & namespaceName = std::string());
 
         /**
          * Destructor
@@ -37,15 +38,10 @@ namespace Xml
         ~Element();
 
         /**
-         * Tells whether or not the element has the given node in
-         * its children recursively.
-         *
-         * @param node Node to find
-         *
-         * @return True if found, false otherwise.
+         * Override of clone abstract method
          */
-        bool
-        hasChild(Node * node) const;
+        Node *
+        clone();
 
         /**
          * Gets the children nodes of the element.
@@ -118,12 +114,12 @@ namespace Xml
         appendText(std::string const & text);
 
         /**
-         * Deletes a child node.
+         * Removes a child node.
          *
          * @return True is the element has been removed, false otherwise.
          */
         bool
-        remove(Node * node);
+        remove(Node * node) override;
 
         /**
          * Gets the name of the element
@@ -140,6 +136,30 @@ namespace Xml
          */
         void
         setName(std::string const & name);
+
+        /**
+         * Gets the namespace of the element
+         *
+         * @return The namespace of the element
+         */
+        std::string const &
+        namespaceName() const;
+
+        /**
+         * Set the namespace of the element
+         *
+         * @param namespace Namespace to set
+         */
+        void
+        setNamespaceName(std::string const & namespaceName);
+
+        /**
+         * Gest the namespace name and the name of the element
+         *
+         * @return the namespace name and the name
+         */
+        std::string
+        tag() const;
 
         /**
          * Gets the value of an attribute by name
@@ -195,8 +215,6 @@ namespace Xml
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
 
-    private:
-
         /**
          * Tells whether or not the node is an Element
          *
@@ -214,8 +232,20 @@ namespace Xml
         void
         appendNode(Node * node) override;
 
+        /**
+         * Tells whether or not the element has the given node in
+         * its children recursively.
+         *
+         * @param node Node to find
+         *
+         * @return True if found, false otherwise.
+         */
+        bool
+        hasChild(Node const * node) const override;
+
     protected:
         std::string mName;         ///< Name of the element
+        std::string mNamespaceName;    ///< Namespace of the element
         AttributesMap mAttributes; ///< Attributes of the element
         NodeList mChildren;        ///< Children elements
 

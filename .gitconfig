@@ -1,0 +1,13 @@
+[color]
+ui = auto
+[push]
+default = simple
+[http]
+sslVerify = false
+postBuffer = 524288000
+[alias]
+lg = log --color --graph --date-order --pretty=format:'%Cred%H%Creset %C(blue)%ad%Creset %C(cyan)%ae%Creset %s%Cgreen%d%Creset' --abbrev-commit
+lga = log --color --graph --date-order --pretty=format:'%Cred%H%Creset %C(blue)%ad%Creset %C(cyan)%ae%Creset %s%Cgreen%d%Creset' --abbrev-commit --all
+st = status
+diffc = diff --cached
+showf = diff-tree --no-commit-id --name-only -r
