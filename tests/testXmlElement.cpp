@@ -150,8 +150,8 @@ testXmlElementClone()
     test_assert(clone->children().size() == 0);
     test_assert(origin->name() == newName && clone->name() == originalName);
 
-    free(origin);
-    free(clone);
+    delete origin;
+    delete clone;
 }
 
 
