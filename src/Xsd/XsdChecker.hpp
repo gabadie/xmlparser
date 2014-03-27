@@ -56,11 +56,14 @@ namespace Xsd
          */
         virtual ~Checker();
 
+        void
+        checkReferences();
+
         /**
          * Returns true if the XML file respects the XML schema definition
          */
         bool
-        isValid(Xml::Document * xmlDoc);
+        isValid(Xml::Document xmlDoc);
 
         std::string getStringTypeValue();
 
@@ -77,6 +80,12 @@ namespace Xsd
 */
         void
         addTypedAttribute(const std::string & attributeName, const std::string & typeName);
+
+        static void
+        checkExistType(const std::string & typeName);
+
+        static bool
+        existType(const std::string & typeName);
 
         Type * const
         getType(const std::string & typeName);

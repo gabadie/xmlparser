@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <utility>
 #include <vector>
 #include <re2/re2.h>
 
@@ -141,6 +142,14 @@ namespace Xml
          */
         void
         setName(std::string const & name);
+
+        /**
+         * Gets all the pairs name/value of the attributes
+         *
+         * @return The pairs name/value of all the attributes.
+         */
+        std::list<std::pair<std::string const, std::string const>>
+        attributesValue() const;
 
         /**
          * Gets the value of an attribute by name

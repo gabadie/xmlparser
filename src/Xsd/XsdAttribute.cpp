@@ -78,7 +78,7 @@ namespace Xsd
     }
 
     void
-    Checker::checkValidity(const std::string & value)
+    Attribute::checkValidity(const std::string & value)
     {
         if(!Checker::getAttributeType(name)->isValid(value))
         {

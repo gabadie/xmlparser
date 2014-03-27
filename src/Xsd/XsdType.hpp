@@ -4,6 +4,7 @@
 #include "../Xml/XmlElement.hpp"
 #include "XsdAttribute.hpp"
 #include <string>
+#include <vector>
 #include <map>
 #include <re2/re2.h>
 
@@ -32,13 +33,16 @@ namespace Xsd
         parseComplexType(const Xml::Element & xmlElement, std::string separator, bool eltSeqChoice);
 
         bool
-        isValid(const Xml::Element & element);
+        isValid(const std::string & str);
 
         /**
          * Create the type regex
          */
         static bool
         isSimpleType(const std::string & type);
+
+        void
+        checkValidity(const Xml::Element & element);
 
         static bool
         getNameOrRef(const std::string & type);
@@ -49,11 +53,8 @@ namespace Xsd
         static const Type *
         parseSimpleType(const std::string & type);
 
-        /**
-         * Create the regex for an element
-         */
-        static std::string
-        getRegexFromElement(const Xml::Element & xmlElement);
+        std::string
+        childrenToString(std::vector<Xml::Element const *> childrenElt);
 
         static std::string
         getRegexFromOccurs(const Xml::Element & xmlElement, const std::string & eltRegex);
@@ -64,7 +65,7 @@ namespace Xsd
     protected:
 
         std::string mRegex;
-        std::list<Attribute * const> mAttributes;
+        std::list<Attribute *> mAttributes;
 
         static const std::string TYPE_SUFFIX;
         static const std::string UNBOUNDED;

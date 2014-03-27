@@ -14,15 +14,10 @@ namespace Xsd
         Checker::getInstance().addType(name, this);
     }
 
-    Type::Type(const Xml::Element & xmlElement, const std::string & name)
-    {
-        mRegex = getRegexFromElement(xmlElement);
-        Checker::getInstance().addType(name, this);
-    }
-
 
     Type::Type(const std::string & name, const std::string & regex, std::list<Attribute *> attrs):
-        mRegex(regex), mAttributes(attrs)
+        mRegex(regex),
+        mAttributes(attrs)
     {
         Checker::getInstance().addType(name, this);
     }
@@ -31,68 +26,72 @@ namespace Xsd
     {
     }
 
-    void
-    Checker::isValid(const std::string & str)
+    bool
+    Type::isValid(const std::string & str)
     {
         return RE2::FullMatch(str, mRegex);
     }
 
 
     void
-    Checker::checkValidity(const Xml::Element & element)
+    Type::checkValidity(const Xml::Element & element)
     {
         //TODO: add function attributes() which returns the mAttributes map in Xml::Element
-        for (std::map<std::string, std::string>::iterator iterAttr = element.attributes().begin(); iterAttr != element.attributes().end(); ++iterAttr)
+        for (auto iterAttr = element.attributesValue().begin(); iterAttr != element.attributesValue().end(); ++iterAttr)
         {
-            iterAttr->checkValidity(iterAttr->second);
+            //pour chaque attibut d'un element
+            //  obtenir l'attribut xsd avec une map depuis le type (map attribut de type)
+            //  xsdAttribute->checkValidity(iterAttr->second)
+            // mAttributes.find(iterAttr->first)
+            // iterAttr->checkValidity(iterAttr->second);
         }
 
-        if(!RE2::FullMatch(childrenToString(xmlElement.elements()), mRegex))
+        if(!RE2::FullMatch(childrenToString(element.elements()), mRegex))
         {
             throw new XSDValidationException("Invalid element: " + element.name());
         }
 
-        for (std::list<Xml::Element * const>::iterator iter = element.elements().begin(); iter != element.attributes().end(); ++iter)
+        for (auto iter = element.elements().begin(); iter != element.elements().end(); ++iter)
         {
-            Checker::getInstance().getElementType(iter->name())->checkValidity(*iter);
+            Checker::getInstance().getElementType(*iter->name())->checkValidity(*iter);
         }
     }
 
 
-    static std::string
-    Checker::childrenToString(list<const Element *> childrenElt)
+    std::string
+    Type::childrenToString(std::vector<Xml::Element const *> childrenElt)
     {
         std::string str = "";
-        for (std::list<const Element *>::iterator iter = childrenElt.begin(); iter != childrenElt.end(); ++iter)
+        for (auto iter = childrenElt.begin(); iter != childrenElt.end(); ++iter)
         {
-            str += "<" + iter->second.name() + ">";
+            str += "<" + iter->name() + ">";
         }
         return str;
     }
 
     //Should work, still have to check the algorithm for choice or sequence inside choice or sequence
-    static std::string
+    std::string
     Type::parseComplexType(const Xml::Element & xmlElement, std::string separator, bool eltSeqChoice)
     {
         bool eltParsed = false;
         std::string regex = "(";
 
-        if(ci->attribute(Checker::MIXED_ATTR).compare("true") == 0)
+        if(xmlElement.attribute(Checker::MIXED_ATTR).compare("true") == 0)
         {
             separator += ".*";
         }
 
-        for (std::list<Xml::Element>::const_iterator ci = xmlElement.elements().begin(); ci != xmlElement.elements().end(); ++ci)
+        for (auto ci = xmlElement.elements().begin(); ci != xmlElement.elements().end(); ++ci)
         {
-            if(ci->name().compare(Checker::SEQUENCE_ELT) == 0)
+            if(*ci.name().compare(Checker::SEQUENCE_ELT) == 0)
             {
-                regex += getRegexFromOccurs(*ci, parseComplexType(*ci, "", true)) + separator;
+                regex += getRegexFromOccurs(ci, parseComplexType(*ci, "", true)) + separator;
             }
-            else if(ci->name().compare(Checker::CHOICE_ELT) == 0)
+            else if(*ci.name().compare(Checker::CHOICE_ELT) == 0)
             {
-                regex += getRegexFromOccurs(*ci, parseComplexType(*ci, "|", true)) + separator;
+                regex += getRegexFromOccurs(ci, parseComplexType(*ci, "|", true)) + separator;
             }
-            else if(ci->name().compare(Checker.ELEMENT_ELT) == 0)
+            else if(*ci.name().compare(Checker.ELEMENT_ELT) == 0)
             {
                 if(eltSeqChoice || !eltParsed)
                 {
@@ -123,13 +122,14 @@ namespace Xsd
     }
 
     static bool
-    isSimpleType(const std::string & type)
+    Type::isSimpleType(const std::string & type)
     {
         return (type.compare(Checker::getInstance().getStringTypeValue()) == 0)
             || (type.compare(Checker::getInstance().getDateTypeValue()) == 0);
     }
 
-    static std::string getOccursFromElement(const Xml::Element & xmlElement, const std::string & occursAttrName, const std::string & occursAttrValue)
+    static std::string
+    Type::getOccursFromElement(const Xml::Element & xmlElement, const std::string & occursAttrName, const std::string & occursAttrValue)
     {
         if(occursAttrValue.compare(UNBOUNDED) == 0)
         {
@@ -297,7 +297,7 @@ namespace Xsd
     }
 
     std::list<Attribute *>
-    attributes() const
+    Type::attributes() const
     {
         return mAttributes;
     }
