@@ -51,8 +51,16 @@ testXmlPIExport()
 void
 testXmlPIParsing()
 {
-    //TODO
-}
+    std::string content (xml_code(<?xml version="1.0" encoding="UTF-8"?>));
+    Xml::Log log;
+
+    Xml::Document * doc = Xml::parse(content, &log);
+    Xml::ProcessingInstruction * pi = static_cast<Xml::ProcessingInstruction *>(doc->mChildren.front());
+
+    test_assert(pi->mName == "xml");
+    std::cout << "it works !" << std::endl;
+    test_assert(pi->attribute("version") == "1.0");
+    test_assert(pi->attribute("encoding") == "UTF-8");}
 
 int
 main()
