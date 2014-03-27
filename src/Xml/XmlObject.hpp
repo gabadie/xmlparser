@@ -150,6 +150,10 @@ namespace Xml
         friend class Xml::Document;
         friend class Xml::Element;
         friend class Xml::Node;
+
+        
+        friend XSL_APPLY_TEMPLATE();
+        friend XSL_APPLY_DEFAULT_TEMPLATE();
     };
 
     /**

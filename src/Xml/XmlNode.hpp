@@ -76,6 +76,14 @@ namespace Xml
         friend class Xml::Element;
         friend class Xml::Text;
 
+        friend class Xsl::Instruction;
+        friend class Xsl::ForEach;
+        friend class Xsl::ApplyTemplate;
+        friend class Xsl::ValueOf;
+
+
+        friend XSL_APPLY_TEMPLATE();
+        friend XSL_APPLY_DEFAULT_TEMPLATE();
     };
 
 }

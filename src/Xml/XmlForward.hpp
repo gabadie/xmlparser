@@ -1,5 +1,10 @@
 #ifndef _H_XML_FORWARD
 #define _H_XML_FORWARD
+#include <vector>
+
+#define private public
+#define protected public 
+//TODO
 
 namespace Xml
 {
@@ -31,18 +36,26 @@ namespace Xsl
     class ApplyTemplate; 
 
 
+
 }
 
 /*
  * Bison parser
  */
 #define XML_BISON_MAIN() \
-    int ::yyparse(void ** e)
+    int ::yyparse(void ** e);
+
 
 /*
  * Bison parser declaration
  */
 int
 yyparse(void ** e);
+
+
+#define XSL_APPLY_TEMPLATE() \
+    void applyTemplate (Xml::Node* context, std::vector<Xml::Node*> &listNodes, Xml::Document& xslDoc, Xml::Element& xslTemplate);
+#define XSL_APPLY_DEFAULT_TEMPLATE() \
+    Xml::Node* applyDefaultTemplate(Xml::Node* context, Xml::Document& xslDoc);
 
 #endif

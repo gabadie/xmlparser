@@ -12,7 +12,7 @@ Xml::Document* Xsl::xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc )
 {
     Xml::Document* result = new Xml::Document();
 
-    Xml::Node* root = Xsl::applyDefaultTemplate(xmlDoc.root(), xslDoc);
+    Xml::Node* root = applyDefaultTemplate(xmlDoc.root(), xslDoc);
 
     try
     {
@@ -25,7 +25,7 @@ Xml::Document* Xsl::xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc )
     }
 }
 
-Xml::Node* Xsl::applyDefaultTemplate(Xml::Node* context, Xml::Document& xslDoc)
+Xml::Node* applyDefaultTemplate(Xml::Node* context, Xml::Document& xslDoc)
 {
     // Debug only
     if (!context->isElement())
@@ -34,7 +34,7 @@ Xml::Node* Xsl::applyDefaultTemplate(Xml::Node* context, Xml::Document& xslDoc)
     }
 
     // We create a new element
-    Xml::Element* resultNode = new Xml::Element(context->name());
+    Xml::Element* resultNode = new Xml::Element(((Xml::Element *)context)->name());
 
     // We generate its children
     for (auto child : ((Xml::Element*)context)->children())
@@ -43,9 +43,9 @@ Xml::Node* Xsl::applyDefaultTemplate(Xml::Node* context, Xml::Document& xslDoc)
 
         //duplicate the test with the one present in applydefaulttemplate
         Xml::Element xslTemplate = xslDoc.getTemplate(child);
-        if (xslTemplate == 0)
+        if (&xslTemplate == 0)
         {
-            resultChild = applyDefaultTemplate(child, xslDoc, resultNodes);
+            resultChild = applyDefaultTemplate(child, xslDoc);
             resultNode->appendNode(resultChild);
         }
         else
@@ -68,7 +68,7 @@ void applyTemplate (Xml::Node* context, vector<Xml::Node*> &listNodes, Xml::Docu
 
     if (&xslTemplate == nullptr)
     {
-        listNodes.push_back(Xsl::applyDefaultTemplate(context, xslDoc));
+        listNodes.push_back(applyDefaultTemplate(context, xslDoc));
         return;
     }
 

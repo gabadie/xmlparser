@@ -8,6 +8,10 @@ using namespace std;
 #include "../Xml/XmlNode.hpp"
 #include "../Xml/XmlText.hpp"
 #include "../Xml/XmlDocument.hpp"
+#include "../Xml/XmlForward.hpp"
+
+
+typedef vector< Xml::Node*> nodeVector;
 
 namespace Xsl {
 
@@ -33,10 +37,7 @@ namespace Xsl {
 
     };
 
-    Xml::Document* xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) ;
+    Xml::Document * xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) ;
 
-    void applyDefaultTemplate( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes) ;
-
-    void applyTemplate ( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes, Xml::Element& xslTemplate) ;
 }
 #endif //_H_XSL_XSL
