@@ -45,6 +45,42 @@ testXmlElementParsingBasic()
 }
 
 void
+testXmlElementParsingNamespace()
+{
+    std::string content (xml_code(
+        <xs:element>
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+    ));
+    Xml::Log log;
+
+    Xml::Document * doc = Xml::parse(content, &log);
+
+    test_assert(doc != 0);
+    test_assert(doc->root() != 0);
+
+    if (doc == 0 || doc->root() == 0)
+    {
+        return;
+    }
+
+    test_assert(doc->root()->name() == "element");
+    test_assert(doc->root()->namespaceName() == "xs");
+    test_assert(doc->root()->tag() == "xs:element");
+
+    test_assert(doc->root()->elements()[0]->name() == "complexType");
+    test_assert(doc->root()->elements()[0]->namespaceName() == "xs");
+    test_assert(doc->root()->elements()[0]->elements()[0]->tag() == "xs:sequence");
+    test_assert(doc->root()->elements()[0]->elements()[0]->elements()[0]->tag() == "xs:element");
+
+    delete doc;
+}
+
+void
 testXmlElementParsingUnclosed()
 {
     std::string content (xml_code(
@@ -205,6 +241,7 @@ int
 main()
 {
     testXmlElementParsingBasic();
+    testXmlElementParsingNamespace();
     testXmlElementParsingUnclosed();
     testXmlElementParsingBadClose();
     testXmlElementParsingAttributes();

@@ -142,7 +142,7 @@ element:
         /*
          * Checks that the closing function is working
          */
-        if ($1->name() != *$3)
+        if ($1->tag() != *$3)
         {
             Xml::parserSemanticError("unexpected </" + *$3 + "> (it should have been </" + $1->name() + ">)");
 
@@ -225,6 +225,20 @@ emptytag:
 
         free($2);
         delete $3;
+    } |
+    INF NOM COLON NOM atts SLASH SUP
+    {
+        /* ---------------------------------------------------- empty element tag with namespace*/
+        $$ = new Xml::Element(std::string($4), std::string($2));
+
+        for(auto const & p : *$5)
+        {
+            $$->setAttribute(p.first, p.second);
+        }
+
+        free($2);
+        free($4);
+        delete $5;
     };
 
 stag:
@@ -275,6 +289,7 @@ etag:
 
         free($3);
         free($5);
+        delete element;
     };
 
 atts:

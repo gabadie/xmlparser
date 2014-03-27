@@ -206,8 +206,15 @@ namespace Xml
     std::string
     Element::tag() const
     {
-        std::string tag = mNamespaceName + ":" + mName;
-        return tag;
+        if (mNamespaceName == "")
+        {
+            return mName;
+        }
+        else
+        {
+            std::string tag = mNamespaceName + ":" + mName;
+            return tag;
+        }
     }
 
     std::string const &
