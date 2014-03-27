@@ -28,7 +28,7 @@ testSelect()
 {
     Xml::Document doc;
 
-    std::string ns = "ns";
+    std::string ns = "namespace";
 
     std::string root = "root";
     auto xmlRoot = new Xml::Element(root);
@@ -311,6 +311,8 @@ testValueOf()
 {
     Xml::Document doc;
 
+    std::string ns = "namespace";
+
     std::string root = "root";
     Xml::Element * xmlRoot = new Xml::Element(root);
     doc.setRoot(xmlRoot);
@@ -327,6 +329,7 @@ testValueOf()
 
     std::string elt1 = "elt1";
     Xml::Element * xmlElt1 = new Xml::Element(elt1);
+    xmlElt1->setNamespaceName(ns);
     xmlRoot->append(xmlElt1);
 
     {
@@ -335,14 +338,16 @@ testValueOf()
 
         test_assert(xmlElt1->valueOf("@") == "");
         test_assert(xmlElt1->valueOf(".") == text);
-        test_assert(xmlElt1->valueOf("/" + elt1) == text);
-        test_assert(xmlRoot->valueOf("/" + elt1) == text);
+        test_assert(xmlElt1->valueOf("/" + ns + ":" + elt1) == text);
+        test_assert(xmlRoot->valueOf("/" + ns + ":" + elt1) == text);
         test_assert(xmlElt1->valueOf("../@" + attr1) == value1);
     }
 
     std::string elt11 = "elt11";
     Xml::Element * xmlElt11_1 = new Xml::Element(elt11);
+    xmlElt11_1->setNamespaceName(ns);
     Xml::Element * xmlElt11_2 = new Xml::Element(elt11);
+    xmlElt11_2->setNamespaceName(ns);
     xmlElt1->append(xmlElt11_1);
     xmlElt1->append(xmlElt11_2);
 
@@ -355,15 +360,15 @@ testValueOf()
         xmlElt11_2->setAttribute(attr, value);
 
         test_assert(xmlElt11_1->valueOf(".") == text);
-        test_assert(xmlElt1->valueOf(elt11) == text);
-        test_assert(xmlElt11_1->valueOf("/" + elt1 + "/" + elt11) == text);
-        test_assert(xmlElt11_1->valueOf("/" + elt1 + "/" + elt11 + "/@" + attr) == "");
+        test_assert(xmlElt1->valueOf(ns + ":" + elt11) == text);
+        test_assert(xmlElt11_1->valueOf("/" + ns + ":" + elt1 + "/" + ns + ":" + elt11) == text);
+        test_assert(xmlElt11_1->valueOf("/" + ns + ":" + elt1 + "/" + ns + ":" + elt11 + "/@" + attr) == "");
         test_assert(xmlElt11_2->valueOf("@" + attr) == value);
 
         std::string attr2 = "attr12";
         std::string value2 = "value12";
         xmlElt11_1->setAttribute(attr2, value2);
-        test_assert(xmlElt1->valueOf("/" + elt1 + "/" + elt11 + "/@" + attr2) == value2);
+        test_assert(xmlElt1->valueOf("/" + ns + ":" + elt1 + "/" + ns + ":" + elt11 + "/@" + attr2) == value2);
     }
 }
 
