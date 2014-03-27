@@ -30,7 +30,7 @@ Xml::Node* Xsl::applyDefaultTemplate(Xml::Node* context, Xml::Document& xslDoc)
     // Debug only
     if (!context->isElement())
     {
-        return &();
+        return context->clone();
     }
 
     // We create a new element
@@ -41,49 +41,55 @@ Xml::Node* Xsl::applyDefaultTemplate(Xml::Node* context, Xml::Document& xslDoc)
     {
         Xml::Node* resultChild;
 
+        //duplicate the test with the one present in applydefaulttemplate
         Xml::Element xslTemplate = xslDoc.getTemplate(child);
         if (xslTemplate == 0)
         {
             resultChild = applyDefaultTemplate(child, xslDoc, resultNodes);
-            resultNode->children().push_back(resultChild);
+            resultNode->appendNode(resultChild);
         }
         else
         {
-           vector<Xml::Node*> generatedChildren = applyTemplate(child, xslDoc, resultChildren, xslTemplate);
-           resultNode->setChildren( generatedChildren.end(), resultNode->children().begin(), resultNode->children().end() );
+            //we concatain all the results of the template to one Node.
+            vector<Xml::Node*> generatedChildren = applyTemplate(child, xslDoc, resultChildren, xslTemplate);
+            for ( auto generatedChild : generatedChildren)
+            {
+                resultNode.appendNode(generatedChild);
+            }
         }
     }
-
+l
     return resultNode;
 }
 
 
-vector<Xml::Node*>  applyTemplate (Xml::Node* context, vector<Xml::Node*> resultNodes, Xml::Document& xslDoc, Xml::Element& xslTemplate)
+void applyTemplate (Xml::Node* context, vector<Xml::Node*> &listNodes, Xml::Document& xslDoc, Xml::Element& xslTemplate)
 {
-    vector<Xml::Node*>  resultNodes;
 
     if (&xslTemplate == nullptr)
     {
-        return Xsl::applyDefaultTemplate(context, xslDoc);
+        listNodes.push_back(Xsl::applyDefaultTemplate(context, xslDoc));
+        return;
     }
 
     // Attention, ici on parcours des éléments XSL, et pas le document XML qu'on transforme
     for (Xml::Node* node : xslTemplate.children())
     {
-        if (node->isElement() && node->namespace() == "xsl")
+        if (node->isElement() /*&& node->namespace() == "xsl"*/)
         {
-            (*xslInstructions[((Xml::Element*) node)->name()])(context, xslDoc, resultNodes, node);
+            listNodes.push_back((*xslInstructions[((Xml::Element*) node)->name()])(context, xslDoc, resultNodes->children(), node));
         }
         else
         {
-            resultNodes.push_back(node);
+            listNodes.push_back(node->clone());
         }
     }
+    return;
 
 }
 
 
-void Xsl::ValueOf::operator () (Xml::Node* context, const Xml::Document& xslDoc,  vector <Xml::Node*> &resultNodes, const Xml::Element xslElement)
+void Xsl::ValueOf::operator () (Xml::Node* context, const Xml::Document& xslDoc,  vector <Xml::Node*> &listNodes, const Xml::Element xslElement)
 {
    /* resultNodes.push_back(context.select(xslElement.attr("select").text()));*/
 }
