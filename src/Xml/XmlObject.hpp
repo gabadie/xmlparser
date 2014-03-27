@@ -152,8 +152,8 @@ namespace Xml
         friend class Xml::Node;
 
         
-        friend XSL_APPLY_TEMPLATE();
-        friend XSL_APPLY_DEFAULT_TEMPLATE();
+       /* friend XSL_APPLY_TEMPLATE();
+        friend XSL_APPLY_DEFAULT_TEMPLATE();*/
     };
 
     /**

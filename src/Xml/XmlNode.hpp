@@ -82,8 +82,8 @@ namespace Xml
         friend class Xsl::ValueOf;
 
 
-        friend XSL_APPLY_TEMPLATE();
-        friend XSL_APPLY_DEFAULT_TEMPLATE();
+        /*friend XSL_APPLY_TEMPLATE();
+        friend XSL_APPLY_DEFAULT_TEMPLATE();*/
     };
 
 }

@@ -41,6 +41,12 @@ namespace Xml
         Document const *
         document() const override final;
 
+        //TODO
+        inline Element * 
+        getTemplate(Node * node){
+            return new Element("haha");
+        }
+
         /**
          * Gets the parent xml object (const version)
          *
