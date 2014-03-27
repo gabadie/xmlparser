@@ -37,7 +37,7 @@ namespace Xsl {
 
     const
     Xml::Element *
-    getTemplate(Xml::Document& xslDoc, Xml::Document& xmlDoc, const Xml::Element* element);
+    getTemplate(Xml::Document& xslDoc, const Xml::Element* element);
 
     void applyDefaultTemplate( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes) ;
 
