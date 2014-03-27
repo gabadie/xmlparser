@@ -28,12 +28,15 @@ testSelect()
 {
     Xml::Document doc;
 
+    std::string ns = "namespace";
+
     std::string root = "root";
     auto xmlRoot = new Xml::Element(root);
     doc.setRoot(xmlRoot);
 
     std::string elt1 = "elt1";
     auto xmlElt1 = new Xml::Element(elt1);
+    xmlElt1->setNamespaceName(ns);
     xmlRoot->append(xmlElt1);
 
     std::string elt11 = "elt11";
@@ -44,6 +47,7 @@ testSelect()
 
     std::string elt2 = "elt2";
     auto xmlElt2 = new Xml::Element(elt2);
+    xmlElt2->setNamespaceName(ns);
     xmlRoot->append(xmlElt2);
 
     std::string elt21 = "elt21";
@@ -136,13 +140,13 @@ testSelect()
     // Query: "tag"
     {
         {
-            auto results = xmlRoot->select(elt1);
+            auto results = xmlRoot->select(ns + ":" + elt1);
             test_assert(results.size() == 1);
             test_assert(get(results, 0) == xmlElt1);
         }
 
         {
-            auto results = xmlRoot->select(elt2);
+            auto results = xmlRoot->select(ns + ":" + elt2);
             test_assert(results.size() == 1);
             test_assert(get(results, 0) == xmlElt2);
         }
@@ -178,7 +182,7 @@ testSelect()
         auto const
         rootQueryTest = [&](Xml::Element const * elt, Xml::Element const * rootChild)
         {
-            auto results = elt->select("/" + rootChild->name());
+            auto results = elt->select("/" + rootChild->tag());
             test_assert(results.size() == 1);
             test_assert(get(results, 0) == rootChild);
         };
@@ -208,26 +212,26 @@ testSelect()
     // Query: "tag1/tag2"
     {
         {
-            auto results = xmlRoot->select(elt1 + "/" + elt11);
+            auto results = xmlRoot->select(ns + ":" + elt1 + "/" + elt11);
             test_assert(results.size() == 2);
             test_assert(get(results, 0) == xmlElt11_1);
             test_assert(get(results, 1) == xmlElt11_2);
         }
 
         {
-            auto results = xmlRoot->select(elt2 + "/" + elt21);
+            auto results = xmlRoot->select(ns + ":" + elt2 + "/" + elt21);
             test_assert(results.size() == 1);
             test_assert(get(results, 0) == xmlElt21);
         }
 
         {
-            auto results = xmlRoot->select(elt2 + "/" + elt22);
+            auto results = xmlRoot->select(ns + ":" + elt2 + "/" + elt22);
             test_assert(results.size() == 1);
             test_assert(get(results, 0) == xmlElt22);
         }
 
         {
-            auto results = xmlRoot->select(elt1 + "/" + "12456789");
+            auto results = xmlRoot->select(ns + ":" + elt1 + "/" + "12456789");
             test_assert(results.size() == 0);
         }
     }
@@ -235,26 +239,26 @@ testSelect()
     // Query: "/tag1/tag2"
     {
         {
-            auto results = xmlRoot->select("/" + elt1 + "/" + elt11);
+            auto results = xmlRoot->select("/" + ns + ":" + elt1 + "/" + elt11);
             test_assert(results.size() == 2);
             test_assert(get(results, 0) == xmlElt11_1);
             test_assert(get(results, 1) == xmlElt11_2);
         }
 
         {
-            auto results = xmlRoot->select("/" + elt2 + "/" + elt21);
+            auto results = xmlRoot->select("/" + ns + ":" + elt2 + "/" + elt21);
             test_assert(results.size() == 1);
             test_assert(get(results, 0) == xmlElt21);
         }
 
         {
-            auto results = xmlRoot->select("/" + elt2 + "/" + elt22);
+            auto results = xmlRoot->select("/" + ns + ":" + elt2 + "/" + elt22);
             test_assert(results.size() == 1);
             test_assert(get(results, 0) == xmlElt22);
         }
 
         {
-            auto results = xmlRoot->select("/" + elt1 + "/" + "12456789");
+            auto results = xmlRoot->select("/" + ns + ":" + elt1 + "/" + "12456789");
             test_assert(results.size() == 0);
         }
     }
@@ -272,14 +276,14 @@ testSelect()
     // Query: "tag1/.../tagN"
     {
         {
-            auto results = xmlRoot->select(elt1 + "/" + elt11 + "/" + elt111);
+            auto results = xmlRoot->select(ns + ":" + elt1 + "/" + elt11 + "/" + elt111);
             test_assert(results.size() == 2);
             test_assert(get(results, 0) == xmlElt111_1);
             test_assert(get(results, 1) == xmlElt111_2);
         }
 
         {
-            auto results = xmlRoot->select(elt1 + "/" + elt11 + "/" + elt111 + "/" + elt1111);
+            auto results = xmlRoot->select(ns + ":" + elt1 + "/" + elt11 + "/" + elt111 + "/" + elt1111);
             test_assert(results.size() == 1);
             test_assert(get(results, 0) == xmlElt111_21);
         }
@@ -288,14 +292,14 @@ testSelect()
     // Query: "/tag1/.../tagN"
     {
         {
-            auto results = xmlRoot->select("/" + elt1 + "/" + elt11 + "/" + elt111);
+            auto results = xmlRoot->select("/" + ns + ":" + elt1 + "/" + elt11 + "/" + elt111);
             test_assert(results.size() == 2);
             test_assert(get(results, 0) == xmlElt111_1);
             test_assert(get(results, 1) == xmlElt111_2);
         }
 
         {
-            auto results = xmlRoot->select("/" + elt1 + "/" + elt11 + "/" + elt111 + "/" + elt1111);
+            auto results = xmlRoot->select("/" + ns + ":" + elt1 + "/" + elt11 + "/" + elt111 + "/" + elt1111);
             test_assert(results.size() == 1);
             test_assert(get(results, 0) == xmlElt111_21);
         }
@@ -306,6 +310,8 @@ void
 testValueOf()
 {
     Xml::Document doc;
+
+    std::string ns = "namespace";
 
     std::string root = "root";
     Xml::Element * xmlRoot = new Xml::Element(root);
@@ -323,6 +329,7 @@ testValueOf()
 
     std::string elt1 = "elt1";
     Xml::Element * xmlElt1 = new Xml::Element(elt1);
+    xmlElt1->setNamespaceName(ns);
     xmlRoot->append(xmlElt1);
 
     {
@@ -331,14 +338,16 @@ testValueOf()
 
         test_assert(xmlElt1->valueOf("@") == "");
         test_assert(xmlElt1->valueOf(".") == text);
-        test_assert(xmlElt1->valueOf("/" + elt1) == text);
-        test_assert(xmlRoot->valueOf("/" + elt1) == text);
+        test_assert(xmlElt1->valueOf("/" + ns + ":" + elt1) == text);
+        test_assert(xmlRoot->valueOf("/" + ns + ":" + elt1) == text);
         test_assert(xmlElt1->valueOf("../@" + attr1) == value1);
     }
 
     std::string elt11 = "elt11";
     Xml::Element * xmlElt11_1 = new Xml::Element(elt11);
+    xmlElt11_1->setNamespaceName(ns);
     Xml::Element * xmlElt11_2 = new Xml::Element(elt11);
+    xmlElt11_2->setNamespaceName(ns);
     xmlElt1->append(xmlElt11_1);
     xmlElt1->append(xmlElt11_2);
 
@@ -351,15 +360,15 @@ testValueOf()
         xmlElt11_2->setAttribute(attr, value);
 
         test_assert(xmlElt11_1->valueOf(".") == text);
-        test_assert(xmlElt1->valueOf(elt11) == text);
-        test_assert(xmlElt11_1->valueOf("/" + elt1 + "/" + elt11) == text);
-        test_assert(xmlElt11_1->valueOf("/" + elt1 + "/" + elt11 + "/@" + attr) == "");
+        test_assert(xmlElt1->valueOf(ns + ":" + elt11) == text);
+        test_assert(xmlElt11_1->valueOf("/" + ns + ":" + elt1 + "/" + ns + ":" + elt11) == text);
+        test_assert(xmlElt11_1->valueOf("/" + ns + ":" + elt1 + "/" + ns + ":" + elt11 + "/@" + attr) == "");
         test_assert(xmlElt11_2->valueOf("@" + attr) == value);
 
         std::string attr2 = "attr12";
         std::string value2 = "value12";
         xmlElt11_1->setAttribute(attr2, value2);
-        test_assert(xmlElt1->valueOf("/" + elt1 + "/" + elt11 + "/@" + attr2) == value2);
+        test_assert(xmlElt1->valueOf("/" + ns + ":" + elt1 + "/" + ns + ":" + elt11 + "/@" + attr2) == value2);
     }
 }
 
