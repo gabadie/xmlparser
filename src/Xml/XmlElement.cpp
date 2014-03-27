@@ -358,8 +358,6 @@ namespace Xml
             auto parentPattern = pattern.substr(0, slashPos);
             return parent->matches(parentPattern);
         }
-
-
     }
 
     std::string
