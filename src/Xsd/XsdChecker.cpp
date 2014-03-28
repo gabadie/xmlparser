@@ -188,7 +188,7 @@ namespace Xsd
         mAttributesTypes.insert(std::pair<std::string, std::string>(attributeName, typeName));
     }
 
-    Type * const
+    Type *
     Checker::getType(const std::string & typeName)
     {
         auto iterType = mTypes.find(typeName);
@@ -199,7 +199,7 @@ namespace Xsd
         return iterType->second;
     }
 
-    Type * const
+    Type *
     Checker::getElementType(const std::string & elementName)
     {
         auto iterType = mElementsTypes.find(elementName);
@@ -224,7 +224,7 @@ namespace Xsd
     }
 */
 
-    Type * const
+    Type *
     Checker::getAttributeType(const std::string & attributeName)
     {
         auto iterType = mAttributesTypes.find(attributeName);

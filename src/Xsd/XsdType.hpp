@@ -57,7 +57,7 @@ namespace Xsd
         static std::string
         getRegexFromOccurs(const Xml::Element & xmlElement, const std::string & eltRegex);
 
-        std::string
+        static std::string
         getOccursFromElement(const Xml::Element & xmlElement, const std::string & occursAttrName, const std::string & occursAttrValue);
 
         std::list<Attribute *>

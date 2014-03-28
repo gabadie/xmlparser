@@ -84,16 +84,16 @@ namespace Xsd
         static bool
         existType(const std::string & typeName);
 
-        Type * const
+        Type *
         getType(const std::string & typeName);
 
-        Type * const
+        Type *
         getElementType(const std::string & elementName);
 /*
         Attribute * const
         getAttribute(const std::string & attributeName);
 */
-        Type * const
+        Type *
         getAttributeType(const std::string & attributeName);
 
         static void

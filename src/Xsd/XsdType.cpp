@@ -271,8 +271,8 @@ namespace Xsd
             supOccurs = "0";
         }
 
-        if((minOccurs.compare(UNBOUNDED_EXP_REG) == 0) && !(supOccurs.compare(UNBOUNDED_EXP_REG) == 0)
-            || (!(supOccurs.compare(UNBOUNDED_EXP_REG) ==0) && std::stoi(supOccurs) < std::stoi(minOccurs)))
+        if((minOccurs.compare(UNBOUNDED_EXP_REG) == 0 && supOccurs.compare(UNBOUNDED_EXP_REG) != 0)
+            || (supOccurs.compare(UNBOUNDED_EXP_REG) !=0 && std::stoi(supOccurs) < std::stoi(minOccurs)))
         {
             throw new XSDConstructionException("Error: " + Checker::MIN_OCC_ATTR + " attribute value is higher than " + Checker::MAX_OCC_ATTR + " value");
         }
