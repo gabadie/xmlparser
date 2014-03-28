@@ -37,13 +37,11 @@ testXslTransform()
     Xml::Log xslLog;
     Xml::Document * xslDoc = Xml::parse(xslContent, &xslLog);
 
-
-
     Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc);
 
     // for (auto c : result->children())
     // {
-    //     std::cerr << *c << std::endl;
+    //     std::cerr << c << std::endl;
     // }
 
     delete xmlDoc;
