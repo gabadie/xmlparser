@@ -12,7 +12,7 @@ namespace Xsd
 
     Type::Type(const Xml::Element * const xmlElement, const std::string & name)
     {
-        mRegex = parseComplexType(*xmlElement, "", false, mAttributes, true);
+        mRegex = parseComplexType(xmlElement, "", false, mAttributes, true);
         Checker::getInstance()->addType(name, this);
     }
 
@@ -200,7 +200,7 @@ namespace Xsd
         std::string regex, name;
 
         // Name and ref attributes
-        if(isReference(*xmlElement))
+        if(isReference(xmlElement))
         {
             name = xmlElement->attribute(Checker::REF_ATTR);
             ref = true;
@@ -210,7 +210,7 @@ namespace Xsd
             name = xmlElement->attribute(Checker::NAME_ATTR);
         }
 
-        regex = getRegexFromOccurs(*xmlElement, name);
+        regex = getRegexFromOccurs(xmlElement, name);
 
         if(!ref)
         {
