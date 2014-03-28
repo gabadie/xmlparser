@@ -7,6 +7,7 @@
 #define protected public
 #define private public
 
+#include "../src/Xml/XmlConsts.hpp"
 #include "../src/Xml/XmlElement.hpp"
 #include "../src/Xml/XmlComment.hpp"
 #include "../src/Xml/XmlParser.hpp"
@@ -54,8 +55,7 @@ testXmlElementAttributes()
     std::string value1 = "value1";
     std::string attr2 = "attr2";
     std::string value2 = "value2";
-
-    test_assert(attr1 != attr2);
+test_assert(attr1 != attr2);
     test_assert(value1 != value2);
 
     test_assert(root.attribute(attr1) == "");
@@ -210,6 +210,40 @@ void testXmlElementMatches() {
     test_assert(!subchild->matches("child/root/subchild"));
 }
 
+void
+testXmlElementFullText()
+{
+    Xml::Element root("root");
+
+    test_assert(root.isElement() == true);
+
+    root.appendText("hello");
+
+    test_assert(root.contentText() == "");
+    test_assert(root.text() == "hello");
+    test_assert(root.fullText() == "hello");
+
+    Xml::Element * xmlElt1 = new Xml::Element("elt1");
+    std::string const text1 = "Text in elt1";
+    xmlElt1->appendText(text1);
+    root.append(xmlElt1);
+
+    test_assert(root.text() == "hello");
+    test_assert(root.fullText() == std::string("hello") + Xml::CAT_SEPARATOR + text1);
+
+    Xml::Element * xmlElt11 = new Xml::Element("elt11");
+    std::string const text11 = "Text in elt11";
+    xmlElt11->appendText(text11);
+    root.append(xmlElt11);
+
+    test_assert(root.text() == "hello");
+    test_assert(root.fullText() == std::string("hello") + Xml::CAT_SEPARATOR + text1 + Xml::CAT_SEPARATOR + text11);
+
+    root.appendText("hello");
+    test_assert(root.fullText() == std::string("hello") + Xml::CAT_SEPARATOR + text1 + Xml::CAT_SEPARATOR + text11 + "hello");
+}
+
+
 int
 main()
 {
@@ -221,6 +255,7 @@ main()
     testXmlElementClone();
     testXmlElementNamespace();
     testXmlElementMatches();
+    testXmlElementFullText();
 
     return 0;
 }

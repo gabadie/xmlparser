@@ -148,6 +148,29 @@ std::cout << doc << std::endl;
 
     \textbf{\lstinline$std::string Xml::Element::valueOf(std::string const \& xPathQuery) const$}
 
+    Dans la suite de cette section, nous nous référerons à l'élément sur lequel nous appelons \lstinline$Xml::Element::select$ par "E".
+
+    \subsubsection{Description}
+    Cette méthode permet de récupérer la valeur d'une requête XPath.
+
+    Les requêtes XPath supportées sont les suivantes :
+    \begin{itemize}
+        \item "" : Retourne une chaîne vide.
+        \item "/" : Retourne le texte (récursivement) de la racine ou une chaîne vide si E ne fait pas partie d'un document.
+        \item "bookstore" : Retourne le texte (récursivement) du premier élement enfant de E qui a pour tag \textit{bookstore}.
+        \item "bookstore/book" : Retourne le texte (récursivement) du premier élement des \textit{book} enfants de \textit{bookstore} enfants de E.
+        \item "/bookstore/book" : Retourne le texte (récursivement) du premier élement des \textit{book} enfants de \textit{bookstore} qui sont enfants de la racine du document si E appartient à un document.
+        \item "@attr" : Retourne la valeur de l'attribut \textit{attr} de E.
+        \item "/@attr" : Retourne la valeur de l'attribut \textit{attr} de la racine du document, une chaîne vide si E ne fait pas partie d'un document.
+        \item "bookstore/@attr" : Retourne la valeur de l'attribut \textit{attr} du premier élement enfant de E qui a pour tag \textit{bookstore}.
+        \item "bookstore/book/@attr" : Retourne la valeur de l'attribut \textit{attr} du premier élement des \textit{book} enfants de \textit{bookstore} enfants de E.
+        \item "/bookstore/book/@attr" : Retourne la valeur de l'attribut \textit{attr} du premier élement des \textit{book} enfants de \textit{bookstore} qui sont enfants de la racine du document si E appartient à un document.
+    \end{itemize}
+
+    \subsubsection{Algorithme}
+
+    /* TODO */
+
     \subsection{Xml::Element::matches}
 
     \textbf{\lstinline$bool Xml::Element::matches(std::string const \& xPathQuery) const$}
