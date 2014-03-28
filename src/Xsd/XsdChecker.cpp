@@ -27,8 +27,8 @@ namespace Xsd
 
     const std::string ROOT = "root";
 
-    const std::string STRING_TYPE_VALUE = "string";
-    const std::string DATE_TYPE_VALUE = "date";
+    const std::string STRING_TYPE = "string";
+    const std::string DATE_TYPE = "date";
     const std::string USE_REQUIRED_VALUE = "required";
 
     Checker::Checker(const Xml::Document * const xsdDoc):
@@ -40,8 +40,8 @@ namespace Xsd
     {
         const std::string dateRegex = "[0-9]{2}-[0-9]{2}-[0-9]{4}";
         const std::string stringRegex = "*";
-        new Type(DATE_TYPE_VALUE, dateRegex, std::list<Attribute *>());
-        new Type(STRING_TYPE_VALUE, stringRegex, std::list<Attribute *>());
+        new Type(DATE_TYPE, dateRegex, std::list<Attribute *>());
+        new Type(STRING_TYPE, stringRegex, std::list<Attribute *>());
 
         if(!(xsdDoc->root()->attribute(NAME_ATTR).compare(SCHEMA_ELT) == 0))
         {
@@ -49,8 +49,8 @@ namespace Xsd
         }
 
         namespacePrefix = "TODO";
-        stringTypeValue = namespacePrefix + ":" + STRING_TYPE_VALUE;
-        dateTypeValue = namespacePrefix + ":" + DATE_TYPE_VALUE;
+        stringTypeValue = namespacePrefix + ":" + STRING_TYPE;
+        dateTypeValue = namespacePrefix + ":" + DATE_TYPE;
 
         //Check that the root element has xmlns:MYPREFIX="http://www.w3.org/2001/XMLSchema"
         //or noNamespaceSchemaLocation
@@ -156,18 +156,6 @@ namespace Xsd
             std::cerr << e.what() << std::endl;
             return false;
         }
-    }
-
-    std::string
-    Checker::getStringTypeValue()
-    {
-        return stringTypeValue;
-    }
-
-    std::string
-    Checker::getDateTypeValue()
-    {
-        return dateTypeValue;
     }
 
     void

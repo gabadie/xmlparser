@@ -42,8 +42,8 @@ namespace Xsd
 
         static const std::string ROOT;
 
-        static const std::string STRING_TYPE_VALUE;
-        static const std::string DATE_TYPE_VALUE;
+        static const std::string STRING_TYPE;
+        static const std::string DATE_TYPE;
         static const std::string USE_REQUIRED_VALUE;
 
         static Checker *
@@ -65,10 +65,6 @@ namespace Xsd
          */
         bool
         isValid(const Xml::Document * const xsdDoc);
-
-        std::string getStringTypeValue();
-
-        std::string getDateTypeValue();
 
         void
         addType(const std::string & typeName, const Type * const type);
