@@ -1,5 +1,6 @@
 #include "XsdType.hpp"
 #include "XsdChecker.hpp"
+#include <sstream>
 
 namespace Xsd
 {
@@ -120,14 +121,14 @@ namespace Xsd
         return regex + ")";
     }
 
-    static bool
+    bool
     Type::isSimpleType(const std::string & type)
     {
         return (type.compare(Checker::getInstance().getStringTypeValue()) == 0)
             || (type.compare(Checker::getInstance().getDateTypeValue()) == 0);
     }
 
-    static std::string
+    std::string
     Type::getOccursFromElement(const Xml::Element & xmlElement, const std::string & occursAttrName, const std::string & occursAttrValue)
     {
         if(occursAttrValue.compare(UNBOUNDED) == 0)
@@ -150,7 +151,7 @@ namespace Xsd
         return occursAttrValue;
     }
 
-    static bool
+    bool
     Type::getNameOrRef(const Xml::Element & xmlElement)
     {
         if(isReference(xmlElement))
@@ -160,7 +161,7 @@ namespace Xsd
         return xmlElement.attribute(Checker.NAME_ATTR);
     }
 
-    static bool
+    bool
     Type::isReference(const Xml::Element & xmlElement)
     {
         std::string notFound = "";
@@ -184,7 +185,7 @@ namespace Xsd
      * Returns the regex of an element, adds its type and type relation to the maps if it's not a ref
      * The regex does not contain the validation for the element children, it's only about the element name or ref itself
      */
-    static std::string
+    std::string
     Type::parseElement(const Xml::Element & xmlElement)
     {
         bool ref = false;
@@ -239,7 +240,7 @@ namespace Xsd
      * Modify and returns the element regex given in parameter in order to add
      * regex expression for the occurs attributes values
      */
-    static std::string
+    std::string
     Type::getRegexFromOccurs(const Xml::Element & xmlElement, const std::string & eltRegex)
     {
         std::string notFound = "", regex;
@@ -251,7 +252,7 @@ namespace Xsd
         // Min and max occurs attributes
         if(!(minOccurs.compare(notFound) == 0))
         {
-            minOccurs = getOccursFromElement(xmlElement, Checker::MIN_OCC_ATTR, sMinOccurs);
+            minOccurs = getOccursFromElement(xmlElement, Checker::MIN_OCC_ATTR, minOccurs);
         }
         else
         {

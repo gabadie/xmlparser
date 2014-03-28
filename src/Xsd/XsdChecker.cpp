@@ -204,8 +204,7 @@ namespace Xsd
         {
             return NULL;
         }
-        Type * const type = iterType->second;
-        return type;
+        return iterType->second;
     }
 
     Type * const
