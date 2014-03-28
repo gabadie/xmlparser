@@ -66,8 +66,11 @@ appVerify(std::string const & xmlPath, std::string const & xsdPath)
     }
 
     // Building XSD Checker
-    Xsd::Checker::initialize(xsdDoc);
-    Xsd::Checker checker = *(Xsd::Checker::getInstance());
+    if(!Xsd::Checker::parseXsd(xsdDoc))
+    {
+        return;
+    }
+    Xsd::Checker * checker = Xsd::Checker::getInstance();
 
     // Validation process
     if(checker.isValid(xmlDoc))
@@ -80,7 +83,7 @@ appVerify(std::string const & xmlPath, std::string const & xsdPath)
     }
 
     delete xmlDoc;
-    //delete checker;
+    delete checker;
 
     return SUCCESS;
 }

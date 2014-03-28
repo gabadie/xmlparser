@@ -135,7 +135,7 @@ namespace Xsd
     {
         if(!existType(typeName))
         {
-            throw new XSDConstructionException("Reference cannot be resolved: " + typeName);
+            throw new XSDConstructionException("Error: Reference cannot be resolved: " + typeName);
         }
     }
 
@@ -246,12 +246,30 @@ namespace Xsd
         return instance;
     }
 
-    void
-    Checker::initialize(const Xml::Document * const xsdDoc)
+    bool
+    Checker::parseXsd(const Xml::Document * const xsdDoc)
     {
-        if(instance == NULL)
+
+        if(instance != NULL)
+        {
+            std::cerr << "Error: An XSD document has already been parsed" << std::endl;
+            return false;
+        }
+        if(xsdDoc == NULL)
+        {
+            std::cerr << "Error: The document received has not been initialized" << std::endl;
+            return false;
+        }
+        
+        try
         {
             instance = new Checker(xsdDoc);
+            return true;
+        }
+        catch(const XSDValidationException & e)
+        {
+            std::cerr << e.what() << std::endl;
+            return false;
         }
     }
 

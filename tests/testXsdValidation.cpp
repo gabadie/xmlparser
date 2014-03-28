@@ -12,8 +12,8 @@
 
 using namespace Xsd;
 
-std::string xmlFolder = "../../tests/xml_files";
-std::string xsdFolder = "../../tests/xsd_files";
+std::string xmlFolder = "./tests/xml_files";
+std::string xsdFolder = "./tests/xsd_files";
 std::string invalidFileRegexp = "^[0-9]*_err_.*$";
 
 std::string
@@ -25,12 +25,23 @@ getFilePath(std::string folderPath, std::string fileName)
 }
 
 std::string
+getFileNameNoExt(std::string fileName)
+{
+    std::size_t idx = fileName.find(".");
+    if(idx != std::string::npos)
+    {
+        return fileName.substr(0, idx);
+    }
+    return fileName;
+}
+
+std::string
 getXsdFileNameFromXmlError(std::string fileName)
 {
     int idx = fileName.find("_", 0);
     std::string start = fileName.substr(0, idx+1);
     std::string end = fileName.substr(idx+3, std::string::npos);
-    return start + end;
+    return start + getFileNameNoExt(end) + ".xsd";
 }
 
 void
@@ -54,35 +65,36 @@ test_validation()
 
     if(dir == NULL)
     {
-        std::cerr << "Cannot find " << xmlFolder << " folder" << std::endl;
-        test_assert(false);
-        std::cerr << "Cannot find " << xmlFolder << " folder" << std::endl;
+        std::cerr << "Error: Cannot find " << xmlFolder << " folder" << std::endl;
+        return;
     }
 
     while ((ent = readdir (dir)) != NULL)
     {
         xmlFilePath = getFilePath(xmlFolder, ent->d_name);
-        std::cout << "test" <<std::endl;
+
         if (RE2::FullMatch(std::string(ent->d_name), invalidFileRegexp))
         {
             xsdFilePath = getXsdFileNameFromXmlError(ent->d_name);
             valid = false;
+            std::cout << "Invalidation of " << xmlFilePath << " from " << xsdFilePath << std::endl;
         }
         else
         {
-            xsdFilePath = getFilePath(xsdFolder, ent->d_name);
+            xsdFilePath = getFilePath(xsdFolder, getFileNameNoExt(ent->d_name) + ".xsd");
             valid = true;
+            std::cout << "Validation of " << xmlFilePath << " from " << xsdFilePath << std::endl;
         }
 
-        std::cout << "Validation of " << xmlFilePath << " from " << xsdFilePath << std::endl;
 
         Xml::Document * xmlDoc = Xml::load(xmlFilePath, &xmlLog);
-        test_assert(xmlDoc != NULL);
         Xml::Document * xsdDoc = Xml::load(xsdFilePath, &xmlLog);
-        test_assert(xsdDoc != NULL);
 
         // Building XSD Checker
-        Xsd::Checker::initialize(xsdDoc);
+        if(!Xsd::Checker::parseXsd(xsdDoc))
+        {
+            return;
+        }
 
         Xsd::Checker * checker = Xsd::Checker::getInstance();
 

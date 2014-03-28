@@ -56,7 +56,7 @@ namespace Xsd
 
         if(!RE2::FullMatch(childrenToString(element->elements()), mRegex))
         {
-            throw new XSDValidationException("Invalid element: " + element->name());
+            throw new XSDValidationException("Error: Invalid element: " + element->name());
         }
 
         for (auto iter = element->elements().begin(); iter != element->elements().end(); ++iter)
@@ -154,7 +154,7 @@ namespace Xsd
         {
             if(std::stoi(occursAttrValue) < 0)
             {
-                throw new XSDConstructionException("Invalid value for " + occursAttrName + "attribute in element " + xmlElement.name() + ": " + occursAttrValue);
+                throw new XSDConstructionException("Error: Invalid value for " + occursAttrName + "attribute in element " + xmlElement.name() + ": " + occursAttrValue);
             }
         }
         catch(const std::exception& e)

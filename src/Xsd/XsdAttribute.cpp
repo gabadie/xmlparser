@@ -81,7 +81,7 @@ namespace Xsd
     {
         if(!Checker::getInstance()->getAttributeType(mName)->isValid(value))
         {
-            throw new XSDValidationException("Invalid attribute: " + mName);
+            throw new XSDValidationException("Error: Invalid attribute: " + mName);
         }
     }
 

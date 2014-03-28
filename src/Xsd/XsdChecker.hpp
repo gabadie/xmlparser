@@ -52,8 +52,8 @@ namespace Xsd
         static Checker *
         getInstance();
 
-        static void
-        initialize(const Xml::Document * const xsdDoc);
+        static bool
+        parseXsd(const Xml::Document * const xsdDoc);
 
         /**
          * Destructor
