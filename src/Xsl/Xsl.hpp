@@ -17,30 +17,29 @@ namespace Xsl {
     class Instruction
     {
         public:
-        virtual vector <Xml::Node*>  operator () (const Xml::Node* context, Xml::Document& xslDoc,  const Xml::Element * forEachElement) = 0;
+        virtual vector <Xml::Node*>  operator () (const Xml::Node* context, Xml::Document& xslDoc,  const Xml::Element * forEachElement) const = 0;
     };
 
 
     class ValueOf : public Instruction
     {
         public:
-        virtual vector <Xml::Node*>  operator () (const Xml::Node* context,  Xml::Document& xslDoc,  const Xml::Element * xslElement);
+        virtual vector <Xml::Node*>  operator () (const Xml::Node* context,  Xml::Document& xslDoc,  const Xml::Element * xslElement) const;
     };
 
     class ForEach: public Instruction
     {
         public:
-        virtual vector <Xml::Node*>  operator () (const Xml::Node* context, Xml::Document& xslDoc,  const Xml::Element * forEachElement);
+        virtual vector <Xml::Node*>  operator () (const Xml::Node* context, Xml::Document& xslDoc,  const Xml::Element * forEachElement) const;
     };
 
     class ApplyTemplate: public Instruction
     {
         public:
-        virtual vector <Xml::Node*>  operator () (const Xml::Node* context, Xml::Document& xslDoc, const Xml::Element * applyTemplateElement);
-
+        virtual vector <Xml::Node*>  operator () (const Xml::Node* context, Xml::Document& xslDoc, const Xml::Element * applyTemplateElement) const;
     };
 
-    Xml::Document * 
+    Xml::Document *
     xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) ;
 
     Xml::Node * applyDefaultTemplate( const Xml::Node * context,  Xml::Document& xslDoc, Xml::Document& xmlDoc);
