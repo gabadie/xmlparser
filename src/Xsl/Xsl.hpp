@@ -16,23 +16,27 @@ namespace Xsl {
 
     class Instruction
     {
-        virtual void operator () (Xml::Element * xslElement, Xml::Node* XmlContext) = 0;
+        public:
+        virtual vector <Xml::Node*>  operator () (const Xml::Node* context, Xml::Document& xslDoc,  const Xml::Element * forEachElement) = 0;
     };
 
 
     class ValueOf : public Instruction
     {
-        virtual void operator () (Xml::Node* context, const Xml::Document& xslDoc,  vector <Xml::Node*> &resultNodes, const Xml::Element xslElement);
+        public:
+        virtual vector <Xml::Node*>  operator () (const Xml::Node* context,  Xml::Document& xslDoc,  const Xml::Element * xslElement);
     };
 
     class ForEach: public Instruction
     {
-        virtual void operator () (Xml::Node* context,const Xml::Document& xslDoc,  vector <Xml::Node*> &resultNodes,  const Xml::Element forEachElement);
+        public:
+        virtual vector <Xml::Node*>  operator () (const Xml::Node* context, Xml::Document& xslDoc,  const Xml::Element * forEachElement);
     };
 
     class ApplyTemplate: public Instruction
     {
-        virtual void operator () (const Xml::Node* context,const Xml::Document& xslDoc, vector <Xml::Node*> &resultNodes, const Xml::Element applyTemplateElement);
+        public:
+        virtual vector <Xml::Node*>  operator () (const Xml::Node* context, Xml::Document& xslDoc, const Xml::Element * applyTemplateElement);
 
     };
 
@@ -55,6 +59,7 @@ namespace Xsl {
     Xml::Element *
     getTemplate(Xml::Document& xslDoc, const Xml::Element* element);
 
+    std::vector<Xml::Node *> applyTemplate(const Xml::Node * context, Xml::Document& xslDoc,const Xml::Element * xslTemplate,  Xml::Document& xmlDoc);
 
     //void applyTemplate ( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes, Xml::Element * xslTemplate) ;
 }
