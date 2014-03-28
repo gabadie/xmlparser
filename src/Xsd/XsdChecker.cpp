@@ -10,29 +10,31 @@ namespace Xsd
 {
     //TODO: ctrl + f : "TODO"
 
-    const std::string SCHEMA_ELT = "schema";
-    const std::string ELEMENT_ELT = "element";
-    const std::string ATTRIBUTE_ELT = "attribute";
-    const std::string COMPLEX_TYP_ELT = "complexType";
-    const std::string SEQUENCE_ELT = "sequence";
-    const std::string CHOICE_ELT = "choice";
+    const std::string Checker::SCHEMA_ELT = "schema";
+    const std::string Checker::ELEMENT_ELT = "element";
+    const std::string Checker::ATTRIBUTE_ELT = "attribute";
+    const std::string Checker::COMPLEX_TYP_ELT = "complexType";
+    const std::string Checker::SEQUENCE_ELT = "sequence";
+    const std::string Checker::CHOICE_ELT = "choice";
 
-    const std::string NAME_ATTR = "name";
-    const std::string TYPE_ATTR = "type";
-    const std::string REF_ATTR = "ref";
-    const std::string USE_ATTR = "use";
-    const std::string MIXED_ATTR = "mixed";
-    const std::string MIN_OCC_ATTR = "minOccurs";
-    const std::string MAX_OCC_ATTR = "maxOccurs";
+    const std::string Checker::NAME_ATTR = "name";
+    const std::string Checker::TYPE_ATTR = "type";
+    const std::string Checker::REF_ATTR = "ref";
+    const std::string Checker::USE_ATTR = "use";
+    const std::string Checker::MIXED_ATTR = "mixed";
+    const std::string Checker::MIN_OCC_ATTR = "minOccurs";
+    const std::string Checker::MAX_OCC_ATTR = "maxOccurs";
 
-    const std::string ROOT = "root";
+    const std::string Checker::ROOT = "root";
 
-    const std::string STRING_TYPE = "string";
-    const std::string DATE_TYPE = "date";
-    const std::string USE_REQUIRED_VALUE = "required";
+    const std::string Checker::STRING_TYPE = "string";
+    const std::string Checker::DATE_TYPE = "date";
+    const std::string Checker::USE_REQUIRED_VALUE = "required";
 
-    const std::string OR_SEPARATOR = "|";
-    const std::string AND_SEPARATOR = "";
+    const std::string Checker::OR_SEPARATOR = "|";
+    const std::string Checker::AND_SEPARATOR = "";
+
+    Checker * Checker::instance;
 
     Checker::Checker(const Xml::Document * const xsdDoc):
         mXsdDoc(xsdDoc),
@@ -178,7 +180,7 @@ namespace Xsd
 
 /*
     void
-    Checker::addAttribute(const std::string & attributeName, const Attribute * const attribute)
+    Checker::addAttribute(const std::string Checker::& attributeName, const Attribute * const attribute)
     {
         attributesMap.insert(std::pair<std::string, Attribute const *>(attributeName, attribute));
     }
@@ -215,7 +217,7 @@ namespace Xsd
 
 /*
     Attribute * const
-    Checker::getAttribute(const std::string & attributeName)
+    Checker::getAttribute(const std::string Checker::& attributeName)
     {
         Attribute * att = *(attributesMap.find(attributeName)).second;
         if(att == attributesMap.end())

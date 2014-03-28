@@ -6,9 +6,9 @@
 namespace Xsd
 {
 
-    const std::string TYPE_SUFFIX = "TYPE";
-    const std::string UNBOUNDED = "unbounded";
-    const std::string UNBOUNDED_EXP_REG = "*";
+    const std::string Type::TYPE_SUFFIX = "TYPE";
+    const std::string Type::UNBOUNDED = "unbounded";
+    const std::string Type::UNBOUNDED_EXP_REG = "*";
 
     Type::Type(const Xml::Element * const xmlElement, const std::string & name)
     {
@@ -78,7 +78,7 @@ namespace Xsd
 
     //Should work, still have to check the algorithm for choice or sequence inside choice or sequence
     std::string
-    Type::parseComplexType(const Xml::Element * const xmlElement, const std::string & separator, bool eltSeqChoice, std::list<Attribute *> * attributes, bool acceptAttributes)
+    Type::parseComplexType(const Xml::Element * const xmlElement, std::string separator, bool eltSeqChoice, std::list<Attribute *> attributes, bool acceptAttributes)
     {
         bool eltParsed = false;
         std::string regex = "(";
@@ -92,11 +92,11 @@ namespace Xsd
         {
             if((*ci)->name().compare(Checker::SEQUENCE_ELT) == 0)
             {
-                regex += getRegexFromOccurs(*ci, parseComplexType(ci, Checker::AND_SEPARATOR, true, attributes, false)) + separator;
+                regex += getRegexFromOccurs(*ci, parseComplexType(*ci, Checker::AND_SEPARATOR, true, attributes, false)) + separator;
             }
             else if((*ci)->name().compare(Checker::CHOICE_ELT) == 0)
             {
-                regex += getRegexFromOccurs(*ci, parseComplexType(ci, Checker::OR_SEPARATOR, true, attributes, false)) + separator;
+                regex += getRegexFromOccurs(*ci, parseComplexType(*ci, Checker::OR_SEPARATOR, true, attributes, false)) + separator;
             }
             else if((*ci)->name().compare(Checker::ELEMENT_ELT) == 0)
             {
@@ -107,20 +107,20 @@ namespace Xsd
                 }
                 else
                 {
-                    Checker::throwInvalidElementException(Checker::ELEMENT_ELT, getNameOrRef(ci));
+                    Checker::throwInvalidElementException(Checker::ELEMENT_ELT, getNameOrRef(*ci));
                 }
             }
-            else if(ci->name().compare(Checker::ATTRIBUTE_ELT) == 0)
+            else if((*ci)->name().compare(Checker::ATTRIBUTE_ELT) == 0)
             {
                 if(!acceptAttributes)
                 {
-                    Checker::throwInvalidElementException(Checker::ELEMENT_ELT, getNameOrRef(ci));
+                    Checker::throwInvalidElementException(Checker::ELEMENT_ELT, getNameOrRef(*ci));
                 }
-                attributes->push_back(Xsd::Attribute::parseAttribute(ci));
+                attributes.push_back(Xsd::Attribute::parseAttribute(*ci));
             }
             else
             {
-                Checker::throwInvalidElementException(Checker::COMPLEX_TYP_ELT, ci->name());
+                Checker::throwInvalidElementException(Checker::COMPLEX_TYP_ELT, (*ci)->name());
             }
         }
 
@@ -231,7 +231,7 @@ namespace Xsd
             }
             else if(xmlElement->elements().size() > 0)
             {
-                Xml::Element * typeElement = xmlElement->elements().front();
+                auto typeElement = xmlElement->elements().front();
                 if(typeElement->name().compare(Checker::COMPLEX_TYP_ELT) == 0)
                 {
                     std::string typeName = name + "Type";
