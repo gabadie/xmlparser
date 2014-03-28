@@ -121,6 +121,49 @@ namespace Xml
         return contentStream.str();
     }
 
+    std::string
+    Element::fullText() const
+    {
+        std::ostringstream contentStream;
+
+        for(auto const & c : mChildren)
+        {
+            app_assert(c != nullptr);
+            app_assert(c->mParent == this);
+
+            if(c->isElement())
+            {
+                std::string const text = static_cast<Element *>(c)->fullText();
+
+                if(text.size() > 0)
+                {
+                    if (contentStream.tellp() != 0)
+                    {
+                        contentStream << Xml::CAT_SEPARATOR;
+                    }
+
+                    contentStream << text;
+                }
+            }
+
+            std::string const text = c->contentText();
+
+            if(text.size() == 0)
+            {
+                continue;
+            }
+
+            if (contentStream.tellp() != 0)
+            {
+                contentStream << Xml::CAT_SEPARATOR;
+            }
+
+            contentStream << text;
+        }
+
+        return contentStream.str();
+    }
+
     void
     Element::setContent(std::string const & content)
     {
