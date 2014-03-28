@@ -36,7 +36,7 @@ namespace Xml
     }
 
     bool
-    Object::remove(Node * node)
+    Object::remove(Node *)
     {
         /*
          * Object::remove is overloaded in Xml::Document and Xml::Element.

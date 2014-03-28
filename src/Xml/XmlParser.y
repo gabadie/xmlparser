@@ -407,7 +407,7 @@ content:
 /* ----------------------------------------------------------------------------- C/C++ suffix */
 
 void
-yyerror(void ** e, const char * msg)
+yyerror(void **, const char * msg)
 {
     Xml::parserSyntaxError(msg);
 }

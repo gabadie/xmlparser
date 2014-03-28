@@ -158,7 +158,7 @@ namespace Xml
     bool
     Element::remove(Node * node)
     {
-        app_assert(node != 0);
+        app_assert(node != nullptr);
 
         if (node->mParent != this)
         {
@@ -397,7 +397,7 @@ namespace Xml
     void
     Element::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
     {
-        stream << Utils::repeat(indent, level) << "<" << mName;
+        stream << Utils::repeat(indent, level) << "<" << (mNamespaceName.size() > 0 ? mNamespaceName + ":" : "") << mName;
 
         for(auto const & a : mAttributes)
         {
@@ -407,7 +407,7 @@ namespace Xml
         // If the element has no child, we close the tag and stop
         if(mChildren.size() == 0)
         {
-            stream << "/>\n";
+            stream << "/>";
             return;
         }
 
@@ -423,7 +423,7 @@ namespace Xml
             stream << "\n";
         }
 
-        stream << Utils::repeat(indent, level) << "</" << mName << ">";
+        stream << Utils::repeat(indent, level) << "</" << (mNamespaceName.size() > 0 ? mNamespaceName + ":" : "") << mName << ">";
     }
 
     bool

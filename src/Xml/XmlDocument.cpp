@@ -64,7 +64,7 @@ namespace Xml
     bool
     Document::remove(Node * node)
     {
-        app_assert(node != 0);
+        app_assert(node != nullptr);
 
         if (node->mParent != this)
         {
@@ -144,7 +144,7 @@ namespace Xml
     void
     Document::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
     {
-        for(auto i = 0u; i < mChildren.size(); ++i)
+        for(size_t i = 0u; i < mChildren.size(); ++i)
         {
             auto const & c = mChildren[i];
 
