@@ -229,7 +229,6 @@ testXmlElementFullText()
     root.append(xmlElt1);
 
     test_assert(root.text() == "hello");
-    std::cerr << root.fullText() << std::endl;
     test_assert(root.fullText() == std::string("hello") + Xml::CAT_SEPARATOR + text1);
 
     Xml::Element * xmlElt11 = new Xml::Element("elt11");
@@ -238,8 +237,11 @@ testXmlElementFullText()
     root.append(xmlElt11);
 
     test_assert(root.text() == "hello");
-    std::cerr << root.fullText() << std::endl;
     test_assert(root.fullText() == std::string("hello") + Xml::CAT_SEPARATOR + text1 + Xml::CAT_SEPARATOR + text11);
+
+    root.appendText("hello");
+    std::cerr << root.fullText() << std::endl;
+    test_assert(root.fullText() == std::string("hello") + Xml::CAT_SEPARATOR + text1 + Xml::CAT_SEPARATOR + text11 + "hello");
 }
 
 
