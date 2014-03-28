@@ -60,12 +60,12 @@ testXslTransform()
 
     delete xmlDoc;
     delete xslDoc;
+    delete result;
 }
 
 void
 testGetTemplate()
 {
-
     // xml
     std::string xmlContent (xml_code(
         <catalog>
@@ -134,12 +134,11 @@ testGetTemplate()
     test_assert(categoryTemplate != nullptr);
     test_assert(categoryTemplate->children()[0]->contentText() == "LastTemplate");
 
-
     const Xml::Element* artistTemplate = Xsl::getTemplate(*xslDoc, artistElement);
     test_assert(artistTemplate == nullptr);
 
-    free(xmlDoc);
-    free(xslDoc);
+    delete xmlDoc;
+    delete xslDoc;
 }
 
 void
@@ -172,6 +171,7 @@ testValueOf()
 
     delete xmlDoc;
     delete xslDoc;
+    delete result;
 }
 
 int
