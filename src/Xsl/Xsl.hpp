@@ -58,6 +58,9 @@ namespace Xsl {
     Xml::Element *
     getTemplate(Xml::Document& xslDoc, const Xml::Element* element);
 
+
+    std::vector<Xml::Node *> findAndApplyTemplate(const Xml::Element * context, Xml::Document& xslDoc);
+
     std::vector<Xml::Node *> applyTemplate(const Xml::Element *  context, Xml::Document& xslDoc,const Xml::Element * xslTemplate);
 
     //void applyTemplate ( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes, Xml::Element * xslTemplate) ;

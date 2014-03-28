@@ -38,8 +38,8 @@ testXslTransform()
 
                 <xsl:for-each select="cd">
                     <div>
-                        <h1>This is a CD</h1>
-                        <h2><xsl:value-of select="title" /></h2>
+                        <h1><xsl:value-of select="title" /></h1>
+                        <h2>(this is a cd)</h2>
                     </div>
                 </xsl:for-each>
 
@@ -145,7 +145,6 @@ testGetTemplate()
 void
 testValueOf()
 {
-
     // xml
     std::string xmlContent (xml_code(
         <root>A<tag>B</tag>C</root>
@@ -169,7 +168,8 @@ testValueOf()
 
     Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc);
 
-    std::cerr << std::endl << *result->root()->elements()[0]->children()[0] << std::endl;
+    std::cerr << std::endl << *result << std::endl;
+
     delete xmlDoc;
     delete xslDoc;
 }
