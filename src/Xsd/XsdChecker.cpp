@@ -152,7 +152,7 @@ namespace Xsd
     {
         try
         {
-            getElementType(ROOT)->checkValidity(*(xsdDoc->root()));
+            getElementType(ROOT)->checkValidity(xsdDoc->root());
             return true;
         }
         catch(const XSDValidationException & e)

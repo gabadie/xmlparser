@@ -40,13 +40,13 @@ namespace Xsd
         isSimpleType(const std::string & type);
 
         void
-        checkValidity(const Xml::Element & element);
+        checkValidity(const Xml::Element * const element);
 
         static std::string
-        getNameOrRef(const Xml::Element & xmlElement);
+        getNameOrRef(const Xml::Element * const xmlElement);
 
         static bool
-        isReference(const Xml::Element & xmlElement);
+        isReference(const Xml::Element * const xmlElement);
 
         static const Type *
         parseSimpleType(const std::string & type);

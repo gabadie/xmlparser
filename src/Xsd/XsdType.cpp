@@ -35,10 +35,10 @@ namespace Xsd
     }
 
     void
-    Type::checkValidity(const Xml::Element & element)
+    Type::checkValidity(const Xml::Element * const element)
     {
         //TODO: add function attributes() which returns the mAttributes map in Xml::Element
-        for (auto iterAttr = element.attributesValue().begin(); iterAttr != element.attributesValue().end(); ++iterAttr)
+        for (auto iterAttr = element->attributesValue().begin(); iterAttr != element->attributesValue().end(); ++iterAttr)
         {
             //pour chaque attibut d'un element
             //  obtenir l'attribut xsd avec une map depuis le type (map attribut de type)
@@ -47,16 +47,16 @@ namespace Xsd
             // iterAttr->checkValidity(iterAttr->second);
         }
 
-        if(!RE2::FullMatch(childrenToString(element.elements()), mRegex))
+        if(!RE2::FullMatch(childrenToString(element->elements()), mRegex))
         {
-            throw new XSDValidationException("Invalid element: " + element.name());
+            throw new XSDValidationException("Invalid element: " + element->name());
         }
 
-        for (auto iter = element.elements().begin(); iter != element.elements().end(); ++iter)
+        for (auto iter = element->elements().begin(); iter != element->elements().end(); ++iter)
         {
             Checker * checker = Checker::getInstance();
             Type * typePt = checker-> getElementType((*iter)->name());
-            typePt->checkValidity(*(*iter));
+            typePt->checkValidity(*iter);
         }
     }
 
@@ -102,7 +102,7 @@ namespace Xsd
                 }
                 else
                 {
-                    Checker::throwInvalidElementException(Checker::ELEMENT_ELT, getNameOrRef(*(*ci)));
+                    Checker::throwInvalidElementException(Checker::ELEMENT_ELT, getNameOrRef(*ci));
                 }
             }
             else if((*ci)->name().compare(Checker::ATTRIBUTE_ELT) == 0)
@@ -156,21 +156,21 @@ namespace Xsd
 
 
     std::string
-    Type::getNameOrRef(const Xml::Element & xmlElement)
+    Type::getNameOrRef(const Xml::Element * const xmlElement)
     {
         if(isReference(xmlElement))
         {
-            return xmlElement.attribute(Checker::REF_ATTR);
+            return xmlElement->attribute(Checker::REF_ATTR);
         }
-        return xmlElement.attribute(Checker::NAME_ATTR);
+        return xmlElement->attribute(Checker::NAME_ATTR);
     }
 
     bool
-    Type::isReference(const Xml::Element & xmlElement)
+    Type::isReference(const Xml::Element * const xmlElement)
     {
         std::string notFound = "";
-        std::string name = xmlElement.attribute(Checker::NAME_ATTR);
-        std::string ref = xmlElement.attribute(Checker::REF_ATTR);
+        std::string name = xmlElement->attribute(Checker::NAME_ATTR);
+        std::string ref = xmlElement->attribute(Checker::REF_ATTR);
 
         // Name and ref attributes
         if((name.compare(notFound) == 0) && (ref.compare(notFound) != 0))
