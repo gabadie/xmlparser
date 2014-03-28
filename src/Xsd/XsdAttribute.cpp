@@ -85,4 +85,10 @@ namespace Xsd
             throw new XSDValidationException("Invalid attribute: " + name);
         }
     }
+
+    std::string
+    Attribute::name()
+    {
+        return mName;
+    }
 }

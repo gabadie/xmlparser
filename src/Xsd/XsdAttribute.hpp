@@ -36,6 +36,9 @@ namespace Xsd
 
             void
             checkValidity(const std::string & value);
+
+            std::string
+            name();
     };
 }
 
