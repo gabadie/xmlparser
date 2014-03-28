@@ -84,13 +84,13 @@ namespace Xsd
         {
             if((*ci)->name().compare(Checker::SEQUENCE_ELT) == 0)
             {
-                regex += getRegexFromOccurs(ci, parseComplexType(ci, "", true)) + separator;
+                regex += getRegexFromOccurs(*ci, parseComplexType(ci, "", true)) + separator;
             }
             else if((*ci)->name().compare(Checker::CHOICE_ELT) == 0)
             {
-                regex += getRegexFromOccurs(ci, parseComplexType(ci, "|", true)) + separator;
+                regex += getRegexFromOccurs(*ci, parseComplexType(ci, "|", true)) + separator;
             }
-            else if((*ci)->name().compare(Checker.ELEMENT_ELT) == 0)
+            else if((*ci)->name().compare(Checker::ELEMENT_ELT) == 0)
             {
                 if(eltSeqChoice || !eltParsed)
                 {
@@ -99,7 +99,7 @@ namespace Xsd
                 }
                 else
                 {
-                    Checker::throwInvalidElementException(Checker.ELEMENT_ELT, getNameOrRef(*ci);
+                    Checker::throwInvalidElementException(Checker::ELEMENT_ELT, getNameOrRef((*ci)->name());
                 }
             }
             else if((*ci)->name().compare(Checker::ATTRIBUTE_ELT) == 0)
@@ -184,7 +184,7 @@ namespace Xsd
      * Returns the regex of an element, adds its type and type relation to the maps if it's not a ref
      * The regex does not contain the validation for the element children, it's only about the element name or ref itself
      */
-    static std::string
+    std::string
     Type::parseElement(const Xml::Element & xmlElement)
     {
         bool ref = false;

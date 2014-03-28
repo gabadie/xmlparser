@@ -148,7 +148,7 @@ namespace Xsd
     {
         try
         {
-            getElementType(ROOT)->checkValidity(xsdDoc->root());
+            getElementType(ROOT)->checkValidity(*(xsdDoc->root()));
             return true;
         }
         catch(const XSDValidationException & e)
@@ -204,7 +204,7 @@ namespace Xsd
         {
             return NULL;
         }
-        Type * const type = iterType->second;
+        Type * type = iterType->second;
         return type;
     }
 
