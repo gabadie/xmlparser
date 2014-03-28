@@ -105,7 +105,7 @@ namespace Xsd
             }
             else if(ci->name().compare(Checker::ATTRIBUTE_ELT) == 0)
             {
-                mAttributes.push_back(Xsd::Attribute.parseAttribute(*ci));
+                mAttributes.push_back(Xsd::Attribute::parseAttribute(*ci));
             }
             else
             {

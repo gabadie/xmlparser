@@ -212,11 +212,12 @@ namespace Xsd
     Type * const
     Checker::getElementType(const std::string & elementName)
     {
-        std::string typeName = *(mElementsTypes.find(elementName)).second;
-        if(typeName == mElementsTypes.end())
+        auto iterType = mElementsTypes.find(elementName);
+        if(iterType == mElementsTypes.end())
         {
             return NULL;
         }
+        std::string typeName = iterType->second;
         return getType(typeName);
     }
 
@@ -236,8 +237,8 @@ namespace Xsd
     Type * const
     Checker::getAttributeType(const std::string & attributeName)
     {
-        std::string typeName = *(attributesTypesMap.find(attributeName)).second;
-        if(typeName == attributesTypesMap.end())
+        std::string typeName = *(mAttributesTypes.find(attributeName)).second;
+        if(typeName == mAttributesTypes.end())
         {
             return NULL;
         }
@@ -245,7 +246,7 @@ namespace Xsd
     }
 
     Checker
-    Checker::getInstance(const Xml::Document & xsdDoc)
+    Checker::getInstance()
     {
         return instance;
     }
@@ -253,9 +254,10 @@ namespace Xsd
     void
     Checker::initialize(const Xml::Document & xsdDoc)
     {
+
         if(instance == NULL)
         {
-            intance = Checker(xsdDoc);
+            instance = Checker(xsdDoc);
         }
     }
 

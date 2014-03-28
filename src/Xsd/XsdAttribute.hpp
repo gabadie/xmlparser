@@ -19,7 +19,7 @@ namespace Xsd
              */
             Attribute(const std::string & name, bool required, const std::string & typeName, bool ref);
 
-            static void
+            static Attribute *
             parseAttribute(const Xml::Element & xmlElement);
 
             /**

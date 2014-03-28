@@ -28,8 +28,8 @@ namespace Xsd
 
     }
 
-    static Attribute * const
-    Attribute::parseAttribute(const Xml::Element & xmlElement);
+    Attribute *
+    Attribute::parseAttribute(const Xml::Element & xmlElement)
     {
         bool required = false, isRef = false;
         std::string notFound = "";
@@ -74,7 +74,7 @@ namespace Xsd
             }
         }
 
-        init(name, required, type, isRef);
+        return new Attribute(name, required, type, isRef);
     }
 
     void
