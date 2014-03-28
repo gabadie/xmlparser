@@ -100,7 +100,7 @@ namespace Xsd
         //Check types, attributes and elements
         //Check that every type from attributesTypesMap and elementsTypesMap are in typesMap
         //Check that every attribute in every type has its type in elementsTypesMap
-        Type const * type;
+        //Type const * type;
 
         /*
             pour tous les elts

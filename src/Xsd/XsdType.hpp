@@ -55,7 +55,7 @@ namespace Xsd
         childrenToString(std::vector<Xml::Element const *> childrenElt);
 
         static std::string
-        getRegexFromOccurs(const Xml::Element & xmlElement, const std::string & eltRegex);
+        getRegexFromOccurs(const Xml::Element * const xmlElement, const std::string & eltRegex);
 
         static std::string
         getOccursFromElement(const Xml::Element & xmlElement, const std::string & occursAttrName, const std::string & occursAttrValue);
