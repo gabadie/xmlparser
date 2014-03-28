@@ -142,11 +142,43 @@ testGetTemplate()
     free(xslDoc);
 }
 
+void
+testValueOf()
+{
+
+    // xml
+    std::string xmlContent (xml_code(
+        <root>A<tag>B</tag>C</root>
+    ));
+    Xml::Log xmlLog;
+    Xml::Document * xmlDoc = Xml::parse(xmlContent, &xmlLog);
+
+    // xsl
+    std::string xslContent (xml_code(
+        <xsl:stylesheet>
+            <xsl:template match="/">
+                <result><xsl:value-of select="." /></result>
+            </xsl:template>
+        </xsl:stylesheet>
+    ));
+    Xml::Log xslLog;
+    Xml::Document * xslDoc = Xml::parse(xslContent, &xslLog);
+
+    test_assert(xslDoc != 0);
+    test_assert(xmlDoc != 0);
+
+    Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc);
+
+    std::cerr << std::endl << *result->root()->elements()[0]->children()[0] << std::endl;
+    delete xmlDoc;
+    delete xslDoc;
+}
+
 int
 main()
 {
-   testXslTransform();
-   testGetTemplate();
-
+    testXslTransform();
+    testGetTemplate();
+    testValueOf();
     return 0;
 }
