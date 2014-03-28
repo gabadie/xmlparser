@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <list>
+#include <string>
 
 #include "./Xsl.hpp"
 
@@ -140,15 +141,16 @@ std::vector<Xml::Node *> Xsl::applyTemplate(const Xml::Element * context, Xml::D
 
 vector <Xml::Node*>  Xsl::ValueOf::operator () (const Xml::Element* context, Xml::Document& xslDoc, const Xml::Element * xslElement) const
 {
-    std::cerr << "value of applied " << std::endl;
-    vector <Xml::Node*>  resultNodes;
-    list <Xml::Element const*>  resultNodesTemp;
 
-    resultNodesTemp = ((const Xml::Element *) context)->select(xslElement->attribute("select"));
-    for(auto node : resultNodesTemp)
-    {
-        resultNodes.push_back(node->clone());
-    }
+    vector <Xml::Node*>  resultNodes;
+    std::string resultText;
+    resultText = xslElement->attribute("select");
+
+    resultText =((const Xml::Element *) context)->valueOf(resultText);
+    Xml::Text * textValue = new Xml::Text(resultText);
+
+
+    resultNodes.push_back(textValue);
     return resultNodes;
 }
 

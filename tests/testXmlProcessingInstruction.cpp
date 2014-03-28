@@ -60,12 +60,13 @@ testXmlPIParsing()
     Xml::Log log;
 
     Xml::Document * doc = Xml::parse(content, &log);
+
     test_assert(doc != nullptr);
     test_assert(doc->mChildren.size() > 0);
-    Xml::ProcessingInstruction * pi = static_cast<Xml::ProcessingInstruction *>(doc->mChildren.front());
+
+    Xml::ProcessingInstruction * pi = dynamic_cast<Xml::ProcessingInstruction *>(doc->mChildren.front());
 
     test_assert(pi != nullptr);
-
     test_assert(pi->mName == "xml");
     test_assert(pi->attribute("version") == "1.0");
     test_assert(pi->attribute("encoding") == "UTF-8");

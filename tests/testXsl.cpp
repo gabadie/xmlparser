@@ -11,6 +11,7 @@ testXslTransform()
     // xml
     std::string xmlContent (xml_code(
         <root>
+            rethdghg
             <cd>
                 <title>Title A</title>
             </cd>
@@ -41,7 +42,7 @@ testXslTransform()
                         <h1>This is a CD</h1>
 
                         <xsl:for-each select="title">
-                            <h2>This is a title !</h2>s
+                            <h2>This is a title !</h2>
                         </xsl:for-each>
                     </div>
                 </xsl:for-each>
