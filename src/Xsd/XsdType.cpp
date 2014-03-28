@@ -100,16 +100,16 @@ namespace Xsd
                 }
                 else
                 {
-                    Checker::throwInvalidElementException(Checker::ELEMENT_ELT, getNameOrRef(*ci));
+                    Checker::throwInvalidElementException(Checker::ELEMENT_ELT, getNameOrRef(*(*ci)));
                 }
             }
             else if((*ci)->name().compare(Checker::ATTRIBUTE_ELT) == 0)
             {
-                mAttributes.push_back(Xsd::Attribute::parseAttribute(*ci));
+                mAttributes.push_back(Xsd::Attribute::parseAttribute(*(*ci)));
             }
             else
             {
-                Checker::throwInvalidElementException(Checker::COMPLEX_TYPE_ELT, ci->name());
+                Checker::throwInvalidElementException(Checker::COMPLEX_TYP_ELT, (*ci)->name());
             }
         }
 
@@ -125,8 +125,8 @@ namespace Xsd
     Type::isSimpleType(const std::string & type)
     {
         throw new NotImplementedException("Not implemented yet");
-        return (type.compare(Checker::getInstance()::STRING_TYPE) == 0)
-            || (type.compare(Checker::getInstance()::DATE_TYPE) == 0);
+        return (type.compare(Checker::STRING_TYPE) == 0)
+            || (type.compare(Checker::DATE_TYPE) == 0);
     }
 
     std::string
@@ -196,12 +196,12 @@ namespace Xsd
         // Name and ref attributes
         if(isReference(xmlElement))
         {
-            name = xmlElement.attribute(Checker.REF_ATTR);
+            name = xmlElement.attribute(Checker::REF_ATTR);
             ref = true;
         }
         else
         {
-            name = xmlElement.attribute(Checker.NAME_ATTR);
+            name = xmlElement.attribute(Checker::NAME_ATTR);
         }
 
         regex = getRegexFromOccurs(xmlElement, name);
@@ -209,8 +209,8 @@ namespace Xsd
         if(!ref)
         {
             //Type manaement
-            std::string type = xmlElement.attribute(Checker.TYPE_ATTR);
-            if(!type.compare("") && Xsd::Type.isSimpleType(type))
+            std::string type = xmlElement.attribute(Checker::TYPE_ATTR);
+            if(!type.compare("") && isSimpleType(type))
             {
                 std::vector<std::string> tokens;
                 throw new NotImplementedException("Not implemented yet"); tokens = NULL; //todo remove

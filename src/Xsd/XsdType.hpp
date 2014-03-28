@@ -43,7 +43,7 @@ namespace Xsd
         checkValidity(const Xml::Element & element);
 
         static std::string
-        getNameOrRef(const std::string & type);
+        getNameOrRef(const Xml::Element & xmlElement);
 
         static bool
         isReference(const Xml::Element & xmlElement);

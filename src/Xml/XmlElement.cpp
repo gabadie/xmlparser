@@ -235,6 +235,7 @@ namespace Xml
         {
             listPair.push_back(std::make_pair(it->first, it->second));
         }
+        return listPair;
     }
 
     void
