@@ -3,6 +3,7 @@
 
 #include "../Xml/XmlElement.hpp"
 #include "XsdAttribute.hpp"
+#include "XsdException.hpp"
 #include <string>
 #include <vector>
 #include <map>
