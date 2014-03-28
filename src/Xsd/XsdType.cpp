@@ -143,7 +143,7 @@ namespace Xsd
         {
             if(std::stoi(occursAttrValue) < 0)
             {
-                throw new Exception();
+                throw new XSDConstructionException("Invalid value for " + occursAttrName + "attribute: " + occursAttrValue);
             }
         }
         catch(const std::exception& e)
@@ -190,39 +190,39 @@ namespace Xsd
      * The regex does not contain the validation for the element children, it's only about the element name or ref itself
      */
     std::string
-    Type::parseElement(const Xml::Element & xmlElement)
+    Type::parseElement(const Xml::Element * const xmlElement)
     {
         bool ref = false;
         std::string regex, name;
 
         // Name and ref attributes
-        if(isReference(xmlElement))
+        if(isReference(*xmlElement))
         {
-            name = xmlElement.attribute(Checker::REF_ATTR);
+            name = xmlElement->attribute(Checker::REF_ATTR);
             ref = true;
         }
         else
         {
-            name = xmlElement.attribute(Checker::NAME_ATTR);
+            name = xmlElement->attribute(Checker::NAME_ATTR);
         }
 
-        regex = getRegexFromOccurs(xmlElement, name);
+        regex = getRegexFromOccurs(*xmlElement, name);
 
         if(!ref)
         {
             //Type manaement
-            std::string type = xmlElement.attribute(Checker::TYPE_ATTR);
+            std::string type = xmlElement->attribute(Checker::TYPE_ATTR);
             if(!type.compare("") && isSimpleType(type))
             {
                 std::vector<std::string> tokens;
-                throw new NotImplementedException("Not implemented yet"); tokens = NULL; //todo remove
+                //throw new NotImplementedException("Not implemented yet"); tokens = NULL; //todo remove
                 //tokens = Utils::split(type, ':'));
                 Checker::getInstance()->addTypedElement(name, tokens.back());
 
             }
-            else if(xmlElement.elements().size() > 0)
+            else if(xmlElement->elements().size() > 0)
             {
-                Xml::Element * typeElement = xmlElement.elements().front();
+                Xml::Element * typeElement = xmlElement->elements().front();
                 if(typeElement->name().compare(Checker::COMPLEX_TYP_ELT) == 0)
                 {
                     parseComplexType(typeElement, "", true);
