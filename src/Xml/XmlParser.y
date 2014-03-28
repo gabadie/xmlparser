@@ -111,6 +111,7 @@ document:
         *e = doc;
     };
 
+
 element:
     emptytag
     {
@@ -147,15 +148,39 @@ element:
         if ($1->tag() != *$3)
         {
             Xml::parserSemanticError("unexpected </" + *$3 + "> (it should have been </" + $1->name() + ">)");
-
-            delete $$;
-            $$ = nullptr;
         }
 
         /*
          * $3 has been created in content, then we delete it.
          */
         delete $3;
+    } |
+    stag content error
+    {
+        /* ---------------------------------------------------- element with children */
+
+        /*
+         * Xml::Element is allocated in stag.
+         */
+        $$ = $1;
+
+        for(Xml::Node * node : *$2)
+        {
+            if (node == nullptr)
+            {
+                continue;
+            }
+
+            $1->appendNode(node);
+        }
+
+        /*
+         * std::list<Xml::Node *> has been created in content, then we delete it.
+         */
+        delete $2;
+
+        Xml::parserSyntaxError("missing closing element </" + $1->name() + ">");
+        yyerrok;
     };
 
 miscitem:
