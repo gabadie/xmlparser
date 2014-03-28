@@ -16,7 +16,7 @@ std::map<std::string, Xsl::Instruction*> const xslInstructions {
 bool deeperMatch(const Xml::Element* xslTemplateA, const Xml::Element* xslTemplateB) {
     std::string matchA = xslTemplateA->attribute("match");
     std::string matchB = xslTemplateB->attribute("match");
-    return std::count(matchA.begin(), matchA.end(), '/') > std::count(matchB.begin(), matchB.end(), '/') ;
+    return std::count(matchA.begin(), matchA.end(), '/') >= std::count(matchB.begin(), matchB.end(), '/') ;
 }
 
 const Xml::Element* Xsl::getTemplate(Xml::Document& xslDoc, const Xml::Element* element) {
@@ -140,14 +140,11 @@ std::vector<Xml::Node *> Xsl::applyTemplate(const Xml::Element * context, Xml::D
 
 vector <Xml::Node*>  Xsl::ValueOf::operator () (const Xml::Element* context, Xml::Document& xslDoc, const Xml::Element * xslElement) const
 {
-
     vector <Xml::Node*>  resultNodes;
-    std::string resultText;
-    resultText = xslElement->attribute("select");
+    std::string resultText = xslElement->attribute("select");
 
     resultText =((const Xml::Element *) context)->valueOf(resultText);
     Xml::Text * textValue = new Xml::Text(resultText);
-
 
     resultNodes.push_back(textValue);
     return resultNodes;

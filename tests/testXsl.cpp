@@ -1,4 +1,3 @@
-
 #include "testhelper.hpp"
 
 #include "../src/Xml/XmlParser.hpp"
@@ -72,11 +71,13 @@ testGetTemplate()
         <catalog>
             <cd>
                 <title>Title A</title>
+                <artist>Artist A</artist>
                 <category>Category A</category>
             </cd>
 
             <cd>
                 <title>Title B</title>
+                <artist>Artist B</artist>
                 <category>Category B</category>
             </cd>
         </catalog>
@@ -85,7 +86,6 @@ testGetTemplate()
     Xml::Log xmlLog;
 
     Xml::Document * xmlDoc = Xml::parse(xmlContent, &xmlLog);
-
 
     // xsl
     std::string xslContent (xml_code(
@@ -101,14 +101,25 @@ testGetTemplate()
             <xsl:template match="cd/title">
                 <xsl:value-of select="." />
             </xsl:template>
+
+            <xsl:template match="category">
+                FirstTemplate
+            </xsl:template>
+
+            <xsl:template match="category">
+                LastTemplate
+            </xsl:template>
         </xsl:stylesheet>
     ));
     Xml::Log xslLog;
     Xml::Document * xslDoc = Xml::parse(xslContent, &xslLog);
 
+    test_assert(xmlDoc != 0);
+    test_assert(xslDoc != 0);
 
     const Xml::Element* cdElement = xmlDoc->root()->elements()[0];
     const Xml::Element* titleElement = cdElement->elements("title")[0];
+    const Xml::Element* artistElement = cdElement->elements("artist")[0];
     const Xml::Element* categoryElement = cdElement->elements("category")[0];
 
     const Xml::Element* titleTemplate = Xsl::getTemplate(*xslDoc, titleElement);
@@ -120,7 +131,12 @@ testGetTemplate()
     test_assert(cdTemplate->attribute("match") == "catalog/cd");
 
     const Xml::Element* categoryTemplate = Xsl::getTemplate(*xslDoc, categoryElement);
-    test_assert(categoryTemplate == nullptr);
+    test_assert(categoryTemplate != nullptr);
+    test_assert(categoryTemplate->children()[0]->contentText() == "LastTemplate");
+
+
+    const Xml::Element* artistTemplate = Xsl::getTemplate(*xslDoc, artistElement);
+    test_assert(artistTemplate == nullptr);
 
     free(xmlDoc);
     free(xslDoc);
