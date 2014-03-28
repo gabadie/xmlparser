@@ -14,7 +14,7 @@ namespace Xsd
     class Attribute;
 
     //Aliases
-    using typesMap = std::map<std::string, Type const *>;
+    using typesMap = std::map<std::string, Type * const>;
     using elementsTypesMap = std::map<std::string, std::string>;
     //using attributesMap = std::map<std::string, Attribute const *>;
     using attributesTypesMap = std::map<std::string, std::string>;
@@ -71,7 +71,7 @@ namespace Xsd
         std::string getDateTypeValue();
 
         void
-        addType(const std::string & typeName, const Type * const type);
+        addType(const std::string & typeName, Type * const type);
 
         void
         addTypedElement(const std::string & elementName, const std::string & typeName);
@@ -88,7 +88,7 @@ namespace Xsd
         static bool
         existType(const std::string & typeName);
 
-        Type *
+        Type * const
         getType(const std::string & typeName);
 
         Type * const
