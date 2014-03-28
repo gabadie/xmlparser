@@ -354,7 +354,7 @@ namespace Xml
             if (this->name() != lastToken || !this->parent()->isElement()) {
                 return false;
             }
-            auto parent = (Xml::Element*) this->parent();
+            auto parent = static_cast<Xml::Element const *>(this->parent());
             auto parentPattern = pattern.substr(0, slashPos);
             return parent->matches(parentPattern);
         }
@@ -404,8 +404,16 @@ namespace Xml
             stream << " " << a.first << "=\"" << a.second << "\"";
         }
 
+        // If the element has no child, we close the tag and stop
+        if(mChildren.size() == 0)
+        {
+            stream << "/>\n";
+            return;
+        }
+
         stream << ">\n";
 
+        // else we display each child
         for(auto const & c : mChildren)
         {
             app_assert(c != nullptr);
