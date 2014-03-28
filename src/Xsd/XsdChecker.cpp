@@ -43,9 +43,9 @@ namespace Xsd
         new Type(DATE_TYPE_VALUE, dateRegex, std::list<Attribute *>());
         new Type(STRING_TYPE_VALUE, stringRegex, std::list<Attribute *>());
 
-        if(!(xsdDoc.root()->attribute(NAME_ATTR).compare(SCHEMA_ELT) == 0))
+        if(!(xsdDoc->root()->attribute(NAME_ATTR).compare(SCHEMA_ELT) == 0))
         {
-            throwInvalidElementException(xsdDoc.root()->attribute(NAME_ATTR), SCHEMA_ELT);
+            throwInvalidElementException(xsdDoc->root()->attribute(NAME_ATTR), SCHEMA_ELT);
         }
 
         namespacePrefix = "TODO";
@@ -58,7 +58,7 @@ namespace Xsd
         throw NotImplementedYet("TODO : gestion namespace !!!!!");
 
         //Building intermediary structure from xmlDoc
-        Xsd::Type::parseComplexType(*(xsdDoc.root()), "|", true);
+        Xsd::Type::parseComplexType(xsdDoc->root(), "|", true);
 
         checkReferences();
 
@@ -144,16 +144,16 @@ namespace Xsd
     }
 
     bool
-    Checker::isValid(const Xml::Document * const)
+    Checker::isValid(const Xml::Document * const xsdDoc)
     {
         try
         {
             getElementType(ROOT)->checkValidity(xsdDoc->root());
             return true;
         }
-        catch(XSDValidationException e)
+        catch(const XSDValidationException & e)
         {
-            std::cerr << e.getMessage() << std:endl;
+            std::cerr << e.what() << std:endl;
             return false;
         }
     }
@@ -193,7 +193,7 @@ namespace Xsd
     void
     Checker::addTypedAttribute(const std::string & attributeName, const std::string & typeName)
     {
-        attributesTypesMap.insert(std::pair<std::string, std::string>(attributeName, typeName));
+        mAttributesTypes.insert(std::pair<std::string, std::string>(attributeName, typeName));
     }
 
     Type * const
@@ -204,7 +204,7 @@ namespace Xsd
         {
             return NULL;
         }
-        Type * type = iterType->second;
+        Type * const type = iterType->second;
         return type;
     }
 

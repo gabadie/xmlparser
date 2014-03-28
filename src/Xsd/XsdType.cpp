@@ -8,7 +8,7 @@ namespace Xsd
     const std::string UNBOUNDED = "unbounded";
     const std::string UNBOUNDED_EXP_REG = "*";
 
-    Type::Type(const Xml::Element & xmlElement, const std::string & name)
+    Type::Type(const Xml::Element * const xmlElement, const std::string & name)
     {
         mRegex = parseComplexType(xmlElement, "", false);
         Checker::getInstance().addType(name, this);
@@ -31,7 +31,6 @@ namespace Xsd
     {
         return RE2::FullMatch(str, mRegex);
     }
-
 
     void
     Type::checkValidity(const Xml::Element & element)
@@ -71,27 +70,27 @@ namespace Xsd
 
     //Should work, still have to check the algorithm for choice or sequence inside choice or sequence
     std::string
-    Type::parseComplexType(const Xml::Element & xmlElement, std::string separator, bool eltSeqChoice)
+    Type::parseComplexType(const Xml::Element * const xmlElement, std::string separator, bool eltSeqChoice)
     {
         bool eltParsed = false;
         std::string regex = "(";
 
-        if(xmlElement.attribute(Checker::MIXED_ATTR).compare("true") == 0)
+        if(xmlElement->attribute(Checker::MIXED_ATTR).compare("true") == 0)
         {
             separator += ".*";
         }
 
-        for (auto ci = xmlElement.elements().begin(); ci != xmlElement.elements().end(); ++ci)
+        for (auto ci = xmlElement->elements().begin(); ci != xmlElement->elements().end(); ++ci)
         {
-            if(*ci.name().compare(Checker::SEQUENCE_ELT) == 0)
+            if((*ci)->name().compare(Checker::SEQUENCE_ELT) == 0)
             {
-                regex += getRegexFromOccurs(ci, parseComplexType(*ci, "", true)) + separator;
+                regex += getRegexFromOccurs(ci, parseComplexType(ci, "", true)) + separator;
             }
-            else if(*ci.name().compare(Checker::CHOICE_ELT) == 0)
+            else if((*ci)->name().compare(Checker::CHOICE_ELT) == 0)
             {
-                regex += getRegexFromOccurs(ci, parseComplexType(*ci, "|", true)) + separator;
+                regex += getRegexFromOccurs(ci, parseComplexType(ci, "|", true)) + separator;
             }
-            else if(*ci.name().compare(Checker.ELEMENT_ELT) == 0)
+            else if((*ci)->name().compare(Checker.ELEMENT_ELT) == 0)
             {
                 if(eltSeqChoice || !eltParsed)
                 {
@@ -103,7 +102,7 @@ namespace Xsd
                     Checker::throwInvalidElementException(Checker.ELEMENT_ELT, getNameOrRef(*ci);
                 }
             }
-            else if(ci->name().compare(Checker::ATTRIBUTE_ELT) == 0)
+            else if((*ci)->name().compare(Checker::ATTRIBUTE_ELT) == 0)
             {
                 mAttributes.push_back(Xsd::Attribute::parseAttribute(*ci));
             }
@@ -220,7 +219,7 @@ namespace Xsd
                 Xml::Element & typeElement = xmlElement.elements().front();
                 if(typeElement.name().compare(Checker::COMPLEX_TYPE_ELEMENT) == 0)
                 {
-                    parseComplexType(*ci, "", true);
+                    parseComplexType(ci, "", true);
                 }
                 else
                 {

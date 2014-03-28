@@ -14,13 +14,7 @@ namespace Xsd
     class Type
     {
     public:
-        /**
-         * Constructor
-         * @param xmlElement XML ComplexType element
-         */
-        Type(const Xml::Element & xmlElement);
-
-        Type(const Xml::Element & xmlElement, const std::string & name);
+        Type(const Xml::Element * const xmlElement, const std::string & name);
 
         Type(const std::string & name, const std::string & regex, std::list<Attribute *> attrs);
 
@@ -31,7 +25,7 @@ namespace Xsd
         ~Type();
 
         static std::string
-        parseComplexType(const Xml::Element & xmlElement, std::string separator, bool eltSeqChoice);
+        parseComplexType(const Xml::Element * const xmlElement, std::string separator, bool eltSeqChoice);
 
         bool
         isValid(const std::string & str);
