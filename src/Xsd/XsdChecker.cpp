@@ -58,11 +58,7 @@ namespace Xsd
         throw NotImplementedYet("TODO : gestion namespace !!!!!");
 
         //Building intermediary structure from xmlDoc
-<<<<<<< HEAD
         Xsd::Type::parseComplexType(xsdDoc->root(), "|", true);
-=======
-        Xsd::Type::parseComplexType(*(xsdDoc->root()), "|", true);
->>>>>>> b9cd30de8a17a6af558461c2191d16c6bf29af58
 
         checkReferences();
 
