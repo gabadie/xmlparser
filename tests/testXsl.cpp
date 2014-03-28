@@ -33,6 +33,13 @@ testXslTransform()
             <xsl:template match="cd">
                 <xsl:value-of select="title" />
             </xsl:template>
+
+            <xsl:template match="/">
+                <xsl:for-each select="cd/title">
+                    hihi
+                </xsl:for-each>
+            </xsl:template>
+
         </xsl:stylesheet>
     ));
     Xml::Log xslLog;
@@ -40,7 +47,7 @@ testXslTransform()
 
     Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc);
 
-    std::cerr << *result << std::endl;
+    std::cerr << "XSL output = " << std::endl << *result << std::endl;
 
     delete xmlDoc;
     delete xslDoc;
