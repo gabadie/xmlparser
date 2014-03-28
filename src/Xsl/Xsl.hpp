@@ -3,46 +3,50 @@
 
 #include <vector>
 #include <map>
-using namespace std;
 
 #include "../Xml/XmlNode.hpp"
 #include "../Xml/XmlText.hpp"
 #include "../Xml/XmlDocument.hpp"
 
 
-typedef vector< Xml::Node*> nodeVector;
+typedef std::vector< Xml::Node*> nodeVector;
 
-namespace Xsl {
+namespace Xsl
+{
 
+    /**
+     * Defines a XML document
+     */
     class Instruction
     {
-        public:
-        virtual vector <Xml::Node*>  operator () (const Xml::Element* context, Xml::Document& xslDoc,  const Xml::Element * forEachElement) const = 0;
+    public:
+        virtual std::vector <Xml::Node*>  operator () (const Xml::Element* context, const Xml::Document& xslDoc,  const Xml::Element * forEachElement) const = 0;
     };
 
 
     class ValueOf : public Instruction
     {
-        public:
-        virtual vector <Xml::Node*>  operator () (const Xml::Element* context,  Xml::Document& xslDoc,  const Xml::Element * xslElement) const;
+    public:
+        virtual std::vector <Xml::Node*>  operator () (const Xml::Element* context,  const Xml::Document& xslDoc,  const Xml::Element * xslElement) const;
     };
 
     class ForEach: public Instruction
     {
-        public:
-        virtual vector <Xml::Node*>  operator () (const Xml::Element* context, Xml::Document& xslDoc,  const Xml::Element * forEachElement) const;
+    public:
+        virtual std::vector <Xml::Node*>  operator () (const Xml::Element* context, const Xml::Document& xslDoc,  const Xml::Element * forEachElement) const;
     };
 
     class ApplyTemplate: public Instruction
     {
-        public:
-        virtual vector <Xml::Node*>  operator () (const Xml::Element* context, Xml::Document& xslDoc, const Xml::Element * applyTemplateElement) const;
+    public:
+        virtual std::vector <Xml::Node*>  operator () (const Xml::Element* context, const Xml::Document& xslDoc, const Xml::Element * applyTemplateElement) const;
     };
 
     Xml::Document *
-    xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) ;
+    xslTransform(const Xml::Document& xmlDoc, const Xml::Document& xslDoc ) ;
 
-    Xml::Node * applyDefaultTemplate( const Xml::Node * context,  Xml::Document& xslDoc);
+    Xml::Node *
+    applyDefaultTemplate(const Xml::Node * context,  const Xml::Document& xslDoc);
 
 
     /**
@@ -56,13 +60,14 @@ namespace Xsl {
      */
     const
     Xml::Element *
-    getTemplate(Xml::Document& xslDoc, const Xml::Element* element);
+    getTemplate(const Xml::Document& xslDoc, const Xml::Element* element);
 
 
-    std::vector<Xml::Node *> findAndApplyTemplate(const Xml::Element * context, Xml::Document& xslDoc);
+    std::vector<Xml::Node *>
+    findAndApplyTemplate(const Xml::Element * context, const Xml::Document& xslDoc);
 
-    std::vector<Xml::Node *> applyTemplate(const Xml::Element *  context, Xml::Document& xslDoc,const Xml::Element * xslTemplate);
+    std::vector<Xml::Node *>
+    applyTemplate(const Xml::Element *  context, const Xml::Document& xslDoc, const Xml::Element * xslTemplate);
 
-    //void applyTemplate ( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes, Xml::Element * xslTemplate) ;
 }
 #endif //_H_XSL_XSL

@@ -20,7 +20,7 @@ bool deeperMatch(const Xml::Element* xslTemplateA, const Xml::Element* xslTempla
     return std::count(matchA.begin(), matchA.end(), '/') >= std::count(matchB.begin(), matchB.end(), '/') ;
 }
 
-const Xml::Element* Xsl::getTemplate(Xml::Document& xslDoc, const Xml::Element* element) {
+const Xml::Element* Xsl::getTemplate(const Xml::Document& xslDoc, const Xml::Element* element) {
     const Xml::Element* curTemplate = nullptr;
 
     for (const Xml::Element* xslTemplate : xslDoc.root()->elements()) {
@@ -34,9 +34,9 @@ const Xml::Element* Xsl::getTemplate(Xml::Document& xslDoc, const Xml::Element* 
     return curTemplate;
 }
 
-Xml::Document * Xsl::xslTransform( Xml::Document& xmlDoc,  Xml::Document& xslDoc)
+Xml::Document * Xsl::xslTransform( const Xml::Document& xmlDoc,  const Xml::Document& xslDoc)
 {
-    vector<Xml::Node*> resultNodes = findAndApplyTemplate(xmlDoc.root(), xslDoc);
+    std::vector<Xml::Node*> resultNodes = findAndApplyTemplate(xmlDoc.root(), xslDoc);
     app_assert(resultNodes.size() == 1);
     app_assert(resultNodes[0]->isElement());
     auto root = static_cast<Xml::Element *>(resultNodes[0]);
@@ -47,27 +47,23 @@ Xml::Document * Xsl::xslTransform( Xml::Document& xmlDoc,  Xml::Document& xslDoc
     return result;
 }
 
-Xml::Node * Xsl::applyDefaultTemplate( const Xml::Node * context,  Xml::Document& xslDoc)
+Xml::Node * Xsl::applyDefaultTemplate(const Xml::Node * context,  const Xml::Document& xslDoc)
 {
-
     if (!context->isElement())
     {
         return context->clone();
     }
     else
     {
-        const Xml::Element * contextTemplate = getTemplate(xslDoc, static_cast<const Xml::Element*>(context));
         Xml::Element * resultElementNode = static_cast<Xml::Element*>(context->clone());
-
         for (auto rNode : findAndApplyTemplate(static_cast<const Xml::Element*>(context), xslDoc)) {
             resultElementNode->appendNode(rNode);
         }
-
         return resultElementNode;
     }
 }
 
-std::vector<Xml::Node *> Xsl::findAndApplyTemplate(const Xml::Element * context, Xml::Document& xslDoc) {
+std::vector<Xml::Node *> Xsl::findAndApplyTemplate(const Xml::Element * context, const Xml::Document& xslDoc) {
     const Xml::Element * contextTemplate = getTemplate(xslDoc, static_cast<const Xml::Element*>(context));
 
     // if the context a template matches the context, we apply it
@@ -82,7 +78,7 @@ std::vector<Xml::Node *> Xsl::findAndApplyTemplate(const Xml::Element * context,
     }
 }
 
-std::vector<Xml::Node *> Xsl::applyTemplate(const Xml::Element * context, Xml::Document& xslDoc, const Xml::Element * xslTemplate)
+std::vector<Xml::Node *> Xsl::applyTemplate(const Xml::Element * context, const Xml::Document& xslDoc, const Xml::Element * xslTemplate)
 {
     std::vector<Xml::Node *> listNodes;
 
@@ -129,23 +125,22 @@ std::vector<Xml::Node *> Xsl::applyTemplate(const Xml::Element * context, Xml::D
 
 }
 
-vector <Xml::Node*>  Xsl::ValueOf::operator () (const Xml::Element* context, Xml::Document& xslDoc, const Xml::Element * xslElement) const
+std::vector <Xml::Node*>  Xsl::ValueOf::operator () (const Xml::Element* context, const Xml::Document& xslDoc, const Xml::Element * xslElement) const
 {
-    vector <Xml::Node*>  resultNodes;
+    std::vector<Xml::Node*>  resultNodes;
     std::string resultText = xslElement->attribute("select");
 
-    resultText =((const Xml::Element *) context)->valueOf(resultText);
+    resultText = static_cast<const Xml::Element *>(context)->valueOf(resultText);
     Xml::Text * textValue = new Xml::Text(resultText);
 
     resultNodes.push_back(textValue);
     return resultNodes;
 }
 
-vector <Xml::Node*>  Xsl::ForEach::operator () (const Xml::Element* context, Xml::Document& xslDoc,  const Xml::Element * forEachElement) const
+std::vector <Xml::Node*>  Xsl::ForEach::operator () (const Xml::Element* context, const Xml::Document& xslDoc,  const Xml::Element * forEachElement) const
  {
-    vector <Xml::Node*>  resultNodes;
-
-    list <Xml::Element const*> matchingNodes = context->select(forEachElement->attribute("select"));
+    std::vector<Xml::Node*> resultNodes;
+    auto matchingNodes = context->select(forEachElement->attribute("select"));
     for (auto node : matchingNodes) {
         for (auto resultNode : Xsl::applyTemplate(node, xslDoc, forEachElement)) {
             resultNodes.push_back(resultNode);
@@ -155,9 +150,9 @@ vector <Xml::Node*>  Xsl::ForEach::operator () (const Xml::Element* context, Xml
     return resultNodes;
 }
 
- vector <Xml::Node*> Xsl::ApplyTemplate::operator () (const Xml::Element* context,Xml::Document& xslDoc, const Xml::Element * applyTemplateElement) const
+std::vector <Xml::Node*> Xsl::ApplyTemplate::operator () (const Xml::Element* context,const Xml::Document& xslDoc, const Xml::Element * applyTemplateElement) const
 {
-    list <Xml::Element const *> matchingNodes = context->select(applyTemplateElement->attribute("select"));
+    auto matchingNodes = context->select(applyTemplateElement->attribute("select"));
     for (auto node : matchingNodes){
         Xml::Element const * xslTemplate = Xsl::getTemplate(xslDoc, node) ;
         Xsl::applyTemplate(node, xslDoc, xslTemplate);

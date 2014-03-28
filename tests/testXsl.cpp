@@ -37,7 +37,7 @@ testXslTransform()
                 <html>
 
                 <xsl:for-each select="cd">
-                    <div>
+                    <div class="song">
                         <h1><xsl:value-of select="title" /></h1>
                         <h2>(this is a cd)</h2>
                     </div>
