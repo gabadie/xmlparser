@@ -96,8 +96,6 @@ namespace Xsd
         //Check types, attributes and elements
         //Check that every type from attributesTypesMap and elementsTypesMap are in typesMap
         //Check that every attribute in every type has its type in elementsTypesMap
-        elementsTypesMap::iterator iterEltType;
-        attributesTypesMap::iterator iterAttrType;
         Type const * type;
 
         /*
@@ -116,10 +114,10 @@ namespace Xsd
 
         for (auto iterType = mTypes.begin(); iterType != mTypes.end(); ++iterType)
         {
-            std::list<const Attribute *> attributes = iterType->second->attributes();
-            for (std::list<const Attribute *>::iterator iterAttr = attributes.begin(); iterAttr != attributes.end(); ++iterAttr)
+            std::list<Attribute *> attributes = iterType->second->attributes();
+            for (auto iterAttr = attributes.begin(); iterAttr != attributes.end(); ++iterAttr)
             {
-                checkExistType(*iterAttr->second);
+                checkExistType(iterAttr->name());
             }
         }
     }
