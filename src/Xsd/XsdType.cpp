@@ -205,7 +205,7 @@ namespace Xsd
         std::string regex, name;
 
         // Name and ref attributes
-        if(isReference(*xmlElement))
+        if(isReference(xmlElement))
         {
             name = xmlElement->attribute(Checker::REF_ATTR);
             ref = true;
@@ -215,7 +215,7 @@ namespace Xsd
             name = xmlElement->attribute(Checker::NAME_ATTR);
         }
 
-        regex = getRegexFromOccurs(*xmlElement, name);
+        regex = getRegexFromOccurs(xmlElement, name);
 
         if(!ref)
         {
@@ -260,10 +260,10 @@ namespace Xsd
     Type::getRegexFromOccurs(const Xml::Element * const xmlElement, const std::string & eltRegex)
     {
         std::string notFound = "", regex;
-        std::string name = xmlElement.attribute(Xsd::Checker::NAME_ATTR);
-        std::string ref = xmlElement.attribute(Xsd::Checker::REF_ATTR);
-        std::string minOccurs = xmlElement.attribute(Checker::MIN_OCC_ATTR);
-        std::string supOccurs = xmlElement.attribute(Checker::MAX_OCC_ATTR);
+        std::string name = xmlElement->attribute(Xsd::Checker::NAME_ATTR);
+        std::string ref = xmlElement->attribute(Xsd::Checker::REF_ATTR);
+        std::string minOccurs = xmlElement->attribute(Checker::MIN_OCC_ATTR);
+        std::string supOccurs = xmlElement->attribute(Checker::MAX_OCC_ATTR);
 
         // Min and max occurs attributes
         if(!(minOccurs.compare(notFound) == 0))
