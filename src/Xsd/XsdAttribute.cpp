@@ -10,7 +10,7 @@
 
 namespace Xsd
 {
-    Attribute::Attribute(const std::string & name, bool required, const std::string & typeName, bool ref):
+    Attribute::Attribute(const std::string & name, bool required, const std::string & typeName, bool ref)
     {
         init(name, required, typeName, ref);
     }
@@ -23,7 +23,7 @@ namespace Xsd
         //Xsd::Checker::addAttribute(name, this);
         if(!ref)
         {
-            Xsd::Checker::getInstance().addTypedAttribute(name, typeName);
+            Xsd::Checker::getInstance()->addTypedAttribute(name, typeName);
         }
 
     }
@@ -45,7 +45,7 @@ namespace Xsd
             {
                     std::vector<std::string> tokens;
                     boost::algorithm::split(tokens, type, boost::algorithm::is_any_of(":"));
-                    Checker::getInstance().addTypedElement(name, tokens.back());
+                    Checker::getInstance()->addTypedElement(name, tokens.back());
             }
             else
             {
@@ -80,7 +80,7 @@ namespace Xsd
     void
     Attribute::checkValidity(const std::string & value)
     {
-        if(!Checker::getAttributeType(mName)->isValid(value))
+        if(!Checker::getInstance()->getAttributeType(mName)->isValid(value))
         {
             throw new XSDValidationException("Invalid attribute: " + mName);
         }
