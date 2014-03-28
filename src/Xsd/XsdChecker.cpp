@@ -43,9 +43,9 @@ namespace Xsd
         new Type(DATE_TYPE_VALUE, dateRegex, std::list<Attribute *>());
         new Type(STRING_TYPE_VALUE, stringRegex, std::list<Attribute *>());
 
-        if(!(xsdDoc.root()->attribute(NAME_ATTR).compare(SCHEMA_ELT) == 0))
+        if(!(xsdDoc->root()->attribute(NAME_ATTR).compare(SCHEMA_ELT) == 0))
         {
-            throwInvalidElementException(xsdDoc.root()->attribute(NAME_ATTR), SCHEMA_ELT);
+            throwInvalidElementException(xsdDoc->root()->attribute(NAME_ATTR), SCHEMA_ELT);
         }
 
         namespacePrefix = "TODO";
@@ -58,7 +58,7 @@ namespace Xsd
         throw NotImplementedYet("TODO : gestion namespace !!!!!");
 
         //Building intermediary structure from xmlDoc
-        Xsd::Type::parseComplexType(*(xsdDoc.root()), "|", true);
+        Xsd::Type::parseComplexType(*(xsdDoc->root()), "|", true);
 
         checkReferences();
 
@@ -117,7 +117,7 @@ namespace Xsd
             std::list<Attribute *> attributes = iterType->second->attributes();
             for (auto iterAttr = attributes.begin(); iterAttr != attributes.end(); ++iterAttr)
             {
-                checkExistType(iterAttr->name());
+                checkExistType(*iterAttr->name());
             }
         }
     }
@@ -136,7 +136,7 @@ namespace Xsd
     bool
     Checker::existType(const std::string & typeName)
     {
-        if(mTypes.find(typeName) == mTypes.end())
+        if(getInstance()->mTypes.find(typeName) == getInstance()->mTypes.end())
         {
             return false;
         }

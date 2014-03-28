@@ -80,9 +80,9 @@ namespace Xsd
     void
     Attribute::checkValidity(const std::string & value)
     {
-        if(!Checker::getAttributeType(name)->isValid(value))
+        if(!Checker::getAttributeType(mName)->isValid(value))
         {
-            throw new XSDValidationException("Invalid attribute: " + name);
+            throw new XSDValidationException("Invalid attribute: " + mName);
         }
     }
 
