@@ -220,10 +220,10 @@ namespace Xsd
             }
             else if(xmlElement.elements().size() > 0)
             {
-                Xml::Element & typeElement = xmlElement.elements().front();
-                if(typeElement.name().compare(Checker::COMPLEX_TYP_ELT) == 0)
+                Xml::Element * typeElement = xmlElement.elements().front();
+                if(typeElement->name().compare(Checker::COMPLEX_TYP_ELT) == 0)
                 {
-                    parseComplexType(ci, "", true);
+                    parseComplexType(typeElement, "", true);
                 }
                 else
                 {
