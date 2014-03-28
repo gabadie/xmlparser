@@ -215,8 +215,6 @@ testXmlElementFullText()
 {
     Xml::Element root("root");
 
-    test_assert(root.isElement() == true);
-
     root.appendText("hello");
 
     test_assert(root.contentText() == "");
@@ -243,6 +241,22 @@ testXmlElementFullText()
     test_assert(root.fullText() == std::string("hello") + Xml::CAT_SEPARATOR + text1 + Xml::CAT_SEPARATOR + text11 + "hello");
 }
 
+void
+testXmlElementValueOf()
+{
+    Xml::Element root("root");
+
+    root.appendText("A");
+
+    Xml::Element * e = new Xml::Element("tag");
+    e->appendText("B");
+    root.append(e);
+
+    root.appendText("C");
+
+    test_assert(root.valueOf(".") == "ABC");
+}
+
 
 int
 main()
@@ -256,6 +270,7 @@ main()
     testXmlElementNamespace();
     testXmlElementMatches();
     testXmlElementFullText();
+    testXmlElementValueOf();
 
     return 0;
 }
