@@ -64,3 +64,18 @@ Les hypothèse suivantes sont également formulées :
         Celui ci est defini avec un nom de balise (\lstinline$mName$) mais aussi d'un espace de nom (\lstinline$mNamespaceName$). La concatenation de ces deux derniers forme le tag de l'\lstinline$Element$. Le nom du membre \lstinline$mNamespaceName$ au lieu de \lstinline$mNamespace$ a \'et\'e effectuer pour eviter la colision avec le mot clef du language C++ \lstinline$namespace$ avec son getter th\'eorique \lstinline$Xml::Element::namespace()$ remplacer par \lstinline$Xml::Element::namespaceName()$.
 
         Un \lstinline$Element$ possede un ensemble non-ordonné d'attributs etant simplement une map aillant une assossiation $clef \leftarrow valeur$, par soucis de determinisme, nous les exportons par ordre alphabetique des clefs.
+
+    \section{Algorithmes}
+
+    \subsection{Xml::Element::select}
+
+    \textbf{std::list<Xml::Element const *> Xml::Element::select(std::string const & xPathQuery);}
+
+    \subsection{Xml::Element::valueOf}
+
+    \textbf{std::string Xml::Element::valueOf(std::string const & xPathQuery);}
+
+    \subsection{Xml::Element::matches}
+
+    \textbf{bool Xml::Element::matches(std::string const & xPathQuery);}
+
