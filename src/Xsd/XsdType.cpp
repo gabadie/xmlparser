@@ -28,7 +28,7 @@ namespace Xsd
     {
         for(auto iterator = mAttributes.begin(); iterator != mAttributes.end(); iterator++)
         {
-            delete iterator->second;
+            delete *iterator;
         }
         mAttributes.clear();
     }
