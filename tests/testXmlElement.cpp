@@ -240,7 +240,6 @@ testXmlElementFullText()
     test_assert(root.fullText() == std::string("hello") + Xml::CAT_SEPARATOR + text1 + Xml::CAT_SEPARATOR + text11);
 
     root.appendText("hello");
-    std::cerr << root.fullText() << std::endl;
     test_assert(root.fullText() == std::string("hello") + Xml::CAT_SEPARATOR + text1 + Xml::CAT_SEPARATOR + text11 + "hello");
 }
 
