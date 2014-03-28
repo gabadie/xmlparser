@@ -64,3 +64,43 @@ Les hypothèse suivantes sont également formulées :
         Celui ci est defini avec un nom de balise (\lstinline$mName$) mais aussi d'un espace de nom (\lstinline$mNamespaceName$). La concatenation de ces deux derniers forme le tag de l'\lstinline$Element$. Le nom du membre \lstinline$mNamespaceName$ au lieu de \lstinline$mNamespace$ a \'et\'e effectuer pour eviter la colision avec le mot clef du language C++ \lstinline$namespace$ avec son getter th\'eorique \lstinline$Xml::Element::namespace()$ remplacer par \lstinline$Xml::Element::namespaceName()$.
 
         Un \lstinline$Element$ possede un ensemble non-ordonné d'attributs etant simplement une map aillant une assossiation $clef \leftarrow valeur$, par soucis de determinisme, nous les exportons par ordre alphabetique des clefs.
+
+        Enfin un \lstinline$Element$ possede une liste ordonn\'ee de noeux (\lstinline$Node$). Mais cette liste est innaccessible \`a l'utilisateur. En effet, nous ne voulons pas que l'utilisateur du namespace ai besoin de tester les differents types de de noeux. Mais \lstinline$Xml::Element::elements()$ permettent de recuperer
+        l'ensemble des \lstinline$Element$ fils. Mais il ne pourra pas recuperer les \lstinline$Comment$ car ne sont pas senser \^etre parser. De m\^eme l'utilisateur ne pourra acceder aux \lstinline$ProcessingInstruction$ car sont seulement dedier au parser \textit{XML}.
+
+        Bien sur l'utilisateur peux acceder au contenu text d'un \lstinline$Element$ \`a l'aide de \lstinline$Xml::Element::text()$ qui concatenera (avec saut de lignes entre) l'ensemble des noeux enfant de type \lstinline$Text$. Seul le parser Xsl aura le droit d'acceder \`a \lstinline$Xml::Element::mChildren$ \`a l'aide d'une amiti\'e.
+
+\section{Encapsulation du namespace Xml}
+    Au final l'utilisateur aura simplement acc\`es au classes suivante~:
+
+    \begin{itemize}
+        \item \lstinline$Log$~;
+        \item \lstinline$Object$~;
+        \item \lstinline$Document$~;
+        \item \lstinline$Element$.
+    \end{itemize}
+
+    Les autres classes sont impl\'ement\'ees avec des constructeurs \lstinline$private$ (avec des amiti\'ees n\'ecessaires entre elles bien entendu). Ainsi l'utilisateur peut reutiliser notre impl\'ementation tout aussi facilement que la librarie \lstinline$DOM$ ayant pour avantage de ne pas avoir \`a gerer la pr\'esence de commentaires ou de processing instructions dans son code car ne travaillant dans l'arbre \textit{XML} qu'avec \lstinline$Document$ et \lstinline$Element$.
+    \\
+    \begin{lstlisting}[frame=single]
+Xml::Document doc;
+
+doc.setRoot(new Xml::Element("root"));
+doc.root()->append(new Xml::Element("hi"));
+doc.root()->appendComment("Hello world!");
+doc.root()->append(new Xml::Element("bar", "foo"));
+
+assert(doc.elements("hi").size() == 1);
+
+doc.elements()[1]->setAttribute("attr", "myValue");
+
+delete doc.elements("hi")[0];
+
+std::cout << doc << std::endl;
+/** stdout:
+ * <root>
+ *   <!--Hello world!-->
+ *   <foo:bar attr="myValue"/>
+ * </root>
+ */
+    \end{lstlisting}
