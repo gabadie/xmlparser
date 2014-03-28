@@ -1,7 +1,9 @@
 #include "XsdType.hpp"
 #include "XsdChecker.hpp"
-#include <sstream>
+#include "XsdException.hpp"
 #include "../Utils.hpp"
+
+#include <sstream>
 
 namespace Xsd
 {

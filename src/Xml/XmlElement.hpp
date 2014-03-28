@@ -40,17 +40,6 @@ namespace Xml
         ~Element();
 
         /**
-         * Tells whether or not the element has the given node in
-         * its children recursively.
-         *
-         * @param node Node to find
-         *
-         * @return True if found, false otherwise.
-         */
-        bool
-        hasChild(Node * node) const;
-
-        /**
          * Override of clone abstract method
          */
         Node *

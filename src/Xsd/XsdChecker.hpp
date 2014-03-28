@@ -109,7 +109,6 @@ namespace Xsd
         throwInvalidAttributeValueException(const std::string & element, const std::string & attr, const std::string & invalidValue);
 
 
-
     protected:
         /**
          * Constructor

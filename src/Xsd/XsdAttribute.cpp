@@ -1,4 +1,5 @@
 #include "XsdAttribute.hpp"
+#include "XsdException.hpp"
 #include "XsdChecker.hpp"
 
 #ifdef APP_DEBUG

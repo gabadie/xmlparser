@@ -1,6 +1,6 @@
 #include "XsdChecker.hpp"
-#include "../Xml/XmlParser.hpp"
 #include "XsdException.hpp"
+#include "../Xml/XmlParser.hpp"
 
 #ifdef APP_DEBUG
 #include <cassert>
@@ -256,19 +256,19 @@ namespace Xsd
     }
 
     void
-    throwInvalidElementException(const std::string & received, const std::string & expected)
+    Checker::throwInvalidElementException(const std::string & received, const std::string & expected)
     {
         throw new XSDConstructionException("Error: Invalid XSD root element received :" + received + " (" + expected + " expected");
     }
 
     void
-    throwMissingAttributeException(const std::string & element, const std::string & missingAttr)
+    Checker::throwMissingAttributeException(const std::string & element, const std::string & missingAttr)
     {
         throw new XSDConstructionException("Error: Missing attribute for " + element + " element: " + missingAttr);
     }
 
     void
-    throwInvalidAttributeValueException(const std::string & element, const std::string & attr, const std::string & invalidValue)
+    Checker::throwInvalidAttributeValueException(const std::string & element, const std::string & attr, const std::string & invalidValue)
     {
         throw new XSDConstructionException("Error: Invalid " + attr + " attribute value for " + element + " element: " + invalidValue);
     }

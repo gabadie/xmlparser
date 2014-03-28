@@ -8,10 +8,12 @@
 
 #include "../src/Xsd/XsdChecker.hpp"
 
+#define DEBUG_MODE
+
 using namespace Xsd;
 
-std::string xmlFolder = "xml_files";
-std::string xsdFolder = "xsd_files";
+std::string xmlFolder = "../../tests/xml_files";
+std::string xsdFolder = "../../tests/xsd_files";
 std::string invalidFileRegexp = "^[0-9]*_err_.*$";
 
 std::string
@@ -49,6 +51,14 @@ test_validation()
     bool valid;
 
     dir = opendir (xmlFolder.c_str());
+
+    if(dir == NULL)
+    {
+        std::cerr << "Cannot find " << xmlFolder << " folder" << std::endl;
+        test_assert(false);
+        std::cerr << "Cannot find " << xmlFolder << " folder" << std::endl;
+    }
+
     while ((ent = readdir (dir)) != NULL)
     {
         xmlFilePath = getFilePath(xmlFolder, ent->d_name);
@@ -101,11 +111,7 @@ main()
     for (const auto &fname : fnames) {
         std::cout << fname << ": " << RE2::FullMatch(fname, txt_regex) << '\n';
     }
-    //std::regex expression(".*");
-    //std::string test("test");
-    //std::regex_match(test, expression);
 
-    //TODO test XSD construction
     test_construction();
     test_validation();
 
