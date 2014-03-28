@@ -15,6 +15,12 @@ namespace Xml
 
     }
 
+    Node *
+    Comment::clone()
+    {
+        return new Comment(this->mContent);
+    }
+
     void
     Comment::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
     {

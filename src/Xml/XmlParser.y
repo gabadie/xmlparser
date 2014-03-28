@@ -7,6 +7,7 @@
 #include "XmlParser.hpp"
 #include "XmlText.hpp"
 #include "XmlComment.hpp"
+#include "XmlProcessingInstruction.hpp"
 #include "XmlParserError.hpp"
 #include "XmlParserInput.hpp"
 
@@ -48,6 +49,7 @@ void yyerror(void ** e, const char * msg);
 %type <nodeList> misc
 %type <node> item
 %type <node> miscitem
+%type <node> processinstr
 %type <str> etag
 
 
@@ -113,7 +115,7 @@ element:
     emptytag
     {
         /* ---------------------------------------------------- empty element */
-        /* TODO */
+        $$ = $1;
     } |
     stag content etag
     {
@@ -126,7 +128,7 @@ element:
 
         for(Xml::Node * node : *$2)
         {
-            if (node == 0)
+            if (node == nullptr)
             {
                 continue;
             }
@@ -142,12 +144,12 @@ element:
         /*
          * Checks that the closing function is working
          */
-        if ($1->name() != *$3)
+        if ($1->tag() != *$3)
         {
             Xml::parserSemanticError("unexpected </" + *$3 + "> (it should have been </" + $1->name() + ">)");
 
             delete $$;
-            $$ = 0;
+            $$ = nullptr;
         }
 
         /*
@@ -160,12 +162,33 @@ miscitem:
     COMMENT
     {
         /* ---------------------------------------------------- comment node */
-        $$ = (Xml::Node *) new Xml::Comment(std::string($1));
+        $$ = static_cast<Xml::Node *>(new Xml::Comment(std::string($1)));
 
         /*
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
          */
         free($1);
+    } |
+    processinstr
+    {
+        /* ------------------------------------------ processing instruction */
+        $$ = $1;
+    };
+
+processinstr:
+    INFSPECIAL NOM atts SUPSPECIAL
+    {
+        /* ------------------------------------------ processing instruction */
+        Xml::ProcessingInstruction * xmlpi = new Xml::ProcessingInstruction(std::string($2), "", "");
+
+        for(auto const & p : *$3)
+        {
+            xmlpi->setAttribute(p.first, p.second);
+        }
+
+        free($2);
+        delete $3;
+        $$ = xmlpi;
     };
 
 misc:
@@ -196,7 +219,13 @@ misc:
             $$->push_back($2);
         }
     } |
-    /* vide */
+    misc DONNEES
+    {
+        Xml::parserSyntaxError(std::string("Text found outside root: ") + "\"" + std::string($2) + "\"");
+        $$ = nullptr;
+        free($2);
+    } |
+    /* empty */
     {
         /* ---------------------------------------------------- empty misc */
         /*
@@ -209,8 +238,29 @@ emptytag:
     INF NOM atts SLASH SUP
     {
         /* ---------------------------------------------------- empty element tag */
-        /* TODO: empty tag */
-        $$ = nullptr;
+        $$ = new Xml::Element(std::string($2));
+
+        for(auto const & p : *$3)
+        {
+            $$->setAttribute(p.first, p.second);
+        }
+
+        free($2);
+        delete $3;
+    } |
+    INF NOM COLON NOM atts SLASH SUP
+    {
+        /* ---------------------------------------------------- empty element tag with namespace*/
+        $$ = new Xml::Element(std::string($4), std::string($2));
+
+        for(auto const & p : *$5)
+        {
+            $$->setAttribute(p.first, p.second);
+        }
+
+        free($2);
+        free($4);
+        delete $5;
     };
 
 stag:
@@ -218,12 +268,28 @@ stag:
     {
         /* ---------------------------------------------------- nonempty element start tag */
         $$ = new Xml::Element(std::string($2));
+
+        for(auto const & p : *$3)
+        {
+            $$->setAttribute(p.first, p.second);
+        }
+
+        free($2);
+        delete $3;
     } |
     INF NOM COLON NOM atts SUP
     {
         /* ---------------------------------------------------- nonempty element start tag (with namespace) */
-        /* TODO: namespaces */
-        $$ = nullptr;
+        $$ = new Xml::Element(std::string($4), std::string($2));
+
+        for(auto const & p : *$5)
+        {
+            $$->setAttribute(p.first, p.second);
+        }
+
+        free($2);
+        free($4);
+        delete $5;
     };
 
 etag:
@@ -240,8 +306,12 @@ etag:
     INF SLASH NOM COLON NOM SUP
     {
         /* ---------------------------------------------------- nonempty element end tag (with namespace) */
-        /* TODO: namespaces */
-        $$ = nullptr;
+        auto element = new Xml::Element(std::string($5), std::string($3));
+        $$ = new std::string(element->tag());
+
+        free($3);
+        free($5);
+        delete element;
     };
 
 atts:
@@ -256,22 +326,56 @@ atts:
         free($2);
         free($4);
     } |
-    /* vide */
+    /* empty */
     {
-        /* ---------------------------------------------------- element with children */
         $$ = new Xml::Element::AttributesMap();
+    } |
+
+    /* Handle Xml::Element's attributes parsing errors */
+
+    /* Shift/reduce warning caused by the rules "atts NOM EGAL" et "atts VALEUR"
+     This conflict is safe because Bison is greedy and will match "atts NOM EGAL VALEUR" first
+     instead of "atts NOM EGAL" and "atts VALEUR" */
+    atts NOM EGAL
+    {
+        Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + "\"" + std::string($2) + "=\"");
+        $$ = $1;
+        free($2);
+    } |
+    atts EGAL VALEUR
+    {
+        Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + "\"=" + std::string($3) + "\"");
+        $$ = $1;
+        free($3);
+    } |
+    atts VALEUR
+    {
+        Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + "\"" + std::string($2) + "\"");
+        $$ = $1;
+        free($2);
     };
+
+    /* Errors not handled */
+    /*
+    atts NOM
+    {
+        $$ = $1;
+    } |
+    atts NOM EGAL NOM
+    {
+        $$ = $1;
+    }; /**/
 
 item:
     element
     {
         /* ---------------------------------------------------- element in another element */
-        $$ = (Xml::Node *) $1;
+        $$ = static_cast<Xml::Node *>($1);
     } |
     DONNEES
     {
         /* ---------------------------------------------------- text in an element */
-        $$ = (Xml::Node *) new Xml::Text(std::string($1));
+        $$ = static_cast<Xml::Node *>(new Xml::Text(std::string($1)));
 
         /*
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
@@ -291,7 +395,7 @@ content:
         $$ = $1;
         $$->push_back($2);
     } |
-    /* vide */
+    /* empty */
     {
         /* ---------------------------------------------------- element's content end */
         $$ = new std::list<Xml::Node *>();
@@ -303,7 +407,7 @@ content:
 /* ----------------------------------------------------------------------------- C/C++ suffix */
 
 void
-yyerror(void ** e, const char * msg)
+yyerror(void **, const char * msg)
 {
     Xml::parserSyntaxError(msg);
 }
@@ -325,7 +429,7 @@ yyrestart(FILE * input_file);
 Xml::Document *
 Xml::parse(std::istream & xmlContent, Xml::Log * log)
 {
-    Xml::Document * e = 0;
+    Xml::Document * e = nullptr;
 
     {
         Xml::Log tmpLog;

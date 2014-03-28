@@ -14,7 +14,7 @@ $(RE2_LIBRARY):
 # ------------------------------------------------------------ default configuration
 override config=debug
 
-PROJECT_CXXFLAGS := -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR) -std=c++11 -I $(RE2_INCLUDE)
+PROJECT_CXXFLAGS := -g -DAPP_DEBUG -DYYDEBUG -I $(BUILD_SRC_GEN_DIR) -std=c++11 -I $(RE2_INCLUDE) -Wall -Wextra
 PROJECT_BISONFLAGS := --debug
 PROJECT_FLEXFLAGS := --debug
 PROJECT_LDFLAGS := -lpthread

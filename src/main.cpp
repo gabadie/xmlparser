@@ -102,7 +102,7 @@ checkArgsAndCall(std::string const & option, int argc, R(* func)(FArgs ...), Arg
 {
     static_assert(sizeof...(FArgs) == sizeof...(Args), "Wrong number of parameters");
 
-    auto nbCmdParams  = argc - 2; // -1 for executable name, -1 for the option
+    auto nbCmdParams  = argc - 2u; // -1 for executable name, -1 for the option
     auto nbFuncParams = sizeof...(FArgs);
 
     if(nbCmdParams != nbFuncParams)

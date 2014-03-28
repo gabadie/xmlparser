@@ -55,6 +55,8 @@ static char * nettoieCommentaire(char *s) {
 /* we don't have yywrap() */
 %option 8bit noyywrap
 %option yylineno
+%option nounput
+%option noinput
 
 
 /* ----------------------------------------------------------------------------- Terminals' definitions */

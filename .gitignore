@@ -47,3 +47,6 @@ build/
 *.acr
 *.alg
 *.ist
+
+# PDF
+latex/*.pdf
