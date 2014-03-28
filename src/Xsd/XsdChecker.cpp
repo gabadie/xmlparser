@@ -65,7 +65,8 @@ namespace Xsd
         //throw NotImplementedYet("TODO : gestion namespace !!!!!");
 
         //Building intermediary structure from xmlDoc
-        Xsd::Type::parseComplexType(xsdDoc->root(), OR_SEPARATOR, true, NULL, true);
+        std::list<Attribute *> attributes;
+        Xsd::Type::parseComplexType(xsdDoc->root(), OR_SEPARATOR, true, attributes, true);
 
         checkReferences();
 
@@ -73,8 +74,6 @@ namespace Xsd
 
     Checker::~Checker()
     {
-        delete mXsdDoc;
-
         for(auto iterator = mTypes.begin(); iterator != mTypes.end(); iterator++)
         {
             delete iterator->second;

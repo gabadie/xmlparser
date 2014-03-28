@@ -12,7 +12,7 @@ namespace Xsd
 
     Type::Type(const Xml::Element * const xmlElement, const std::string & name)
     {
-        mRegex = parseComplexType(*xmlElement, "", false, mAttributes, true);
+        mRegex = parseComplexType(xmlElement, "", false, mAttributes, true);
         Checker::getInstance()->addType(name, this);
     }
 
@@ -26,6 +26,11 @@ namespace Xsd
 
     Type::~Type()
     {
+        for(auto iterator = mAttributes.begin(); iterator != mAttributes.end(); iterator++)
+        {
+            delete iterator->second;
+        }
+        mAttributes.clear();
     }
 
     bool
@@ -73,7 +78,7 @@ namespace Xsd
 
     //Should work, still have to check the algorithm for choice or sequence inside choice or sequence
     std::string
-    Type::parseComplexType(const Xml::Element * const xmlElement, const std::string & separator, bool eltSeqChoice, std::list<Attribute *> & attributes, bool acceptAttributes)
+    Type::parseComplexType(const Xml::Element * const xmlElement, const std::string & separator, bool eltSeqChoice, std::list<Attribute *> * attributes, bool acceptAttributes)
     {
         bool eltParsed = false;
         std::string regex = "(";
@@ -111,7 +116,7 @@ namespace Xsd
                 {
                     Checker::throwInvalidElementException(Checker::ELEMENT_ELT, getNameOrRef(ci));
                 }
-                attributes.push_back(Xsd::Attribute::parseAttribute(ci));
+                attributes->push_back(Xsd::Attribute::parseAttribute(ci));
             }
             else
             {
