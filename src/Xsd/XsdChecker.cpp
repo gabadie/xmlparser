@@ -31,8 +31,8 @@ namespace Xsd
     const std::string DATE_TYPE_VALUE = "date";
     const std::string USE_REQUIRED_VALUE = "required";
 
-    Checker::Checker(const Xml::Document & xsdDoc):
-        mXsdDoc(&xsdDoc),
+    Checker::Checker(const Xml::Document * const xsdDoc):
+        mXsdDoc(xsdDoc),
         mTypes(),
         mElementsTypes(),
         // mAttributes(),
@@ -146,11 +146,11 @@ namespace Xsd
     }
 
     bool
-    Checker::isValid(Xml::Document xsdDoc)
+    Checker::isValid(const Xml::Document * const)
     {
         try
         {
-            getElementType(ROOT)->checkValidity(xsdDoc.root());
+            getElementType(ROOT)->checkValidity(xsdDoc->root());
             return true;
         }
         catch(XSDValidationException e)
@@ -246,19 +246,18 @@ namespace Xsd
         return getType(typeName);
     }
 
-    Checker
+    Checker *
     Checker::getInstance()
     {
         return instance;
     }
 
     void
-    Checker::initialize(const Xml::Document & xsdDoc)
+    Checker::initialize(const Xml::Document * const xsdDoc)
     {
-
         if(instance == NULL)
         {
-            instance = Checker(xsdDoc);
+            instance = new Checker(xsdDoc);
         }
     }
 

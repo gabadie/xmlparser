@@ -46,11 +46,11 @@ namespace Xsd
         static const std::string DATE_TYPE_VALUE;
         static const std::string USE_REQUIRED_VALUE;
 
-        static Checker
+        static Checker *
         getInstance();
 
         static void
-        initialize(const Xml::Document & xmlDoc);
+        initialize(const Xml::Document * const xsdDoc);
 
         /**
          * Destructor
@@ -64,7 +64,7 @@ namespace Xsd
          * Returns true if the XML file respects the XML schema definition
          */
         bool
-        isValid(Xml::Document xmlDoc);
+        isValid(const Xml::Document * const xsdDoc);
 
         std::string getStringTypeValue();
 
@@ -115,12 +115,12 @@ namespace Xsd
         /**
          * Constructor
          */
-        Checker(const Xml::Document & xmlDoc);
+        Checker(const Xml::Document * const xmlDoc);
 
         /**
          * Unique private instance
          */
-        static Checker instance;
+        static Checker * instance;
 
         std::string namespacePrefix;
         std::string stringTypeValue;

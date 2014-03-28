@@ -72,7 +72,9 @@ test_validation()
         test_assert(xsdDoc != NULL);
 
         // Building XSD Checker
-        Xsd::Checker * checker = new Xsd::Checker(xsdDoc);
+        Xsd::Checker::initialize(xsdDoc);
+
+        Xsd::Checker * checker = Xsd::Checker::getInstance();
 
         // Validation process
         if(valid)
