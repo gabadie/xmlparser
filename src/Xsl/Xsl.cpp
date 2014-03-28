@@ -130,14 +130,13 @@ std::vector<Xml::Node *> Xsl::applyTemplate(const Xml::Node * context, Xml::Docu
 
 vector <Xml::Node*>  Xsl::ValueOf::operator () (const Xml::Node* context, Xml::Document& xslDoc, const Xml::Element * xslElement) const
 {
-   vector <Xml::Node*>  resultNodes;
-   list <Xml::Element const*>  resultNodesTemp;
+    vector <Xml::Node*>  resultNodes;
+    std::string resultValue;
 
-   resultNodesTemp = ((const Xml::Element *) context)->select(xslElement->attribute("select"));
-   for(auto node : resultNodesTemp)
-   {
-        resultNodes.push_back(node->clone());
-   }
+    resultValue = ((const Xml::Element *) context)->ValueOf(xslElement->attribute("select"));
+    Xml::Text * textValue = new Xml::Text(resultValue);
+    resultNodes.push_back(textValue);
+
     return resultNodes;
 }
 
