@@ -152,6 +152,11 @@ namespace Xml
     void
     Element::appendText(std::string const & text)
     {
+        if (text == "")
+        {
+            return;
+        }
+
         this->appendNode(new Text(text));
     }
 

@@ -187,7 +187,14 @@ miscitem:
     COMMENT
     {
         /* ---------------------------------------------------- comment node */
-        $$ = static_cast<Xml::Node *>(new Xml::Comment(std::string($1)));
+        if ($1[0] == 0)
+        {
+            $$ = nullptr;
+        }
+        else
+        {
+            $$ = static_cast<Xml::Node *>(new Xml::Comment(std::string($1)));
+        }
 
         /*
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
@@ -400,7 +407,14 @@ item:
     DONNEES
     {
         /* ---------------------------------------------------- text in an element */
-        $$ = static_cast<Xml::Node *>(new Xml::Text(std::string($1)));
+        if ($1[0] == 0)
+        {
+            $$ = nullptr;
+        }
+        else
+        {
+            $$ = static_cast<Xml::Node *>(new Xml::Text(std::string($1)));
+        }
 
         /*
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.

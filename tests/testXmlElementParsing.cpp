@@ -95,14 +95,15 @@ testXmlElementParsingUnclosed()
 
     Xml::Document * doc = Xml::parse(content, &log);
 
-    //std::cerr << *doc << std::endl;
-
     test_assert(doc != 0);
     test_assert(doc->root() != 0);
 
     test_assert(doc->root()->tag() == "hello");
+    test_assert(doc->root()->mChildren.size() == 1);
     test_assert(doc->root()->elements()[0]->tag() == "balise1");
+    test_assert(doc->root()->elements()[0]->mChildren.size() == 1);
     test_assert(doc->root()->elements()[0]->elements()[0]->tag() == "balise1");
+    test_assert(doc->root()->elements()[0]->elements()[0]->mChildren.size() == 1);
     test_assert(doc->root()->elements()[0]->elements()[0]->elements()[0]->tag() == "balise2");
 
     test_assert(log.find("unexpected </hello>") == 1);
