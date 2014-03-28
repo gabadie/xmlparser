@@ -42,7 +42,7 @@ namespace Xsd
         void
         checkValidity(const Xml::Element & element);
 
-        static bool
+        static std::string
         getNameOrRef(const std::string & type);
 
         static bool

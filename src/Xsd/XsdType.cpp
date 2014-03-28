@@ -58,7 +58,6 @@ namespace Xsd
         }
     }
 
-
     std::string
     Type::childrenToString(std::vector<Xml::Element const *> childrenElt)
     {
@@ -101,12 +100,16 @@ namespace Xsd
                 }
                 else
                 {
-                    Checker::throwInvalidElementException(Checker::ELEMENT_ELT, getNameOrRef((*ci)->name());
+                    Checker::throwInvalidElementException(Checker::ELEMENT_ELT, getNameOrRef(*ci));
                 }
             }
             else if((*ci)->name().compare(Checker::ATTRIBUTE_ELT) == 0)
             {
+<<<<<<< Updated upstream
                 mAttributes.push_back(Xsd::Attribute::parseAttribute(*ci));
+=======
+                Xsd::Attribute.parseAttribute(*ci);
+>>>>>>> Stashed changes
             }
             else
             {
@@ -152,7 +155,8 @@ namespace Xsd
         return occursAttrValue;
     }
 
-    bool
+
+    std::string
     Type::getNameOrRef(const Xml::Element & xmlElement)
     {
         if(isReference(xmlElement))
