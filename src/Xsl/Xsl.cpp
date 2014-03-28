@@ -131,11 +131,9 @@ std::vector<Xml::Node *> Xsl::applyTemplate(const Xml::Element * context, Xml::D
 vector <Xml::Node*>  Xsl::ValueOf::operator () (const Xml::Element* context, Xml::Document& xslDoc, const Xml::Element * xslElement) const
 {
 
-    std::cerr << "value of applied " << std::endl;
     vector <Xml::Node*>  resultNodes;
     std::string resultText;
     resultText = xslElement->attribute("select");
-    std::cerr << "=>" << resultText << std::endl;
 
     resultText =((const Xml::Element *) context)->valueOf(resultText);
     Xml::Text * textValue = new Xml::Text(resultText);
