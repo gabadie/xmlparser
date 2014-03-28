@@ -201,11 +201,12 @@ namespace Xsd
     Type * const
     Checker::getType(const std::string & typeName)
     {
-        Type * type = *(mTypes.find(typeName)).second;
-        if(type == mTypes.end())
+        auto iterType = mTypes.find(typeName);
+        if(iterType == mTypes.end())
         {
             return NULL;
         }
+        Type * type = iterType->second;
         return type;
     }
 
