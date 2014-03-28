@@ -46,6 +46,9 @@ namespace Xsd
         static const std::string DATE_TYPE;
         static const std::string USE_REQUIRED_VALUE;
 
+        static const std::string OR_SEPARATOR;
+        static const std::string AND_SEPARATOR;
+
         static Checker *
         getInstance();
 

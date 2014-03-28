@@ -31,6 +31,9 @@ namespace Xsd
     const std::string DATE_TYPE = "date";
     const std::string USE_REQUIRED_VALUE = "required";
 
+    const std::string OR_SEPARATOR = "|";
+    const std::string AND_SEPARATOR = "";
+
     Checker::Checker(const Xml::Document * const xsdDoc):
         mXsdDoc(xsdDoc),
         mTypes(),
@@ -62,7 +65,7 @@ namespace Xsd
         //throw NotImplementedYet("TODO : gestion namespace !!!!!");
 
         //Building intermediary structure from xmlDoc
-        Xsd::Type::parseComplexType(xsdDoc->root(), "|", true);
+        Xsd::Type::parseComplexType(xsdDoc->root(), OR_SEPARATOR, true, NULL, true);
 
         checkReferences();
 
