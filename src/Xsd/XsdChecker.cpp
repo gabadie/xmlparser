@@ -48,14 +48,18 @@ namespace Xsd
             throwInvalidElementException(xsdDoc->root()->attribute(NAME_ATTR), SCHEMA_ELT);
         }
 
-        namespacePrefix = "TODO";
-        stringTypeValue = namespacePrefix + ":" + STRING_TYPE;
-        dateTypeValue = namespacePrefix + ":" + DATE_TYPE;
+        //TODO: remove ?
+        // namespacePrefix = "TODO";
+        // stringTypeValue = namespacePrefix + ":" + STRING_TYPE;
+        // dateTypeValue = namespacePrefix + ":" + DATE_TYPE;
 
         //Check that the root element has xmlns:MYPREFIX="http://www.w3.org/2001/XMLSchema"
         //or noNamespaceSchemaLocation
+        // namespacePrefix = "TODO";
+        // stringTypeValue = namespacePrefix + ":" + STRING_TYPE;
+        // dateTypeValue = namespacePrefix + ":" + DATE_TYPE;
         //Quand on parse un type complexe, ajouter ses attributs à la map !
-        throw NotImplementedYet("TODO : gestion namespace !!!!!");
+        //throw NotImplementedYet("TODO : gestion namespace !!!!!");
 
         //Building intermediary structure from xmlDoc
         Xsd::Type::parseComplexType(xsdDoc->root(), "|", true);
