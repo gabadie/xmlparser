@@ -144,7 +144,7 @@ namespace Xsd
     }
 
     bool
-    Checker::isValid(const Xml::Document * const)
+    Checker::isValid(const Xml::Document * const xsdDoc)
     {
         try
         {
@@ -153,7 +153,7 @@ namespace Xsd
         }
         catch(XSDValidationException e)
         {
-            std::cerr << e.getMessage() << std:endl;
+            std::cerr << e.getMessage() << std::endl;
             return false;
         }
     }
