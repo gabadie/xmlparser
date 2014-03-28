@@ -87,11 +87,11 @@ namespace Xsd
         {
             if((*ci)->name().compare(Checker::SEQUENCE_ELT) == 0)
             {
-                regex += getRegexFromOccurs(*ci, parseComplexType(ci, "", true)) + separator;
+                regex += getRegexFromOccurs(*(*ci), parseComplexType(ci, "", true)) + separator;
             }
             else if((*ci)->name().compare(Checker::CHOICE_ELT) == 0)
             {
-                regex += getRegexFromOccurs(*ci, parseComplexType(ci, "|", true)) + separator;
+                regex += getRegexFromOccurs(*(*ci), parseComplexType(ci, "|", true)) + separator;
             }
             else if((*ci)->name().compare(Checker::ELEMENT_ELT) == 0)
             {
