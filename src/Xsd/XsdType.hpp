@@ -51,9 +51,6 @@ namespace Xsd
         static const Type *
         parseSimpleType(const std::string & type);
 
-        static std::string
-        parseElement(const Xml::Element & xmlElement);
-
         std::string
         childrenToString(std::vector<Xml::Element const *> childrenElt);
 

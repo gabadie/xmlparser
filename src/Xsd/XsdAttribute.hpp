@@ -27,6 +27,9 @@ namespace Xsd
              */
             virtual ~Attribute() {}
 
+            std::string
+            name();
+
         protected:
             std::string mName;
             bool mRequired;
@@ -37,8 +40,6 @@ namespace Xsd
             void
             checkValidity(const std::string & value);
 
-            std::string
-            name();
     };
 }
 

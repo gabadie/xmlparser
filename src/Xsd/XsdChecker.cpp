@@ -117,7 +117,7 @@ namespace Xsd
             std::list<Attribute *> attributes = iterType->second->attributes();
             for (auto iterAttr = attributes.begin(); iterAttr != attributes.end(); ++iterAttr)
             {
-                checkExistType(*iterAttr->name());
+                checkExistType((*iterAttr)->name());
             }
         }
     }
@@ -196,7 +196,7 @@ namespace Xsd
         mAttributesTypes.insert(std::pair<std::string, std::string>(attributeName, typeName));
     }
 
-    Type * const
+    Type *
     Checker::getType(const std::string & typeName)
     {
         auto iterType = mTypes.find(typeName);
