@@ -11,7 +11,7 @@ namespace Xml
     /**
      * Defines Xml log
      */
-    class Log
+    class Log final
     {
     public:
 
@@ -51,8 +51,9 @@ namespace Xml
         size_t
         find(std::string const & subString) const;
 
-    protected:
+    private:
         std::list<std::string> mLines; ///< List of lines
+
     };
 
     /**
