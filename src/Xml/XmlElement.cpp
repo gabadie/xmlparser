@@ -158,7 +158,7 @@ namespace Xml
     bool
     Element::remove(Node * node)
     {
-        app_assert(node != 0);
+        app_assert(node != nullptr);
 
         if (node->mParent != this)
         {
