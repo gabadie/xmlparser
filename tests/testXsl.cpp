@@ -40,10 +40,7 @@ testXslTransform()
                 <xsl:for-each select="cd">
                     <div>
                         <h1>This is a CD</h1>
-
-                        <xsl:for-each select="title">
-                            <h2>This is a title !</h2>
-                        </xsl:for-each>
+                        <h2><xsl:value-of select="title" /></h2>
                     </div>
                 </xsl:for-each>
 
@@ -54,6 +51,9 @@ testXslTransform()
     ));
     Xml::Log xslLog;
     Xml::Document * xslDoc = Xml::parse(xslContent, &xslLog);
+
+    test_assert(xslDoc != 0);
+    test_assert(xmlDoc != 0);
 
     Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc);
 
