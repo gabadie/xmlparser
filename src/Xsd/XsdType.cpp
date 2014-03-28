@@ -158,9 +158,9 @@ namespace Xsd
     {
         if(isReference(xmlElement))
         {
-            return xmlElement.attribute(Checker.REF_ATTR);
+            return xmlElement.attribute(Checker::REF_ATTR);
         }
-        return xmlElement.attribute(Checker.NAME_ATTR);
+        return xmlElement.attribute(Checker::NAME_ATTR);
     }
 
     bool
@@ -221,7 +221,7 @@ namespace Xsd
             else if(xmlElement.elements().size() > 0)
             {
                 Xml::Element & typeElement = xmlElement.elements().front();
-                if(typeElement.name().compare(Checker::COMPLEX_TYPE_ELEMENT) == 0)
+                if(typeElement.name().compare(Checker::COMPLEX_TYP_ELT) == 0)
                 {
                     parseComplexType(ci, "", true);
                 }
