@@ -1,6 +1,7 @@
 #include "XsdType.hpp"
 #include "XsdChecker.hpp"
 #include <sstream>
+#include <boost/algorithm>
 
 namespace Xsd
 {
@@ -124,8 +125,8 @@ namespace Xsd
     bool
     Type::isSimpleType(const std::string & type)
     {
-        return (type.compare(Checker::getInstance().getStringTypeValue()) == 0)
-            || (type.compare(Checker::getInstance().getDateTypeValue()) == 0);
+        return (type.compare(Checker::getInstance()->getStringTypeValue()) == 0)
+            || (type.compare(Checker::getInstance()->getDateTypeValue()) == 0);
     }
 
     std::string
@@ -212,7 +213,7 @@ namespace Xsd
             {
                 std::vector<std::string> tokens;
                 boost::algorithm::split(tokens, type, boost::algorithm::is_any_of(":"));
-                Checker::getInstance().addTypedElement(name, tokens.back());
+                Checker::getInstance()->addTypedElement(name, tokens.back());
 
             }
             else if(xmlElement.elements().size() > 0)
