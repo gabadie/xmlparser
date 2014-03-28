@@ -43,7 +43,7 @@ namespace Xml
     Node *
     Element::clone() const
     {
-        Xml::Element* elementClone =  new Element(this->mName);
+        Xml::Element* elementClone =  new Element(this->mName, this->mNamespaceName);
         elementClone->mAttributes = AttributesMap(this->mAttributes);
         return elementClone;
     }

@@ -97,16 +97,21 @@ std::vector<Xml::Node *> Xsl::applyTemplate(const Xml::Element * context, Xml::D
     // Attention, ici on parcours des éléments XSL, et pas le document XML qu'on transforme
     for (Xml::Node* templateNode : xslTemplate->children())
     {
-        if (templateNode->isElement() && ((Xml::Element*) templateNode)->namespaceName() == "xsl")
+        if (!templateNode->isElement()) {
+            listNodes.push_back(templateNode->clone());
+            continue;
+        }
+
+        auto templateElement = static_cast<const Xml::Element*>(templateNode);
+        if (templateElement->namespaceName() == "xsl")
         {
-            const Xml::Element* xslElement = static_cast<const Xml::Element *>(templateNode);
+            const Xml::Element* xslElement = templateElement;
             auto instructionPair = xslInstructions.find(xslElement->name());
 
             if (instructionPair == xslInstructions.end()) {
                 // Le tag XSL comprends une instruction inconnue
                 // TODO : logger
                     std::cerr << "instruction inconnue ! " << xslElement->name() << std::endl;
-
                 continue;
             }
 
@@ -120,7 +125,13 @@ std::vector<Xml::Node *> Xsl::applyTemplate(const Xml::Element * context, Xml::D
         }
         else
         {
-            listNodes.push_back(templateNode->clone());
+            auto clonedElement = static_cast<Xml::Element*>(templateElement->clone());
+            std::cerr << clonedElement->name() << std::endl;
+            auto resultNodes = applyTemplate(static_cast<const Xml::Element*>(context), xslDoc, templateElement);
+            for (auto rNode : resultNodes) {
+                clonedElement->appendNode(rNode);
+            }
+            listNodes.push_back(clonedElement);
         }
     }
     return listNodes;
