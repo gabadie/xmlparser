@@ -193,6 +193,17 @@ namespace Xml
         select(std::string const & xPathQuery) const;
 
         /**
+         * Tells whether or not the element matches a given (XPath-like) pattern, typically
+         * the "matches" attribute of an XSL template.
+         *
+         * @param pattern an XPath-like pattern.
+         *
+         * @return True if the element matches the given pattern, False otherwise.
+         */
+        bool
+        matches(std::string const & pattern) const;
+
+        /**
          * Gets the value of the result of the XPath query
          *
          * @param xPathQuery XPath query
