@@ -11,7 +11,7 @@ namespace Xsd
     Type::Type(const Xml::Element * const xmlElement, const std::string & name)
     {
         mRegex = parseComplexType(xmlElement, "", false);
-        Checker::getInstance().addType(name, this);
+        Checker::getInstance()->addType(name, this);
     }
 
 
@@ -19,7 +19,7 @@ namespace Xsd
         mRegex(regex),
         mAttributes(attrs)
     {
-        Checker::getInstance().addType(name, this);
+        Checker::getInstance()->addType(name, this);
     }
 
     Type::~Type()
@@ -52,7 +52,7 @@ namespace Xsd
 
         for (auto iter = element.elements().begin(); iter != element.elements().end(); ++iter)
         {
-            Checker::getInstance().getElementType(*iter->name())->checkValidity(*iter);
+            Checker::getInstance()->getElementType(*iter->name())->checkValidity(*iter);
         }
     }
 
@@ -63,7 +63,7 @@ namespace Xsd
         std::string str = "";
         for (auto iter = childrenElt.begin(); iter != childrenElt.end(); ++iter)
         {
-            str += "<" + iter->name() + ">";
+            str += "<" + (*iter)->name() + ">";
         }
         return str;
     }

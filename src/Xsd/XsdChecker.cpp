@@ -58,7 +58,11 @@ namespace Xsd
         throw NotImplementedYet("TODO : gestion namespace !!!!!");
 
         //Building intermediary structure from xmlDoc
+<<<<<<< HEAD
         Xsd::Type::parseComplexType(xsdDoc->root(), "|", true);
+=======
+        Xsd::Type::parseComplexType(*(xsdDoc->root()), "|", true);
+>>>>>>> b9cd30de8a17a6af558461c2191d16c6bf29af58
 
         checkReferences();
 
@@ -117,7 +121,7 @@ namespace Xsd
             std::list<Attribute *> attributes = iterType->second->attributes();
             for (auto iterAttr = attributes.begin(); iterAttr != attributes.end(); ++iterAttr)
             {
-                checkExistType(iterAttr->name());
+                checkExistType(*iterAttr->name());
             }
         }
     }
@@ -136,7 +140,7 @@ namespace Xsd
     bool
     Checker::existType(const std::string & typeName)
     {
-        if(mTypes.find(typeName) == mTypes.end())
+        if(getInstance()->mTypes.find(typeName) == getInstance()->mTypes.end())
         {
             return false;
         }
@@ -153,7 +157,7 @@ namespace Xsd
         }
         catch(const XSDValidationException & e)
         {
-            std::cerr << e.what() << std:endl;
+            std::cerr << e.what() << std::endl;
             return false;
         }
     }
