@@ -54,7 +54,9 @@ namespace Xsd
 
         for (auto iter = element.elements().begin(); iter != element.elements().end(); ++iter)
         {
-            Checker::getInstance()->getElementType(*iter->name())->checkValidity(*iter);
+            Checker * checker = Checker::getInstance();
+            Type * typePt = checker-> getElementType((*iter)->name());
+            typePt->checkValidity(*(*iter));
         }
     }
 
