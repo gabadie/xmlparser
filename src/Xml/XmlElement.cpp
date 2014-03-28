@@ -354,7 +354,7 @@ namespace Xml
             if (this->name() != lastToken || !this->parent()->isElement()) {
                 return false;
             }
-            auto parent = (Xml::Element*) this->parent();
+            auto parent = static_cast<Xml::Element const *>(this->parent());
             auto parentPattern = pattern.substr(0, slashPos);
             return parent->matches(parentPattern);
         }
