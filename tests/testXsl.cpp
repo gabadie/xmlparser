@@ -35,6 +35,7 @@ testXslTransform()
             </xsl:template>
 
             <xsl:template match="/">
+                <xsl:value-of select="cd/title" />
                 <xsl:for-each select="cd/title">
                     hihi
                 </xsl:for-each>
