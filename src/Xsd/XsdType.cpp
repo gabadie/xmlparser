@@ -12,7 +12,7 @@ namespace Xsd
 
     Type::Type(const Xml::Element * const xmlElement, const std::string & name)
     {
-        mRegex = parseComplexType(*xmlElement, "", false, mAttributes);
+        mRegex = parseComplexType(xmlElement, "", false, mAttributes);
         Checker::getInstance()->addType(name, this);
     }
 
@@ -87,11 +87,13 @@ namespace Xsd
         {
             if((*ci)->name().compare(Checker::SEQUENCE_ELT) == 0)
             {
-                regex += getRegexFromOccurs(*ci, parseComplexType(ci, "", true, attributes)) + separator;
+                const Xml::Element * const xmlElement = *ci;
+                regex += getRegexFromOccurs(xmlElement, parseComplexType(ci, "", true, attributes)) + separator;
             }
             else if((*ci)->name().compare(Checker::CHOICE_ELT) == 0)
             {
-                regex += getRegexFromOccurs(*ci, parseComplexType(ci, "|", true, attributes)) + separator;
+                const Xml::Element * const xmlElement = *ci;
+                regex += getRegexFromOccurs(xmlElement, parseComplexType(ci, "|", true, attributes)) + separator;
             }
             else if((*ci)->name().compare(Checker::ELEMENT_ELT) == 0)
             {
@@ -206,7 +208,7 @@ namespace Xsd
             name = xmlElement->attribute(Checker::NAME_ATTR);
         }
 
-        regex = getRegexFromOccurs(*xmlElement, name);
+        regex = getRegexFromOccurs(xmlElement, name);
 
         if(!ref)
         {
@@ -251,10 +253,10 @@ namespace Xsd
     Type::getRegexFromOccurs(const Xml::Element * const xmlElement, const std::string & eltRegex)
     {
         std::string notFound = "", regex;
-        std::string name = xmlElement.attribute(Xsd::Checker::NAME_ATTR);
-        std::string ref = xmlElement.attribute(Xsd::Checker::REF_ATTR);
-        std::string minOccurs = xmlElement.attribute(Checker::MIN_OCC_ATTR);
-        std::string supOccurs = xmlElement.attribute(Checker::MAX_OCC_ATTR);
+        std::string name = xmlElement->attribute(Xsd::Checker::NAME_ATTR);
+        std::string ref = xmlElement->attribute(Xsd::Checker::REF_ATTR);
+        std::string minOccurs = xmlElement->attribute(Checker::MIN_OCC_ATTR);
+        std::string supOccurs = xmlElement->attribute(Checker::MAX_OCC_ATTR);
 
         // Min and max occurs attributes
         if(!(minOccurs.compare(notFound) == 0))
