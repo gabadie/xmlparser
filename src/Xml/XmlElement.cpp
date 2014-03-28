@@ -407,7 +407,7 @@ namespace Xml
         // If the element has no child, we close the tag and stop
         if(mChildren.size() == 0)
         {
-            stream << "/>\n";
+            stream << "/>";
             return;
         }
 
