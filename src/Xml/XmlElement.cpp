@@ -436,7 +436,7 @@ namespace Xml
         {
             auto results = this->select(xPathQuery);
             // Keep only the first result
-            return results.size() > 0 ? (*std::begin(results))->text() : "";
+            return results.size() > 0 ? (*std::begin(results))->fullText() : "";
         }
 
         return "";
