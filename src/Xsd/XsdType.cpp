@@ -1,7 +1,7 @@
 #include "XsdType.hpp"
 #include "XsdChecker.hpp"
 #include <sstream>
-#include <boost/algorithm>
+#include "../Utils.hpp"
 
 namespace Xsd
 {
@@ -105,11 +105,7 @@ namespace Xsd
             }
             else if((*ci)->name().compare(Checker::ATTRIBUTE_ELT) == 0)
             {
-<<<<<<< Updated upstream
                 mAttributes.push_back(Xsd::Attribute::parseAttribute(*ci));
-=======
-                Xsd::Attribute.parseAttribute(*ci);
->>>>>>> Stashed changes
             }
             else
             {
@@ -128,8 +124,9 @@ namespace Xsd
     bool
     Type::isSimpleType(const std::string & type)
     {
-        return (type.compare(Checker::getInstance()->getStringTypeValue()) == 0)
-            || (type.compare(Checker::getInstance()->getDateTypeValue()) == 0);
+        throw new NotImplementedException("Not implemented yet");
+        return (type.compare(Checker::getInstance()::STRING_TYPE) == 0)
+            || (type.compare(Checker::getInstance()::DATE_TYPE) == 0);
     }
 
     std::string
@@ -216,7 +213,8 @@ namespace Xsd
             if(!type.compare("") && Xsd::Type.isSimpleType(type))
             {
                 std::vector<std::string> tokens;
-                boost::algorithm::split(tokens, type, boost::algorithm::is_any_of(":"));
+                throw new NotImplementedException("Not implemented yet"); tokens = NULL; //todo remove
+                //tokens = Utils::split(type, ':'));
                 Checker::getInstance()->addTypedElement(name, tokens.back());
 
             }

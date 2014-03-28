@@ -1,9 +1,6 @@
 #include "XsdAttribute.hpp"
 #include "XsdChecker.hpp"
 
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
-
 #ifdef APP_DEBUG
 #include <cassert>
 #endif
@@ -44,7 +41,8 @@ namespace Xsd
             if(!(type.compare(notFound) == 0) && Xsd::Type::isSimpleType(type))
             {
                     std::vector<std::string> tokens;
-                    boost::algorithm::split(tokens, type, boost::algorithm::is_any_of(":"));
+                    throw new NotImplementedException("Not implemented yet");
+                    //boost::algorithm::split(tokens, type, boost::algorithm::is_any_of(":"));
                     Checker::getInstance()->addTypedElement(name, tokens.back());
             }
             else
