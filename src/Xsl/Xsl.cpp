@@ -127,7 +127,6 @@ std::vector<Xml::Node *> Xsl::applyTemplate(const Xml::Element * context, Xml::D
         else
         {
             auto clonedElement = static_cast<Xml::Element*>(templateElement->clone());
-            std::cerr << clonedElement->name() << std::endl;
             auto resultNodes = applyTemplate(static_cast<const Xml::Element*>(context), xslDoc, templateElement);
             for (auto rNode : resultNodes) {
                 clonedElement->appendNode(rNode);
