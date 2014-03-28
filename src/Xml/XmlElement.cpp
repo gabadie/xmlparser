@@ -388,6 +388,8 @@ namespace Xml
         {
             auto results = this->select(xPathQuery);
             // Keep only the first result
+            std::cerr <<  results.size() <<std::endl;
+
             return results.size() > 0 ? (*std::begin(results))->text() : "";
         }
 

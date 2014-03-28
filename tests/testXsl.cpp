@@ -11,6 +11,7 @@ testXslTransform()
     // xml
     std::string xmlContent (xml_code(
         <root>
+            rethdghg
             <cd>
                 <title>Title A</title>
             </cd>
@@ -28,7 +29,7 @@ testXslTransform()
 
     // xsl
     std::string xslContent (xml_code(
-        <xsl:stylesheet>
+        <xsl:stylesheet>    
             <xsl:template match="cd">
                 <xsl:value-of select="title" />
             </xsl:template>
