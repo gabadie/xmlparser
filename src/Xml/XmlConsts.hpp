@@ -7,7 +7,7 @@ namespace Xml
     /**
      * Defines the string concatenation separator
      */
-    char const CAT_SEPARATOR[] = "\n";
+    char const CAT_SEPARATOR[] = "";
 
 }
 

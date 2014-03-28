@@ -1,4 +1,5 @@
 #include "XmlText.hpp"
+#include "../AppDebug.hpp"
 #include "../Utils.hpp"
 
 namespace Xml
@@ -7,7 +8,7 @@ namespace Xml
         Node(),
         mText(content)
     {
-
+        app_assert(content != "");
     }
 
     Text::~Text()
