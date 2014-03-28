@@ -404,8 +404,16 @@ namespace Xml
             stream << " " << a.first << "=\"" << a.second << "\"";
         }
 
+        // If the element has no child, we close the tag and stop
+        if(mChildren.size() == 0)
+        {
+            stream << "/>\n";
+            return;
+        }
+
         stream << ">\n";
 
+        // else we display each child
         for(auto const & c : mChildren)
         {
             app_assert(c != nullptr);
