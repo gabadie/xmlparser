@@ -120,14 +120,17 @@ std::cout << doc << std::endl;
 
     Les requêtes XPath supportées sont les suivantes :
     \begin{itemize}
-        \item "" : Retourne une liste vide.
-        \item "/" : Retourne une liste contenant la racine du document si E fait partie d'un document, une liste vide sinon.
-        \item "." : Retourne une liste contenant E.
-        \item ".." : Retourne une liste contenant le parent de E si le parent est un élément, une liste vide sinon.
-        \item "bookstore" : Retourne liste des éléments enfants de E qui ont pour tag \textit{bookstore}.
-        \item "bookstore/book" : Retourne la liste des éléments qui sont des \textit{book} enfants de \textit{bookstore} enfants de E.
-        \item "/bookstore/book" : Retourne la liste des éléments qui sont des \textit{book} enfants de \textit{bookstore} qui sont enfants de la racine du document si E appartient à un document, une liste vide sinon.
+        \item \textit{""} : Retourne une liste vide.
+        \item \textit{"/"} : Retourne une liste contenant la racine du document si E fait partie d'un document, une liste vide sinon.
+        \item \textit{"."} : Retourne une liste contenant E.
+        \item \textit{".."} : Retourne une liste contenant le parent de E si le parent est un élément, une liste vide sinon.
+        \item \textit{"bookstore"} : Retourne liste des éléments enfants de E qui ont pour tag \textit{bookstore}.
+        \item \textit{"bookstore/book"} : Retourne la liste des éléments qui sont des \textit{book} enfants de \textit{bookstore} enfants de E.
+        \item \textit{"/bookstore/book"} : Retourne la liste des éléments qui sont des \textit{book} enfants de \textit{bookstore} qui sont enfants de la racine du document si E appartient à un document, une liste vide sinon.
+        \\
     \end{itemize}
+
+    Dans le cas où aucun élément ne match la requête, une liste vide est renvoyée.
 
     \subsubsection{Algorithme}
 
@@ -142,34 +145,58 @@ std::cout << doc << std::endl;
         \item Si XP ne possède pas de "/", XP est un tag simple et on cherche, parmi les éléments de E, les éléments qui ont pour tag XP et on les renvoie dans une liste.
         \item Si XP possède moins un "/" mais ne commence pas par un "/", il s'agit d'un chemin relatif par rapport à E. Dans ce cas, on extrait la chaîne partant du début de XP jusqu'au premier "/" et on récupère tous les enfants de E qui possède ce tag. Ensuite, on appelle récursivement \lstinline$Xml::Element::select$ sur chacun des éléments avec pour requête XPath la sous-chaîne de XP commençant juste après le premier "/" jusqu'à la fin de XP. On concatène ensuite toutes les listes récupérées via les appels à \lstinline$Xml::Element::select$, puis on renvoie la nouvelle liste générée.
         \item Si XP possède au moins un "/" et commence par "/", on appelle \lstinline$Xml::Element::select$ sur la racine du document contenant E avec pour requête XP privée de son premier "/". On se retrouve alors dans le cas précédent avec E étant la racine.
+        \\
     \end{itemize}
+
+    Dans le cas où aucun élément ne match la requête, une liste vide est renvoyée.
 
     \subsection{Xml::Element::valueOf}
 
     \textbf{\lstinline$std::string Xml::Element::valueOf(std::string const \& xPathQuery) const$}
 
-    Dans la suite de cette section, nous nous référerons à l'élément sur lequel nous appelons \lstinline$Xml::Element::select$ par "E".
+    Dans la suite de cette section, nous nous référerons à l'élément sur lequel nous appelons \lstinline$Xml::Element::valueOf$ par "E".
 
     \subsubsection{Description}
     Cette méthode permet de récupérer la valeur d'une requête XPath.
 
     Les requêtes XPath supportées sont les suivantes :
     \begin{itemize}
-        \item "" : Retourne une chaîne vide.
-        \item "/" : Retourne le texte (récursivement) de la racine ou une chaîne vide si E ne fait pas partie d'un document.
-        \item "bookstore" : Retourne le texte (récursivement) du premier élement enfant de E qui a pour tag \textit{bookstore}.
-        \item "bookstore/book" : Retourne le texte (récursivement) du premier élement des \textit{book} enfants de \textit{bookstore} enfants de E.
-        \item "/bookstore/book" : Retourne le texte (récursivement) du premier élement des \textit{book} enfants de \textit{bookstore} qui sont enfants de la racine du document si E appartient à un document.
-        \item "@attr" : Retourne la valeur de l'attribut \textit{attr} de E.
-        \item "/@attr" : Retourne la valeur de l'attribut \textit{attr} de la racine du document, une chaîne vide si E ne fait pas partie d'un document.
-        \item "bookstore/@attr" : Retourne la valeur de l'attribut \textit{attr} du premier élement enfant de E qui a pour tag \textit{bookstore}.
-        \item "bookstore/book/@attr" : Retourne la valeur de l'attribut \textit{attr} du premier élement des \textit{book} enfants de \textit{bookstore} enfants de E.
-        \item "/bookstore/book/@attr" : Retourne la valeur de l'attribut \textit{attr} du premier élement des \textit{book} enfants de \textit{bookstore} qui sont enfants de la racine du document si E appartient à un document.
+        \item \textit{""} : Retourne une chaîne vide.
+        \item \textit{"/"} : Retourne le texte contenu récursivement de la racine.
+        \item \textit{"bookstore"} : Retourne le texte contenu récursivement du premier élement enfant de E qui a pour tag \textit{bookstore}.
+        \item \textit{"bookstore/book"} : Retourne le texte contenu récursivement du premier élement des \textit{book} enfants de \textit{bookstore} enfants de E.
+        \item \textit{"/bookstore/book"} : Retourne le texte contenu récursivement du premier élement des \textit{book} enfants de \textit{bookstore} qui sont enfants de la racine du document.
+        \item \textit{"@attr"} : Retourne la valeur de l'attribut \textit{attr} de E.
+        \item \textit{"/@attr"} : Retourne la valeur de l'attribut \textit{attr} de la racine du document ou une chaîne vide.
+        \item \textit{"bookstore/@attr"} : Retourne la valeur de l'attribut \textit{attr} du premier élement enfant de E qui a pour tag \textit{bookstore}.
+        \item \textit{"bookstore/book/@attr"} : Retourne la valeur de l'attribut \textit{attr} du premier élement des \textit{book} enfants de \textit{bookstore} enfants de E.
+        \item \textit{"/bookstore/book/@attr"} : Retourne la valeur de l'attribut \textit{attr} du premier élement des \textit{book} enfants de \textit{bookstore} qui sont enfants de la racine du document.
+        \\
     \end{itemize}
+
+    Dans le cas où un attribut ou un élément n'existe pas, une chaîne vide est renvoyée.
 
     \subsubsection{Algorithme}
 
-    /* TODO */
+    Pour la suite, nous nous référerons à la requête XPath par "XP".
+
+    Le fonctionnement de l'algorithme \lstinline$Xml::Element::valueOf$ est le suivant :
+
+    On regarde si XP est de la forme "", "/", "tag", "tag1/tag2" ou "/tag1/tag2".
+    Dans ces cas là, on effectue un \lstinline$Xml::Element::select$ avec XP comme requête.
+    On récupère ensuite tout le texte contenu récursivement dans le premier élément du résultat de la requête.
+
+    Dans les autres cas, on cherche à récupérer la valeur d'un attribut. Notre approche est la suivante :
+    \begin{itemize}
+        \item Si XP est de la forme "@attr", on retourne la valeur de l'attribut \textit{attr} de E.
+        \item Si XP est de la forme "/@attr", on retourne la valeur de l'attribut \textit{attr} de la racine du document.
+        \item Dans les 3 cas restants ("tag/@attr", "tag1/tag2/@attr" et "/tag1/tag2/@attr"), on effectue un \lstinline$Xml::Element::select$ avec XP privé de "/@attr" comme requête.
+        On récupère ensuite tout le texte contenu récursivement dans le premier élément du résultat de la requête.
+        \\
+    \end{itemize}
+
+    Dans le cas où un attribut ou un élément n'existe pas, une chaîne vide est renvoyée.
+
 
     \subsection{Xml::Element::matches}
 
