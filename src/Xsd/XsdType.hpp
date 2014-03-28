@@ -25,7 +25,7 @@ namespace Xsd
         ~Type();
 
         static std::string
-        parseComplexType(const Xml::Element * const xmlElement, std::string separator, bool eltSeqChoice);
+        parseComplexType(const Xml::Element * const xmlElement, std::string separator, bool eltSeqChoice, std::list<Attribute *> & attributes);
 
         static std::string
         parseElement(const Xml::Element * const xmlElement);

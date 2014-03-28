@@ -12,7 +12,7 @@ namespace Xsd
 
     Type::Type(const Xml::Element * const xmlElement, const std::string & name)
     {
-        mRegex = parseComplexType(xmlElement, "", false, mAttributes);
+        mRegex = parseComplexType(*xmlElement, "", false, mAttributes);
         Checker::getInstance()->addType(name, this);
     }
 
@@ -259,7 +259,7 @@ namespace Xsd
         // Min and max occurs attributes
         if(!(minOccurs.compare(notFound) == 0))
         {
-            minOccurs = getOccursFromElement(xmlElement, Checker::MIN_OCC_ATTR, minOccurs);
+            minOccurs = getOccursFromElement(*xmlElement, Checker::MIN_OCC_ATTR, minOccurs);
         }
         else
         {
@@ -268,7 +268,7 @@ namespace Xsd
 
         if(!(supOccurs.compare(notFound) == 0))
         {
-            supOccurs = getOccursFromElement(xmlElement, Checker::MAX_OCC_ATTR, supOccurs);
+            supOccurs = getOccursFromElement(*xmlElement, Checker::MAX_OCC_ATTR, supOccurs);
         }
         else
         {
