@@ -35,19 +35,19 @@ const Xml::Element* Xsl::getTemplate(Xml::Document& xslDoc, const Xml::Element* 
 Xml::Document * Xsl::xslTransform( Xml::Document& xmlDoc,  Xml::Document& xslDoc)
 {
     Xml::Document * result = new Xml::Document();
-    std::cerr << "coucou" << endl;
 
     Xml::Node * root = Xsl::applyDefaultTemplate(xmlDoc.root(), xslDoc, xmlDoc);
 
     try
     {
-        result->setRoot((Xml::Element *) root);
+        result->setRoot(static_cast<Xml::Element*>(root));
     }
     catch(...)
     {
         throw ; //TODO ici logger tout ça ?
     }
 
+    return result;
 }
 
 Xml::Node * Xsl::applyDefaultTemplate( const Xml::Node * context,  Xml::Document& xslDoc, Xml::Document& xmlDoc)
@@ -55,20 +55,19 @@ Xml::Node * Xsl::applyDefaultTemplate( const Xml::Node * context,  Xml::Document
 
     if (!context->isElement())
     {
-
         return context->clone();
     }
 
     else
     {
-        Xml::Element * resultElementNode = new Xml::Element(((Xml::Element *)context)->name());
+        Xml::Element * resultElementNode = (Xml::Element*) context->clone();
 
-        const Xml::Element * contextTemplate = getTemplate(xslDoc, (const Xml::Element *)context);
+        const Xml::Element * contextTemplate = getTemplate(xslDoc, resultElementNode);
 
         // if the context has a template, possible the first time we come in this method
-        if (contextTemplate)
+        if (contextTemplate != nullptr)
         {
-            for (Xml::Node* node : applyTemplate(context,xslDoc, contextTemplate, xmlDoc))
+            for (Xml::Node* node : applyTemplate(resultElementNode, xslDoc, contextTemplate, xmlDoc))
             {
                 resultElementNode->appendNode(node);
             }
@@ -79,29 +78,11 @@ Xml::Node * Xsl::applyDefaultTemplate( const Xml::Node * context,  Xml::Document
             // We generate its children
             for (auto child : ((Xml::Element*)context)->children())
             {
-                Xml::Node* resultChild;
-
-                //duplicate the test with the one present in Xsl::applydefaulttemplate
-                const Xml::Element * xslTemplate = Xsl::getTemplate(xslDoc, (const Xml::Element *)child);
-                if (xslTemplate == 0)
-                {
-                    resultChild = Xsl::applyDefaultTemplate((const Xml::Node *)child, xslDoc, xmlDoc);
-                    resultElementNode->appendNode(resultChild);
-                }
-                else
-                {
-                    //we concatain all the results of the template to one Node.
-                    vector<Xml::Node*> generatedChildren ;
-                    generatedChildren = Xsl::applyTemplate(child, xslDoc, xslTemplate, xmlDoc);
-                    for ( auto generatedChild : generatedChildren)
-                    {
-                        resultElementNode->appendNode(generatedChild);
-                    }
-                }
+                resultElementNode->appendNode(applyDefaultTemplate(child, xslDoc, xmlDoc));
             }
         }
 
-        return resultElementNode; //applyTemplate(context, xslDoc, xslTempla)
+        return resultElementNode;
     }
 }
 
