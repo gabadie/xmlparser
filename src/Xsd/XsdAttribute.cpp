@@ -41,7 +41,7 @@ namespace Xsd
             if(!(type.compare(notFound) == 0) && Xsd::Type::isSimpleType(type))
             {
                     std::vector<std::string> tokens;
-                    throw new NotImplementedException("Not implemented yet");
+                    //throw new NotImplementedException("Not implemented yet");
                     //boost::algorithm::split(tokens, type, boost::algorithm::is_any_of(":"));
                     Checker::getInstance()->addTypedElement(name, tokens.back());
             }
