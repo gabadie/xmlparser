@@ -26,14 +26,14 @@ namespace Xsd
     }
 
     Attribute *
-    Attribute::parseAttribute(const Xml::Element & xmlElement)
+    Attribute::parseAttribute(const Xml::Element * const xmlElement)
     {
         bool required = false, isRef = false;
         std::string notFound = "";
-        std::string name = xmlElement.attribute(Checker::NAME_ATTR);
-        std::string ref = xmlElement.attribute(Checker::REF_ATTR);
-        std::string type = xmlElement.attribute(Checker::TYPE_ATTR);
-        std::string use = xmlElement.attribute(Checker::USE_ATTR);
+        std::string name = xmlElement->attribute(Checker::NAME_ATTR);
+        std::string ref = xmlElement->attribute(Checker::REF_ATTR);
+        std::string type = xmlElement->attribute(Checker::TYPE_ATTR);
+        std::string use = xmlElement->attribute(Checker::USE_ATTR);
 
         if(!(name.compare(notFound) == 0))
         {

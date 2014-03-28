@@ -12,7 +12,7 @@ namespace Xsd
 
     Type::Type(const Xml::Element * const xmlElement, const std::string & name)
     {
-        mRegex = parseComplexType(xmlElement, "", false, mAttributes);
+        mRegex = parseComplexType(*xmlElement, "", false, mAttributes, true);
         Checker::getInstance()->addType(name, this);
     }
 
@@ -73,7 +73,7 @@ namespace Xsd
 
     //Should work, still have to check the algorithm for choice or sequence inside choice or sequence
     std::string
-    Type::parseComplexType(const Xml::Element * const xmlElement, std::string separator, bool eltSeqChoice, std::list<Attribute *> & attributes)
+    Type::parseComplexType(const Xml::Element * const xmlElement, const std::string & separator, bool eltSeqChoice, std::list<Attribute *> & attributes, bool acceptAttributes)
     {
         bool eltParsed = false;
         std::string regex = "(";
@@ -87,13 +87,11 @@ namespace Xsd
         {
             if((*ci)->name().compare(Checker::SEQUENCE_ELT) == 0)
             {
-                const Xml::Element * const xmlElement = *ci;
-                regex += getRegexFromOccurs(xmlElement, parseComplexType(ci, "", true, attributes)) + separator;
+                regex += getRegexFromOccurs(*ci, parseComplexType(ci, Checker::AND_SEPARATOR, true, attributes, false)) + separator;
             }
             else if((*ci)->name().compare(Checker::CHOICE_ELT) == 0)
             {
-                const Xml::Element * const xmlElement = *ci;
-                regex += getRegexFromOccurs(xmlElement, parseComplexType(ci, "|", true, attributes)) + separator;
+                regex += getRegexFromOccurs(*ci, parseComplexType(ci, Checker::OR_SEPARATOR, true, attributes, false)) + separator;
             }
             else if((*ci)->name().compare(Checker::ELEMENT_ELT) == 0)
             {
@@ -104,12 +102,16 @@ namespace Xsd
                 }
                 else
                 {
-                    Checker::throwInvalidElementException(Checker::ELEMENT_ELT, getNameOrRef(*ci));
+                    Checker::throwInvalidElementException(Checker::ELEMENT_ELT, getNameOrRef(ci));
                 }
             }
-            else if((*ci)->name().compare(Checker::ATTRIBUTE_ELT) == 0)
+            else if(ci->name().compare(Checker::ATTRIBUTE_ELT) == 0)
             {
-                attributes.push_back(Xsd::Attribute::parseAttribute(*ci));
+                if(!acceptAttributes)
+                {
+                    Checker::throwInvalidElementException(Checker::ELEMENT_ELT, getNameOrRef(ci));
+                }
+                attributes.push_back(Xsd::Attribute::parseAttribute(ci));
             }
             else
             {
@@ -208,7 +210,7 @@ namespace Xsd
             name = xmlElement->attribute(Checker::NAME_ATTR);
         }
 
-        regex = getRegexFromOccurs(xmlElement, name);
+        regex = getRegexFromOccurs(*xmlElement, name);
 
         if(!ref)
         {

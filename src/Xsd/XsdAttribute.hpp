@@ -20,7 +20,7 @@ namespace Xsd
             Attribute(const std::string & name, bool required, const std::string & typeName, bool ref);
 
             static Attribute *
-            parseAttribute(const Xml::Element & xmlElement);
+            parseAttribute(const Xml::Element * const xmlElement);
 
             /**
              * Destructor
