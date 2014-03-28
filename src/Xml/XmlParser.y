@@ -111,6 +111,7 @@ document:
         *e = doc;
     };
 
+
 element:
     emptytag
     {
@@ -147,22 +148,53 @@ element:
         if ($1->tag() != *$3)
         {
             Xml::parserSemanticError("unexpected </" + *$3 + "> (it should have been </" + $1->name() + ">)");
-
-            delete $$;
-            $$ = nullptr;
         }
 
         /*
          * $3 has been created in content, then we delete it.
          */
         delete $3;
+    } |
+    stag content error
+    {
+        /* ---------------------------------------------------- element with children */
+
+        /*
+         * Xml::Element is allocated in stag.
+         */
+        $$ = $1;
+
+        for(Xml::Node * node : *$2)
+        {
+            if (node == nullptr)
+            {
+                continue;
+            }
+
+            $1->appendNode(node);
+        }
+
+        /*
+         * std::list<Xml::Node *> has been created in content, then we delete it.
+         */
+        delete $2;
+
+        Xml::parserSyntaxError("missing closing element </" + $1->name() + ">");
+        yyerrok;
     };
 
 miscitem:
     COMMENT
     {
         /* ---------------------------------------------------- comment node */
-        $$ = static_cast<Xml::Node *>(new Xml::Comment(std::string($1)));
+        if ($1[0] == 0)
+        {
+            $$ = nullptr;
+        }
+        else
+        {
+            $$ = static_cast<Xml::Node *>(new Xml::Comment(std::string($1)));
+        }
 
         /*
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
@@ -375,7 +407,14 @@ item:
     DONNEES
     {
         /* ---------------------------------------------------- text in an element */
-        $$ = static_cast<Xml::Node *>(new Xml::Text(std::string($1)));
+        if ($1[0] == 0)
+        {
+            $$ = nullptr;
+        }
+        else
+        {
+            $$ = static_cast<Xml::Node *>(new Xml::Text(std::string($1)));
+        }
 
         /*
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.

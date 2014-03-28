@@ -26,6 +26,11 @@ namespace Xml
     void
     Object::appendComment(std::string const & comment)
     {
+        if (comment == "")
+        {
+            return;
+        }
+
         this->appendNode(new Comment(comment));
     }
 

@@ -153,7 +153,10 @@ namespace Xml
 
             c->exportToStream(stream, level, indent);
 
-            stream << (i == mChildren.size() - 1 ? "" : "\n");
+            if (i != (mChildren.size() - 1))
+            {
+                stream << "\n";
+            }
         }
     }
 
