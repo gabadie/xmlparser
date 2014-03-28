@@ -270,13 +270,13 @@ namespace Xsd
         if((minOccurs.compare(UNBOUNDED_EXP_REG) == 0) && !(supOccurs.compare(UNBOUNDED_EXP_REG) == 0)
             || (!(supOccurs.compare(UNBOUNDED_EXP_REG) ==0) && std::stoi(supOccurs) < std::stoi(minOccurs)))
         {
-            throw new XSDConstructionException("Error: " Checker::MIN_OCC_ATTR + " attribute value is higher than " + Checker::MAX_OCC_ATTR + " value");
+            throw new XSDConstructionException("Error: " + Checker::MIN_OCC_ATTR + " attribute value is higher than " + Checker::MAX_OCC_ATTR + " value");
         }
         if((minOccurs.compare(UNBOUNDED_EXP_REG) == 0) && (supOccurs.compare(UNBOUNDED_EXP_REG) == 0))
         {
-            stringstream out;
-            std::out << (std::stoi(supOccurs) - std::stoi(minOccurs);
-            supOccurs = std::out.str();
+            std::stringstream out;
+            out << (std::stoi(supOccurs) - std::stoi(minOccurs));
+            supOccurs = out.str();
         }
 
         // Name and ref attributes
