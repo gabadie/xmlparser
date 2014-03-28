@@ -35,6 +35,7 @@ namespace Xsd
         static const std::string NAME_ATTR;
         static const std::string TYPE_ATTR;
         static const std::string REF_ATTR;
+        static const std::string USE_ATTR;
         static const std::string MIXED_ATTR;
         static const std::string MIN_OCC_ATTR;
         static const std::string MAX_OCC_ATTR;

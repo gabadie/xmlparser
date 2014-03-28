@@ -237,11 +237,12 @@ namespace Xsd
     Type * const
     Checker::getAttributeType(const std::string & attributeName)
     {
-        std::string typeName = *(mAttributesTypes.find(attributeName)).second;
-        if(typeName == mAttributesTypes.end())
+        auto iterType = mAttributesTypes.find(attributeName);
+        if(iterType == mAttributesTypes.end())
         {
             return NULL;
         }
+        std::string typeName = iterType->second;
         return getType(typeName);
     }
 

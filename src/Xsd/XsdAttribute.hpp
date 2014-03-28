@@ -33,6 +33,9 @@ namespace Xsd
 
             void
             init(const std::string & name, bool required, const std::string & typeName, bool ref);
+
+            void
+            checkValidity(const std::string & value);
     };
 }
 
