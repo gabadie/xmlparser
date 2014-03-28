@@ -59,12 +59,12 @@ Xml::Node * Xsl::applyDefaultTemplate( const Xml::Node * context,  Xml::Document
     else
     {
         const Xml::Element * contextTemplate = getTemplate(xslDoc, static_cast<const Xml::Element*>(context));
-        Xml::Element * resultElementNode = (Xml::Element*) context->clone();
+        Xml::Element * resultElementNode = dynamic_cast<Xml::Element*>(context->clone());
 
         // if the context has a template, possible the first time we come in this method
         if (contextTemplate != nullptr)
         {
-            for (Xml::Node* node : applyTemplate(resultElementNode, xslDoc, contextTemplate))
+            for (Xml::Node* node : applyTemplate(dynamic_cast<const Xml::Element*>(context), xslDoc, contextTemplate))
             {
                 resultElementNode->appendNode(node);
             }
@@ -73,7 +73,7 @@ Xml::Node * Xsl::applyDefaultTemplate( const Xml::Node * context,  Xml::Document
         else
         {
             // We generate its children
-            for (auto child : ((Xml::Element*)context)->children())
+            for (auto child : (dynamic_cast<const Xml::Element*>(context))->children())
             {
                 resultElementNode->appendNode(applyDefaultTemplate(child, xslDoc));
             }
