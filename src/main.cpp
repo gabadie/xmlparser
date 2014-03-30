@@ -68,12 +68,12 @@ appVerify(std::string const & xmlPath, std::string const & xsdPath)
     // Building XSD Checker
     if(!Xsd::Checker::parseXsd(xsdDoc))
     {
-        return;
+        return PARSE_ERROR;
     }
     Xsd::Checker * checker = Xsd::Checker::getInstance();
 
     // Validation process
-    if(checker.isValid(xmlDoc))
+    if(checker->isValid(xmlDoc))
     {
         std::cout << xmlPath << " is valid according to the " << xsdPath << " schema" << std::endl;
     }
