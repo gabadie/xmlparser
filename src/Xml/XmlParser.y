@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "XmlParser.hpp"
+#include "XmlCharacterData.hpp"
 #include "XmlText.hpp"
 #include "XmlComment.hpp"
 #include "XmlProcessingInstruction.hpp"
@@ -420,6 +421,28 @@ item:
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
          */
         free($1);
+    } |
+    CDATABEGIN CDATAEND
+    {
+        /* ---------------------------------------------------- CDATA node */
+        if ($2[0] == 0)
+        {
+            $$ = nullptr;
+        }
+        else
+        {
+            $$ = static_cast<Xml::Node *>(new Xml::CharacterData(std::string($2)));
+        }
+
+        /*
+         * $2 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
+        free($2);
+    } |
+    CDATABEGIN error
+    {
+        /* ---------------------------------------------------- CDATA error */
+        $$ = nullptr;
     } |
     miscitem
     {

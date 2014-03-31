@@ -71,6 +71,7 @@ namespace Xml
         contentText() const;
 
 
+        friend class Xml::CharacterData;
         friend class Xml::Document;
         friend class Xml::DocumentNode;
         friend class Xml::Element;
