@@ -77,8 +77,8 @@ chaine      \"([^"&]|{esc})*\"|\'([^'&]|{esc})*\'
 doctype     {esp}?"<!DOCTYPE"{esp}
 infspecial {esp}?"<?"
 supspecial "?>"{nl}?
-cdata      "<![CDATA["
-endcdata   "]]>"
+cdata      {inf}"![CDATA["
+endcdata   "]]"{sup}
 
 /*
  * Le mode CONTENU est utilisé entre les balises ouvrantes et fermantes

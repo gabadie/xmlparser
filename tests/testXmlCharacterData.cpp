@@ -32,9 +32,9 @@ testXmlCharacterDataNode()
 void
 testXmlCharacterDataParsing()
 {
-    // TODO: <root> <![CDATA[hello <world>]]> fails to parse
     std::string content (xml_code(
-        <root><![CDATA[hello <world>]]>
+        <root>
+            <![CDATA[hello <world>]]>
         </root>
     ));
 
