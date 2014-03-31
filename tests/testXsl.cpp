@@ -169,6 +169,8 @@ testValueOf()
 
     std::cerr << std::endl << *result << std::endl;
 
+    test_assert(result->root()->children()[0]->contentText() == "ABC");
+
     delete xmlDoc;
     delete xslDoc;
     delete result;
