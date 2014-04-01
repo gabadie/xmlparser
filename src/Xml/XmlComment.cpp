@@ -16,6 +16,12 @@ namespace Xml
 
     }
 
+    ObjectLabel
+    Comment::objectLabel() const
+    {
+        return ObjectLabel::Comment;
+    }
+
     Node *
     Comment::clone()
     {

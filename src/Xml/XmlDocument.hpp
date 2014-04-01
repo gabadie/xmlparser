@@ -34,6 +34,12 @@ namespace Xml
         ~Document() override;
 
         /**
+         * Override of Xml::Object::objectLabel()
+         */
+        ObjectLabel
+        objectLabel() const override;
+
+        /**
          * Gets the itself document (const version)
          *
          * @return The document
@@ -130,6 +136,14 @@ namespace Xml
          */
         bool
         hasChild(Node const * node) const override;
+
+        /**
+         * Tests if can append this node to the document
+         *
+         * @return True if you can append the node
+         */
+        static bool
+        canAppend(Node const * node);
 
     private:
         Element * mRoot;     ///< Root of the XML document

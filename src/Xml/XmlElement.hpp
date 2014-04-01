@@ -38,6 +38,12 @@ namespace Xml
         ~Element();
 
         /**
+         * Override of Xml::Object::objectLabel()
+         */
+        ObjectLabel
+        objectLabel() const override;
+
+        /**
          * Override of clone abstract method
          */
         Node *
@@ -253,15 +259,6 @@ namespace Xml
             std::string const & indent) const override;
 
         /**
-         * Tells whether or not the node is an Element
-         *
-         * @return True if the node is an Element, false otherwise.
-         */
-        virtual
-        bool
-        isElement() const override;
-
-        /**
          * Appends a node
          *
          * @param node Node to append
@@ -279,6 +276,14 @@ namespace Xml
          */
         bool
         hasChild(Node const * node) const override;
+
+        /**
+         * Tests if can append this node to the document
+         *
+         * @return True if you can append the node
+         */
+        static bool
+        canAppend(Node const * node);
 
     protected:
         std::string mName;         ///< Name of the element

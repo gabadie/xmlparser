@@ -40,6 +40,12 @@ namespace Xml
         }
     }
 
+    ObjectLabel
+    Element::objectLabel() const
+    {
+        return ObjectLabel::Element;
+    }
+
     Node *
     Element::clone()
     {
@@ -512,17 +518,12 @@ namespace Xml
         stream << Utils::repeat(indent, level) << "</" << (mNamespaceName.size() > 0 ? mNamespaceName + ":" : "") << mName << ">";
     }
 
-    bool
-    Element::isElement() const
-    {
-        return true;
-    }
-
     void
     Element::appendNode(Node * node)
     {
         app_assert(node != nullptr);
         app_assert(node != this);
+        app_assert(canAppend(node));
 
         node->detach();
 
@@ -554,5 +555,20 @@ namespace Xml
 
         return false;
     }
+
+    bool
+    Element::canAppend(Node const * node)
+    {
+        app_assert(node != nullptr);
+
+        auto objectLabel = node->objectLabel();
+
+        return objectLabel == ObjectLabel::CharacterData ||
+            objectLabel == ObjectLabel::Comment ||
+            objectLabel == ObjectLabel::Element ||
+            objectLabel == ObjectLabel::ProcessingInstruction ||
+            objectLabel == ObjectLabel::Text;
+    }
+
 }
 
