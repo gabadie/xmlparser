@@ -275,6 +275,38 @@ namespace Xml
         return (it != std::end(mAttributes)) ? it->second : notFound;
     }
 
+    Element::AttributesMap
+    Element::namespaceAttributes(std::string const & name) const
+    {
+        Element::AttributesMap map;
+
+        if (name == "")
+        {
+            for (auto const & i : mAttributes)
+            {
+                if (i.first.find(":") == std::string::npos)
+                {
+                    map.insert(i);
+                }
+            }
+
+            return map;
+        }
+
+        std::string prefix = name + ":";
+
+        for (auto const & i : mAttributes)
+        {
+            if (i.first.substr(0, prefix.size()) == prefix)
+            {
+                std::string name = i.first.substr(prefix.size(), std::string::npos);
+                map.insert({name, i.second});
+            }
+        }
+
+        return map;
+    }
+
     void
     Element::setAttribute(std::string const & name, std::string const & value)
     {
