@@ -1,4 +1,4 @@
- #ifndef _H_XSL_XSL
+#ifndef _H_XSL_XSL
 #define _H_XSL_XSL
 
 #include <vector>
@@ -21,25 +21,6 @@ namespace Xsl
     {
     public:
         virtual std::vector <Xml::Node*>  operator () (Xml::Element const * context, const Xml::Document& xslDoc,  Xml::Element const * forEachElement) const = 0;
-    };
-
-
-    class ValueOf : public Instruction
-    {
-    public:
-        virtual std::vector <Xml::Node*>  operator () (Xml::Element const * context,  const Xml::Document& xslDoc,  Xml::Element const * xslElement) const;
-    };
-
-    class ForEach: public Instruction
-    {
-    public:
-        virtual std::vector <Xml::Node*>  operator () (Xml::Element const * context, const Xml::Document& xslDoc,  Xml::Element const * forEachElement) const;
-    };
-
-    class ApplyTemplate: public Instruction
-    {
-    public:
-        virtual std::vector <Xml::Node*>  operator () (Xml::Element const * context, Xml::Document const & xslDoc, Xml::Element const * applyTemplateElement) const;
     };
 
     Xml::Document *
