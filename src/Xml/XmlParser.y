@@ -359,6 +359,19 @@ atts:
         free($2);
         free($4);
     } |
+    atts NOM COLON NOM EGAL VALEUR
+    {
+        /* ---------------------------------------------------- element's attributes with namespace */
+        std::string attrName = std::string($2) + ":" + std::string($4);
+        $1->insert({attrName, std::string($6)});
+
+        /*
+         * $2, $4 and $6 is char * allocated in XmlParser.lex with malloc(), then we free them.
+         */
+        free($2);
+        free($4);
+        free($6);
+    } |
     /* empty */
     {
         $$ = new Xml::Element::AttributesMap();
