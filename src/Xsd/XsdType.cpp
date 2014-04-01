@@ -42,17 +42,36 @@ namespace Xsd
     void
     Type::checkValidity(const Xml::Element * const element)
     {
-        //TODO: add function attributes() which returns the mAttributes map in Xml::Element
-        for (auto iterAttr = element->attributesValue().begin(); iterAttr != element->attributesValue().end(); ++iterAttr)
+        std::map<std::string, std::string> attributeMapElement = element->attributes();
+
+        for (auto iterAttr = mAttributes.begin(); iterAttr != mAttributes.end(); ++iterAttr)
         {
-            //pour chaque attibut d'un element
-            //  obtenir l'attribut xsd avec une map depuis le type (map attribut de type)
-            //  xsdAttribute->checkValidity(iterAttr->second)
-            // mAttributes.find(iterAttr->first)
-            // iterAttr->checkValidity(iterAttr->second);
+            auto iterMap = attributeMapElement.find((*iterAttr)->name());
+            if ((iterMap == attributeMapElement.end()))
+            {
+                if ((*iterAttr)->isRequired())
+                {
+                    throw new XSDValidationException("Error : attribute " + (*iterAttr)->name() + "  in element " + element->name() + " is missing");
+                }
+            }
+            else
+            {
+                if(!isValid(iterMap->second))
+                {
+                    throw new XSDValidationException("Error : invalid element " + element->name());
+                }
+            }
         }
 
-        if(!RE2::FullMatch(childrenToString(element->elements()), mRegex))
+
+// parcours la liste des attrivbut du type
+            // get du nom dans la map des attribut de l'element
+            // si absent et required -> explose xsdCValidationException
+            // checkvalidity avec la valeur de l'attribut, si faux on explose
+
+
+
+        if(!isValid(childrenToString(element->elements())))
         {
             throw new XSDValidationException("Error: Invalid element: " + element->name());
         }
@@ -193,7 +212,6 @@ namespace Xsd
     }
 
     /**
-     * Returns the regex of an element, adds its type and type relation to the maps if it's not a ref
      * The regex does not contain the validation for the element children, it's only about the element name or ref itself
      */
     std::string

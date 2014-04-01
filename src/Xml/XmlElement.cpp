@@ -313,18 +313,6 @@ namespace Xml
         return map;
     }
 
-
- std::list<std::pair<std::string const, std::string const>>
-    Element::attributesValue() const
-    {
-        std::list<std::pair<std::string const, std::string const>> listPair;
-        for(auto it = mAttributes.begin(); it != mAttributes.end(); ++it)
-        {
-            listPair.push_back(std::make_pair(it->first, it->second));
-        }
-        return listPair;
-    }
-
     void
     Element::setAttribute(std::string const & name, std::string const & value)
     {
