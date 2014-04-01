@@ -4,13 +4,14 @@
 
 #include <stdio.h>
 
-#include "XmlParser.hpp"
 #include "XmlCharacterData.hpp"
-#include "XmlText.hpp"
 #include "XmlComment.hpp"
-#include "XmlProcessingInstruction.hpp"
+#include "XmlDoctype.hpp"
+#include "XmlParser.hpp"
 #include "XmlParserError.hpp"
 #include "XmlParserInput.hpp"
+#include "XmlProcessingInstruction.hpp"
+#include "XmlText.hpp"
 
 int yylex(void);
 
@@ -48,10 +49,12 @@ void yyerror(void ** e, const char * msg);
 %type <e> stag
 %type <nodeList> content
 %type <nodeList> misc
+%type <node> doctype
 %type <node> item
 %type <node> miscitem
 %type <node> processinstr
 %type <str> etag
+%type <str> doctype_decl
 
 
 %%
@@ -205,6 +208,11 @@ miscitem:
     processinstr
     {
         /* ------------------------------------------ processing instruction */
+        $$ = $1;
+    } |
+    doctype
+    {
+        /* ------------------------------------------ doctype */
         $$ = $1;
     };
 
@@ -381,7 +389,8 @@ atts:
 
     /* Shift/reduce warning caused by the rules "atts NOM EGAL" et "atts VALEUR"
      This conflict is safe because Bison is greedy and will match "atts NOM EGAL VALEUR" first
-     instead of "atts NOM EGAL" and "atts VALEUR" */
+     instead of "atts NOM EGAL" and "atts VALEUR"
+     A test in testXmlElementParsing checks this assertion. */
     atts NOM EGAL
     {
         Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + "\"" + std::string($2) + "=\"");
@@ -461,7 +470,53 @@ item:
     {
         /* ---------------------------------------------------- misc element */
         $$ = $1;
-    }
+    };
+
+doctype:
+    /* ---------------------------------------------------- doctype node */
+    DOCTYPE NOM SUP
+    {
+        $$ = static_cast<Xml::Node *>(new Xml::Doctype(std::string($2)));
+        free($2);
+    } |
+    DOCTYPE NOM doctype_decl SUP
+    {
+        if($3 != nullptr)
+        {
+            $$ = static_cast<Xml::Node *>(new Xml::Doctype(std::string($2) + " " + std::string(*$3)));
+            delete $3;
+        }
+        else
+        {
+            $$ = nullptr;
+        }
+        free($2);
+    } |
+    DOCTYPE error
+    {
+        $$ = nullptr;
+        Xml::parserSemanticError("Wrong doctype declaration");
+    };
+
+doctype_decl:
+    NOM VALEUR
+    {
+        $$ = new std::string(std::string($1) + " " + std::string($2));
+        free($1);
+        free($2);
+    } |
+    NOM VALEUR VALEUR
+    {
+        $$ = new std::string(std::string($1) + " " + std::string($2) + " " + std::string($3));
+        free($1);
+        free($2);
+        free($3);
+    } |
+    error
+    {
+        $$ = nullptr;
+        Xml::parserSemanticError("Wrong doctype declaration");
+    };
 
 content:
     content item
@@ -475,8 +530,6 @@ content:
         /* ---------------------------------------------------- element's content end */
         $$ = new std::list<Xml::Node *>();
     };
-
-
 
 %%
 /* ----------------------------------------------------------------------------- C/C++ suffix */

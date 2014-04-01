@@ -9,6 +9,7 @@ namespace Xml
      */
     class CharacterData;
     class Comment;
+    class Doctype;
     class Document;
     class DocumentNode;
     class Element;
