@@ -48,9 +48,13 @@ namespace Xsd
         new Type(DATE_TYPE, dateRegex, std::list<Attribute *>());
         new Type(STRING_TYPE, stringRegex, std::list<Attribute *>());
 
-        if(!(xsdDoc->root()->attribute(NAME_ATTR).compare(SCHEMA_ELT) == 0))
+        if(!(xsdDoc->root()->name().compare(SCHEMA_ELT) == 0))
         {
             throwInvalidElementException(xsdDoc->root()->attribute(NAME_ATTR), SCHEMA_ELT);
+        }
+        else
+        {
+
         }
 
         //TODO: remove ?
@@ -260,7 +264,7 @@ namespace Xsd
             std::cerr << "Error: The document received has not been initialized" << std::endl;
             return false;
         }
-        
+
         try
         {
             instance = new Checker(xsdDoc);

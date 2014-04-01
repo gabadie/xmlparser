@@ -121,8 +121,6 @@ namespace Xsd
         static Checker * instance;
 
         std::string namespacePrefix;
-        std::string stringTypeValue;
-        std::string dateTypeValue;
 
         const Xml::Document * const mXsdDoc;
 
