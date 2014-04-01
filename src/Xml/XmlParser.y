@@ -347,14 +347,11 @@ node_doctype:
     /* ---------------------------------------------------- doctype node */
     DOCTYPE NOM SUP
     {
-        std::cerr << "Parsing 1 " << $2 << std::endl;
         $$ = static_cast<Xml::Node *>(new Xml::Doctype(std::string($2)));
         free($2);
-        std::cerr << "Parsing 1 END" << std::endl;
     } |
     DOCTYPE NOM doctype_decl SUP
     {
-        std::cerr << "Parsing 2 " << $2 << " | " << $3 << std::endl;
         if($3 != nullptr)
         {
             $$ = static_cast<Xml::Node *>(new Xml::Doctype(std::string($2) + " " + std::string(*$3)));
@@ -372,7 +369,6 @@ node_doctype:
     } |
     DOCTYPE error
     {
-        std::cerr << "Error" << std::endl;
         $$ = nullptr;
         Xml::parserSemanticError("Wrong doctype declaration");
     };
