@@ -275,6 +275,12 @@ namespace Xml
         return (it != std::end(mAttributes)) ? it->second : notFound;
     }
 
+    Element::AttributesMap const &
+    Element::attributes() const
+    {
+        return mAttributes;
+    }
+
     Element::AttributesMap
     Element::namespaceAttributes(std::string const & name) const
     {

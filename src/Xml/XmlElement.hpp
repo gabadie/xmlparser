@@ -180,6 +180,14 @@ namespace Xml
         attribute(std::string const & namespaceName) const;
 
         /**
+         * Gets all attributes
+         *
+         * @return The map of all attributes
+         */
+        AttributesMap const &
+        attributes() const;
+
+        /**
          * Lists namespace's attributes
          *
          * @param namespaceName is the namespace.
