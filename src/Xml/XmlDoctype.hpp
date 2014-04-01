@@ -24,7 +24,7 @@ namespace Xml
          * Override of clone abstract method
          */
         Node *
-        clone();
+        clone() const override;
 
         /**
          * Returns the object's type label

@@ -17,7 +17,7 @@ namespace Xml
     }
 
     Node *
-    Doctype::clone()
+    Doctype::clone() const
     {
         return new Doctype(this->mContent);
     }
