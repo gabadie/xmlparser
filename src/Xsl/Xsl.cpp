@@ -69,7 +69,6 @@ std::vector<Xml::Node *> Xsl::applyDefaultTemplate(Xml::Node const * context,  c
 
 std::vector<Xml::Node *> Xsl::findAndApplyTemplate(Xml::Element const * context, const Xml::Document& xslDoc) {
     const Xml::Element * contextTemplate = getTemplate(xslDoc, static_cast<const Xml::Element*>(context));
-
     // if the context a template matches the context, we apply it
     if (contextTemplate != nullptr)
     {
@@ -168,15 +167,29 @@ std::vector <Xml::Node*>  Xsl::ForEach::operator () (const Xml::Element* context
 std::vector <Xml::Node*> Xsl::ApplyTemplate::operator () (const Xml::Element* context,const Xml::Document& xslDoc,  Xml::Element const * applyTemplateElement) const
 {
     std::vector <Xml::Node*> resultNodes ;
-    std::list <Xml::Element const *> matchingNodes = context->select(applyTemplateElement->attribute("select"));
 
-    for ( auto element : matchingNodes)
+    std::list <Xml::Element const *> matchingNodes = context->select(applyTemplateElement->attribute("select"));
+        std::cerr << applyTemplateElement->attribute("select")  << std::endl;
+
+    if (applyTemplateElement->attribute("select") == "" )
     {
-        for ( auto  appliedElement : findAndApplyTemplate(element, xslDoc))
+        for ( auto element : context->elements())
         {
-            resultNodes.push_back(appliedElement);
+            for ( auto  appliedElement : findAndApplyTemplate(element, xslDoc))
+            {
+                resultNodes.push_back(appliedElement);
+            }
         }
     }
-
+    else
+    {
+        for ( auto element : matchingNodes)
+        {
+            for ( auto  appliedElement : findAndApplyTemplate(element, xslDoc))
+            {
+                resultNodes.push_back(appliedElement);
+            }
+        }
+    }
     return resultNodes;
 }
