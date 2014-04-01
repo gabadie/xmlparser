@@ -4,20 +4,20 @@
 
 #include <stdio.h>
 
-#include "XmlParser.hpp"
 #include "XmlCharacterData.hpp"
-#include "XmlText.hpp"
 #include "XmlComment.hpp"
-#include "XmlProcessingInstruction.hpp"
+#include "XmlDoctype.hpp"
+#include "XmlParser.hpp"
 #include "XmlParserError.hpp"
 #include "XmlParserInput.hpp"
+#include "XmlProcessingInstruction.hpp"
+#include "XmlText.hpp"
 
 int yylex(void);
 
 void yyerror(void ** e, const char * msg);
 
 %}
-
 
 /* ----------------------------------------------------------------------------- parse parameter */
 %parse-param {void ** e}
@@ -43,22 +43,22 @@ void yyerror(void ** e, const char * msg);
 /* ----------------------------------------------------------------------------- types */
 %start document
 %type <attrs> atts
-%type <e> element
-%type <e> emptytag
+%type <e> node_element
 %type <e> stag
-%type <nodeList> content
-%type <nodeList> misc
-%type <node> item
-%type <node> miscitem
-%type <node> processinstr
+%type <nodeList> nodes
+%type <node> node
+%type <node> node_cdata
+%type <node> node_doctype
+%type <node> node_processinstr
 %type <str> etag
+%type <str> doctype_decl
 
 
 %%
 /* ----------------------------------------------------------------------------- types rules */
 
 document:
-    misc element misc
+    nodes
     {
         /* ---------------------------------------------------- root */
         /*
@@ -73,6 +73,13 @@ document:
         {
             for (auto node : *$1)
             {
+                if (Xml::Document::canAppend(node) == false)
+                {
+                    Xml::parserSyntaxError(std::string("Unexpected node"));
+                    delete node;
+                    continue;
+                }
+
                 doc->appendNode(node);
             }
 
@@ -83,151 +90,15 @@ document:
         }
 
         /*
-         * Appends document's root
-         */
-        if ($2 != nullptr)
-        {
-            doc->appendNode($2);
-        }
-
-        /*
-         * Appends document nodes
-         */
-        if ($3 != nullptr)
-        {
-            for (auto node : *$3)
-            {
-                doc->appendNode(node);
-            }
-
-            /*
-             * Delete document nodes' list allocated in rule 'misc'
-             */
-            delete $3;
-        }
-
-        /*
          * Returns the document to the yyparse()'s output parameter
          */
         *e = doc;
     };
 
-
-element:
-    emptytag
+nodes:
+    nodes node
     {
-        /* ---------------------------------------------------- empty element */
-        $$ = $1;
-    } |
-    stag content etag
-    {
-        /* ---------------------------------------------------- element with children */
-
-        /*
-         * Xml::Element is allocated in stag.
-         */
-        $$ = $1;
-
-        for(Xml::Node * node : *$2)
-        {
-            if (node == nullptr)
-            {
-                continue;
-            }
-
-            $1->appendNode(node);
-        }
-
-        /*
-         * std::list<Xml::Node *> has been created in content, then we delete it.
-         */
-        delete $2;
-
-        /*
-         * Checks that the closing function is working
-         */
-        if ($1->tag() != *$3)
-        {
-            Xml::parserSemanticError("unexpected </" + *$3 + "> (it should have been </" + $1->name() + ">)");
-        }
-
-        /*
-         * $3 has been created in content, then we delete it.
-         */
-        delete $3;
-    } |
-    stag content error
-    {
-        /* ---------------------------------------------------- element with children */
-
-        /*
-         * Xml::Element is allocated in stag.
-         */
-        $$ = $1;
-
-        for(Xml::Node * node : *$2)
-        {
-            if (node == nullptr)
-            {
-                continue;
-            }
-
-            $1->appendNode(node);
-        }
-
-        /*
-         * std::list<Xml::Node *> has been created in content, then we delete it.
-         */
-        delete $2;
-
-        Xml::parserSyntaxError("missing closing element </" + $1->name() + ">");
-        yyerrok;
-    };
-
-miscitem:
-    COMMENT
-    {
-        /* ---------------------------------------------------- comment node */
-        if ($1[0] == 0)
-        {
-            $$ = nullptr;
-        }
-        else
-        {
-            $$ = static_cast<Xml::Node *>(new Xml::Comment(std::string($1)));
-        }
-
-        /*
-         * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
-         */
-        free($1);
-    } |
-    processinstr
-    {
-        /* ------------------------------------------ processing instruction */
-        $$ = $1;
-    };
-
-processinstr:
-    INFSPECIAL NOM atts SUPSPECIAL
-    {
-        /* ------------------------------------------ processing instruction */
-        Xml::ProcessingInstruction * xmlpi = new Xml::ProcessingInstruction(std::string($2), "", "");
-
-        for(auto const & p : *$3)
-        {
-            xmlpi->setAttribute(p.first, p.second);
-        }
-
-        free($2);
-        delete $3;
-        $$ = xmlpi;
-    };
-
-misc:
-    misc miscitem
-    {
-        /* ---------------------------------------------------- misc element */
+        /* ---------------------------------------------------- append node */
         /*
          * we forward the misc list first.
          */
@@ -252,22 +123,69 @@ misc:
             $$->push_back($2);
         }
     } |
-    misc DONNEES
-    {
-        Xml::parserSyntaxError(std::string("Text found outside root: ") + "\"" + std::string($2) + "\"");
-        $$ = nullptr;
-        free($2);
-    } |
     /* empty */
     {
-        /* ---------------------------------------------------- empty misc */
+        /* ---------------------------------------------------- empty nodes */
         /*
          * if misc is empty, we return an empty list.
          */
         $$ = nullptr;
     };
 
-emptytag:
+node:
+    node_element
+    {
+        /* ---------------------------------------------------- element in another element */
+        $$ = static_cast<Xml::Node *>($1);
+    } |
+    node_doctype
+    {
+        $$ = $1;
+    } |
+    DONNEES
+    {
+        /* ---------------------------------------------------- text node */
+        if ($1[0] == '\0')
+        {
+            $$ = nullptr;
+        }
+        else
+        {
+            $$ = static_cast<Xml::Node *>(new Xml::Text($1));
+        }
+
+        /*
+         * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
+        free($1);
+    } |
+    COMMENT
+    {
+        /* ---------------------------------------------------- comment node */
+        if ($1[0] == '\0')
+        {
+            $$ = nullptr;
+        }
+        else
+        {
+            $$ = static_cast<Xml::Node *>(new Xml::Comment($1));
+        }
+
+        /*
+         * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
+        free($1);
+    } |
+    node_cdata
+    {
+        $$ = $1;
+    } |
+    node_processinstr
+    {
+        $$ = $1;
+    };
+
+node_element:
     INF NOM atts SLASH SUP
     {
         /* ---------------------------------------------------- empty element tag */
@@ -278,8 +196,12 @@ emptytag:
             $$->setAttribute(p.first, p.second);
         }
 
-        free($2);
         delete $3;
+
+        /*
+         * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
+        free($2);
     } |
     INF NOM COLON NOM atts SLASH SUP
     {
@@ -294,6 +216,186 @@ emptytag:
         free($2);
         free($4);
         delete $5;
+    } |
+    stag nodes etag
+    {
+        /* ---------------------------------------------------- element with children */
+
+        /*
+         * Xml::Element is allocated in stag.
+         */
+        $$ = $1;
+
+        /*
+         * Appends element's nodes
+         */
+        if ($2 != nullptr)
+        {
+            for (auto node : *$2)
+            {
+                if (Xml::Element::canAppend(node) == false)
+                {
+                    Xml::parserSyntaxError(std::string("Unexpected node"));
+                    delete node;
+                    continue;
+                }
+
+                $1->appendNode(node);
+            }
+
+            /*
+             * Delete document nodes' list allocated in rule 'misc'
+             */
+            delete $2;
+        }
+
+        /*
+         * Checks that the closing function is working
+         */
+        if ($1->tag() != *$3)
+        {
+            Xml::parserSemanticError("unexpected </" + *$3 + "> (it should have been </" + $1->name() + ">)");
+        }
+
+        /*
+         * $3 has been created in content, then we delete it.
+         */
+        delete $3;
+    } |
+    stag nodes error
+    {
+        /* ---------------------------------------------------- element with children */
+
+        /*
+         * Xml::Element is allocated in stag.
+         */
+        $$ = $1;
+
+        /*
+         * Appends element's nodes
+         */
+        if ($2 != nullptr)
+        {
+            for (auto node : *$2)
+            {
+                if (Xml::Element::canAppend(node) == false)
+                {
+                    Xml::parserSyntaxError(std::string("Unexpected node"));
+                    delete node;
+                    continue;
+                }
+
+                $1->appendNode(node);
+            }
+
+            /*
+             * Delete document nodes' list allocated in rule 'misc'
+             */
+            delete $2;
+        }
+
+        Xml::parserSyntaxError("missing closing element </" + $1->name() + ">");
+        yyerrok;
+    };
+
+node_processinstr:
+    INFSPECIAL NOM atts SUPSPECIAL
+    {
+        /* ------------------------------------------ processing instruction */
+        auto xmlpi = new Xml::ProcessingInstruction(std::string($2), "", "");
+
+        for(auto const & p : *$3)
+        {
+            xmlpi->setAttribute(p.first, p.second);
+        }
+
+        $$ = xmlpi;
+
+        delete $3;
+
+        /*
+         * $2 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
+        free($2);
+    };
+
+node_cdata:
+    CDATABEGIN CDATAEND
+    {
+        /* ---------------------------------------------------- CDATA node */
+        if ($2[0] == 0)
+        {
+            $$ = nullptr;
+        }
+        else
+        {
+            $$ = static_cast<Xml::Node *>(new Xml::CharacterData(std::string($2)));
+        }
+
+        /*
+         * $2 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
+        free($2);
+    } |
+    CDATABEGIN error
+    {
+        /* ---------------------------------------------------- CDATA error */
+        $$ = nullptr;
+    };
+
+node_doctype:
+    /* ---------------------------------------------------- doctype node */
+    DOCTYPE NOM SUP
+    {
+        std::cerr << "Parsing 1 " << $2 << std::endl;
+        $$ = static_cast<Xml::Node *>(new Xml::Doctype(std::string($2)));
+        free($2);
+        std::cerr << "Parsing 1 END" << std::endl;
+    } |
+    DOCTYPE NOM doctype_decl SUP
+    {
+        std::cerr << "Parsing 2 " << $2 << " | " << $3 << std::endl;
+        if($3 != nullptr)
+        {
+            $$ = static_cast<Xml::Node *>(new Xml::Doctype(std::string($2) + " " + std::string(*$3)));
+            delete $3;
+        }
+        else
+        {
+            $$ = nullptr;
+        }
+
+        /*
+         * $2 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
+        free($2);
+    } |
+    DOCTYPE error
+    {
+        std::cerr << "Error" << std::endl;
+        $$ = nullptr;
+        Xml::parserSemanticError("Wrong doctype declaration");
+    };
+
+doctype_decl:
+    NOM VALEUR
+    {
+        std::cerr << "Parsing " << $1 << " | " << $2 << std::endl;
+        $$ = new std::string(std::string($1) + " \"" + std::string($2) + "\"");
+        free($1);
+        free($2);
+    } |
+    NOM VALEUR VALEUR
+    {
+        $$ = new std::string(std::string($1) + " \"" + std::string($2) + "\" \"" + std::string($3) + "\"");
+        free($1);
+        free($2);
+        free($3);
+    } |
+    error
+    {
+        $$ = nullptr;
+        Xml::parserSemanticError("Wrong doctype declaration");
     };
 
 stag:
@@ -381,7 +483,8 @@ atts:
 
     /* Shift/reduce warning caused by the rules "atts NOM EGAL" et "atts VALEUR"
      This conflict is safe because Bison is greedy and will match "atts NOM EGAL VALEUR" first
-     instead of "atts NOM EGAL" and "atts VALEUR" */
+     instead of "atts NOM EGAL" and "atts VALEUR"
+     A test in testXmlElementParsing checks this assertion. */
     atts NOM EGAL
     {
         Xml::parserSyntaxError(std::string("Ill-formed attribute: ") + "\"" + std::string($2) + "=\"");
@@ -411,71 +514,6 @@ atts:
     {
         $$ = $1;
     }; /**/
-
-item:
-    element
-    {
-        /* ---------------------------------------------------- element in another element */
-        $$ = static_cast<Xml::Node *>($1);
-    } |
-    DONNEES
-    {
-        /* ---------------------------------------------------- text in an element */
-        if ($1[0] == 0)
-        {
-            $$ = nullptr;
-        }
-        else
-        {
-            $$ = static_cast<Xml::Node *>(new Xml::Text(std::string($1)));
-        }
-
-        /*
-         * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
-         */
-        free($1);
-    } |
-    CDATABEGIN CDATAEND
-    {
-        /* ---------------------------------------------------- CDATA node */
-        if ($2[0] == 0)
-        {
-            $$ = nullptr;
-        }
-        else
-        {
-            $$ = static_cast<Xml::Node *>(new Xml::CharacterData(std::string($2)));
-        }
-
-        /*
-         * $2 is char * allocated in XmlParser.lex with malloc(), then we free it.
-         */
-        free($2);
-    } |
-    CDATABEGIN error
-    {
-        /* ---------------------------------------------------- CDATA error */
-        $$ = nullptr;
-    } |
-    miscitem
-    {
-        /* ---------------------------------------------------- misc element */
-        $$ = $1;
-    }
-
-content:
-    content item
-    {
-        /* ---------------------------------------------------- element's content */
-        $$ = $1;
-        $$->push_back($2);
-    } |
-    /* empty */
-    {
-        /* ---------------------------------------------------- element's content end */
-        $$ = new std::list<Xml::Node *>();
-    };
-
 
 
 %%

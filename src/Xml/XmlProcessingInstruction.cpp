@@ -25,6 +25,12 @@ namespace Xml
     {
     }
 
+    ObjectLabel
+    ProcessingInstruction::objectLabel() const
+    {
+        return ObjectLabel::ProcessingInstruction;
+    }
+
     Node *
     ProcessingInstruction::clone() const
     {

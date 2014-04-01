@@ -16,6 +16,12 @@ namespace Xml
 
     }
 
+    ObjectLabel
+    CharacterData::objectLabel() const
+    {
+        return ObjectLabel::CharacterData;
+    }
+
     Node *
     CharacterData::clone() const
     {
