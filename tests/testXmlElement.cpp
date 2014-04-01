@@ -68,6 +68,57 @@ test_assert(attr1 != attr2);
 }
 
 void
+testXmlElementNamespaceAttributes()
+{
+    Xml::Element root("root");
+
+    std::string attr1 = "hello:attr1";
+    std::string value1 = "value1";
+    std::string attr2 = "attr2";
+    std::string value2 = "value2";
+
+    {
+        auto attrs = root.namespaceAttributes("hello");
+        test_assert(attrs.find("attr1") == std::end(attrs));
+    }
+
+    {
+        auto attrs = root.namespaceAttributes("");
+        test_assert(attrs.find("attr1") == std::end(attrs));
+    }
+
+    {
+        auto attrs = root.namespaceAttributes("");
+        test_assert(attrs.find(attr2) == std::end(attrs));
+    }
+
+    root.setAttribute(attr1, value1);
+
+    {
+        auto attrs = root.namespaceAttributes("hello");
+        test_assert(attrs.find("attr1") != std::end(attrs));
+    }
+
+    {
+        auto attrs = root.namespaceAttributes("world");
+        test_assert(attrs.find("attr1") == std::end(attrs));
+    }
+
+    {
+        auto attrs = root.namespaceAttributes("");
+        test_assert(attrs.find(attr2) == std::end(attrs));
+    }
+
+    root.setAttribute(attr2, value2);
+
+    {
+        auto attrs = root.namespaceAttributes("");
+        test_assert(attrs.find(attr2) != std::end(attrs));
+    }
+
+}
+
+void
 testXmlElementChildren()
 {
     Xml::Element root("root");
@@ -264,6 +315,7 @@ main()
     testXmlElementBasics();
     testXmlElementTagname();
     testXmlElementAttributes();
+    testXmlElementNamespaceAttributes();
     testXmlElementChildren();
     testXmlElementContent();
     testXmlElementClone();
