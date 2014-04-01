@@ -145,7 +145,7 @@ node:
     DONNEES
     {
         /* ---------------------------------------------------- text node */
-        if ($1[0] == 0)
+        if ($1[0] == '\0')
         {
             $$ = nullptr;
         }
@@ -154,12 +154,15 @@ node:
             $$ = static_cast<Xml::Node *>(new Xml::Text($1));
         }
 
+        /*
+         * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
         free($1);
     } |
     COMMENT
     {
         /* ---------------------------------------------------- comment node */
-        if ($1[0] == 0)
+        if ($1[0] == '\0')
         {
             $$ = nullptr;
         }
@@ -193,8 +196,12 @@ node_element:
             $$->setAttribute(p.first, p.second);
         }
 
-        free($2);
         delete $3;
+
+        /*
+         * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
+        free($2);
     } |
     INF NOM COLON NOM atts SLASH SUP
     {
@@ -295,16 +302,21 @@ node_processinstr:
     INFSPECIAL NOM atts SUPSPECIAL
     {
         /* ------------------------------------------ processing instruction */
-        Xml::ProcessingInstruction * xmlpi = new Xml::ProcessingInstruction(std::string($2), "", "");
+        auto xmlpi = new Xml::ProcessingInstruction(std::string($2), "", "");
 
         for(auto const & p : *$3)
         {
             xmlpi->setAttribute(p.first, p.second);
         }
 
-        free($2);
-        delete $3;
         $$ = xmlpi;
+
+        delete $3;
+
+        /*
+         * $2 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
+        free($2);
     };
 
 node_cdata:
@@ -352,6 +364,10 @@ node_doctype:
         {
             $$ = nullptr;
         }
+
+        /*
+         * $2 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
         free($2);
     } |
     DOCTYPE error
