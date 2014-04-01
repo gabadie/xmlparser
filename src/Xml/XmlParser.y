@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "XmlParser.hpp"
+#include "XmlCharacterData.hpp"
 #include "XmlText.hpp"
 #include "XmlComment.hpp"
 #include "XmlProcessingInstruction.hpp"
@@ -358,6 +359,19 @@ atts:
         free($2);
         free($4);
     } |
+    atts NOM COLON NOM EGAL VALEUR
+    {
+        /* ---------------------------------------------------- element's attributes with namespace */
+        std::string attrName = std::string($2) + ":" + std::string($4);
+        $1->insert({attrName, std::string($6)});
+
+        /*
+         * $2, $4 and $6 is char * allocated in XmlParser.lex with malloc(), then we free them.
+         */
+        free($2);
+        free($4);
+        free($6);
+    } |
     /* empty */
     {
         $$ = new Xml::Element::AttributesMap();
@@ -420,6 +434,28 @@ item:
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
          */
         free($1);
+    } |
+    CDATABEGIN CDATAEND
+    {
+        /* ---------------------------------------------------- CDATA node */
+        if ($2[0] == 0)
+        {
+            $$ = nullptr;
+        }
+        else
+        {
+            $$ = static_cast<Xml::Node *>(new Xml::CharacterData(std::string($2)));
+        }
+
+        /*
+         * $2 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
+        free($2);
+    } |
+    CDATABEGIN error
+    {
+        /* ---------------------------------------------------- CDATA error */
+        $$ = nullptr;
     } |
     miscitem
     {

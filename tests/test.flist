@@ -2,13 +2,14 @@
 # List of the application's tests
 #
 
-testXmlDocument.cpp
-testParsing.cpp
 testRE2.cpp
+testXmlCharacterData.cpp
+testXmlDocument.cpp
 testXmlComment.cpp
 testXmlElement.cpp
 testXmlElementParsing.cpp
 testXmlNode.cpp
+testXmlParser.cpp
 testXmlProcessingInstruction.cpp
 testXmlText.cpp
 testXPath.cpp
