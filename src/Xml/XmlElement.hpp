@@ -187,7 +187,25 @@ namespace Xml
          * @return The value of the attribute if found, an empty string otherwise.
          */
         std::string const &
-        attribute(std::string const & name) const;
+        attribute(std::string const & namespaceName) const;
+
+        /**
+         * Gets all attributes
+         *
+         * @return The map of all attributes
+         */
+        AttributesMap const &
+        attributes() const;
+
+        /**
+         * Lists namespace's attributes
+         *
+         * @param namespaceName is the namespace.
+         *
+         * @return The map of attributes.
+         */
+        AttributesMap
+        namespaceAttributes(std::string const & name) const;
 
         /**
          * Sets the value of an attribute.
