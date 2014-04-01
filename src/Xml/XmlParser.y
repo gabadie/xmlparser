@@ -376,7 +376,6 @@ node_doctype:
 doctype_decl:
     NOM VALEUR
     {
-        std::cerr << "Parsing " << $1 << " | " << $2 << std::endl;
         $$ = new std::string(std::string($1) + " \"" + std::string($2) + "\"");
         free($1);
         free($2);
