@@ -171,7 +171,7 @@ std::vector <Xml::Node*> Xsl::ApplyTemplate::operator () (const Xml::Element* co
     std::list <Xml::Element const *> matchingNodes = context->select(applyTemplateElement->attribute("select"));
 
     for ( auto element : matchingNodes)
-    {   
+    {
         for ( auto  appliedElement : findAndApplyTemplate(element, xslDoc))
         {
             resultNodes.push_back(appliedElement);
@@ -179,4 +179,4 @@ std::vector <Xml::Node*> Xsl::ApplyTemplate::operator () (const Xml::Element* co
     }
 
     return resultNodes;
-}   
+}

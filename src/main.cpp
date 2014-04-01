@@ -1,6 +1,7 @@
 #include <utility>
 
 #include "Xml/XmlParser.hpp"
+#include "Xsl/Xsl.hpp"
 
 static int const SUCCESS = 0x0000;
 static int const INVALID_COMMAND = 0x0001;
@@ -52,10 +53,36 @@ appVerify(std::string const & xmlPath, std::string const & xsdPath)
 int
 appTransform(std::string const & xmlPath, std::string const & xslPath)
 {
-    (void) xmlPath;
-    (void) xslPath;
-    std::cerr << __func__ << " : not implemented yet" << std::endl;
-    __builtin_trap();
+    Xml::Log xmlLog;
+    Xml::Document * xmlDoc = Xml::load(xmlPath, &xmlLog);
+
+    if(xmlDoc == nullptr)
+    {
+        std::cerr << "Failed to parse XML file: " << xmlPath << std::endl;
+        std::cerr << xmlLog;
+        return PARSE_ERROR;
+    }
+
+
+    Xml::Log xslLog;
+    Xml::Document * xslDoc = Xml::load(xslPath, &xslLog);
+
+    if(xmlDoc == nullptr)
+    {
+        std::cerr << "Failed to parse XSL file: " << xmlPath << std::endl;
+        std::cerr << xslLog;
+        return PARSE_ERROR;
+    }
+
+    Xml::Document * transformedDoc = Xsl::xslTransform(*xmlDoc, *xslDoc);
+
+    std::cout << (*transformedDoc) << std::endl;
+    //std::cerr << transformLog;
+
+    delete xmlDoc;
+    delete xslDoc;
+    delete transformedDoc;
+
     return SUCCESS;
 }
 
