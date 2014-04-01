@@ -9,6 +9,7 @@
 #define protected public
 #define private public
 
+#include "../src/Xml/XmlConsts.hpp"
 #include "../src/Xml/XmlText.hpp"
 #include "../src/Xml/XmlParser.hpp"
 
@@ -67,7 +68,7 @@ testXmlTextParsing()
 
         test_assert(doc->root()->mChildren[0]->contentText() == "Hello");
         test_assert(doc->root()->mChildren[2]->contentText() == "World");
-        test_assert(doc->root()->text() == "Hello\nWorld");
+        test_assert(doc->root()->text() == std::string("Hello") + Xml::CAT_SEPARATOR + "World");
 
         delete doc;
     }

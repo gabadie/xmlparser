@@ -2,6 +2,8 @@
 # List of the application's tests
 #
 
+testRE2.cpp
+testXmlCharacterData.cpp
 testXmlDocument.cpp
 testParsing.cpp
 testXsdValidation.cpp
@@ -10,6 +12,7 @@ testXmlComment.cpp
 testXmlElement.cpp
 testXmlElementParsing.cpp
 testXmlNode.cpp
+testXmlParser.cpp
 testXmlProcessingInstruction.cpp
 testXmlText.cpp
 testXPath.cpp

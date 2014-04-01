@@ -81,6 +81,14 @@ namespace Xml
         text() const;
 
         /**
+         * Get the text content of the element recursively
+         *
+         * @return The full text content of the element
+         */
+        std::string
+        fullText() const;
+
+        /**
          * Set the content of the element
          *
          * Delete all children nodes and add a text node with

@@ -13,14 +13,9 @@ fonctionnalités de transformation d'une feuille XSL, et de même pour les instr
     \label{oldXslClassDiagram}
 \end{figure}
 
-Néanmoins, cette conception présente de nombreux inconvénients :
+Néanmoins, cette conception présente de nombreux inconvénients : Elle nous forçait à parcourir tout le document XML afin de convertir les tags XSL en objets dédiés, ...
 
-\begin{enumerate}
-    \item Cast des éléments XML.
-    \item Cast des éléments XML.
-    \item Cast des éléments XML.
-    \item Cast des éléments XML.
-\end{enumerate}
+\textbf{TODO : } rajouter d'autres raisons pour lesquelles l'ancienne conception est pas pratique
 
 \begin{landscape}
 \begin{figure}[h!]
@@ -32,5 +27,47 @@ Néanmoins, cette conception présente de nombreux inconvénients :
 \end{landscape}
 
 
-\section{Algorithme}
+\section{Vue globale de l'algorithme}
 
+\textbf{TODO :} rajouter des détails sur cette partie.
+
+L'algorithme de transformation XSL s’exécute de manière récursive et bascule continuellement entre le document XSL et le document XML à transformer.
+
+Un même algorithme s'exécute pour chaque nœud (à quelques exceptions citées ci-dessous) :
+
+\begin{enumerate}
+    \item Si le nœud n'est pas un élément, on le rajoute directement au résultat.
+    \item Si un \textit{template} correspond à ce nœud, on l'applique (plus sur l'application des templates ci-dessous) en prenant ce nœud comme \textit{contexte} et on ajoute le résultat de cette application au nœud contexte.
+    \item Sinon, on clone l'élément, et on ré-applique le même algorithme sur tous ses enfants, en ayant comme contexte le nœud qu'on a cloné et en rajoutant tous les résultats comme fils du clone du nœud.
+\end{enumerate}
+
+La transformation XSL débute en appliquant cet algorithme à la racine du document XML à transformer, et se propage par récursion à la totalité du document.
+
+
+\section{Templates}
+
+Les \textit{templates} sont les seuls fils de la racine (\textit{stylesheet}) d'un document XSL et se présentent de la manière suivante :
+\\
+\\
+\textbf{
+\lstinline$<xsl:template match="cd/title">$\\
+\indent \lstinline$<tagxml></tagxml>$\\
+\indent \lstinline$<xsl:uneinstruction select="untag/unautretag" />$\\
+\indent \lstinline$<encoreunautretagxml />$\\
+\lstinline$</xsl:template>$
+}
+\\
+\\
+Ils peuvent contenir des tags XML "normaux", ainsi que des instructions XSL.
+On dit qu'un template \textit{match} un élément si l'élément est compatible avec la valeur de l'attribut \textit{match} du template, par exemple :
+
+Si un élément XML a comme nom "title" et est le fils d'un élément qui a comme nom "cd", il match le template vu ci-dessus.
+
+Quand on applique un template, on va renvoyer une liste de nœuds résultants (qui vont en général être ajoutés comme fils d'un document ou d'un élément). Cette liste est générée de la manière suivante :\\
+
+\begin{enumerate}
+    \item Les nœuds qui ne sont pas des éléments XML sont rajoutés directement.
+    \item Les nœuds qui sont des éléments XML, mais pas XSL, sont considérés comme des templates (car pouvant contenir des instructions XSL) et appliqués avec comme contexte le nœud d'application de la transformation XSL.
+    \item Les éléments XSL sont appliqués avec comme contexte le nœud d'application de la transformation XSL. Tous les nœuds résultants de cette application sont ajoutés à la liste des nœuds générés par l'application du template.
+
+\end{enumerate}
