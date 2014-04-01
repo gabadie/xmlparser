@@ -4,6 +4,7 @@
 
 Xml/XmlCharacterData.cpp
 Xml/XmlComment.cpp
+Xml/XmlDoctype.cpp
 Xml/XmlDocument.cpp
 Xml/XmlDocumentNode.cpp
 Xml/XmlElement.cpp

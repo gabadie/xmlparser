@@ -9,14 +9,14 @@ namespace Xml
      */
     class CharacterData;
     class Comment;
+    class Doctype;
     class Document;
     class DocumentNode;
     class Element;
     class Log;
     class Node;
     class Object;
-    class ProcessingInstruction;
-    class Text;
+    class ProcessingInstruction; class Text;
 
     /*
      * XML object's type label
@@ -25,6 +25,7 @@ namespace Xml
     {
         CharacterData,
         Comment,
+        Doctype,
         Document,
         Element,
         ProcessingInstruction,
