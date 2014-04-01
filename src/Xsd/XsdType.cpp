@@ -1,3 +1,11 @@
+/**
+ * \file XsdType.cpp
+ * \brief XSD Type
+ * \author jcourlet
+ * \version 0.1
+ * \date 18 mars 2014
+ */
+
 #include "XsdType.hpp"
 #include "XsdChecker.hpp"
 #include "XsdException.hpp"
@@ -64,14 +72,6 @@ namespace Xsd
                 }
             }
         }
-
-
-// parcours la liste des attrivbut du type
-            // get du nom dans la map des attribut de l'element
-            // si absent et required -> explose xsdCValidationException
-            // checkvalidity avec la valeur de l'attribut, si faux on explose
-
-
 
         if(!isValid(childrenToString(element->elements())))
         {
@@ -272,10 +272,6 @@ namespace Xsd
         return regex;
     }
 
-    /**
-     * Modify and returns the element regex given in parameter in order to add
-     * regex expression for the occurs attributes values
-     */
     std::string
     Type::getRegexFromOccurs(const Xml::Element * const xmlElement, const std::string & eltRegex)
     {

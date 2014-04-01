@@ -21,8 +21,8 @@ namespace Xsd
         /*
          * Constructor
          *
-         * @param xmlElement xml parsed element
-         * @param name name of the element
+         * @param xmlElement the Xml parsed element
+         * @param name The Name of the element
          */
         Type(const Xml::Element * const xmlElement, const std::string & name);
 
@@ -37,10 +37,12 @@ namespace Xsd
         /*
          * Create the regex with an xml parsed element
          *
-         * @param xmlElement xml parsed element
-         * @param separator the separator of the regex
-         * @param eltSeqChoice indicates if the xml element is in a sequence or choice element
-         * @param acceptAttributes indicates if the element accepts attributes
+         * @param xmlElement The xml parsed element
+         * @param separator The separator of the regex
+         * @param eltSeqChoice Indicates if the xml element is in a sequence or choice element
+         * @param acceptAttributes Indicates if the element accepts attributes
+         *
+         * @return The regex created
          */
         static std::string
         parseComplexType(const Xml::Element * const xmlElement, std::string separator, bool eltSeqChoice, std::list<Attribute *> attributes, bool acceptAttributes);
@@ -48,7 +50,9 @@ namespace Xsd
         /*
          * Returns the regex of an element, adds its type and type relation to the maps if it's not a ref
          *
-         * @param xmlElement xml parsed element
+         * @param xmlElement The xml parsed element
+         *
+         * @return The regex created
          */
         static std::string
         parseElement(const Xml::Element * const xmlElement);
@@ -56,49 +60,102 @@ namespace Xsd
         /*
          * Check if the string value matches with the type regex
          *
-         * @param str the string to match
+         * @param str The string to match
+         *
+         * @return True if the values match, false otherwise
          */
         bool
         isValid(const std::string & str);
 
         /**
-         * Create the type regex
+         * Checks if the type attribute is of date or string type
+         *
+         * @param type The value of the type attribute
+         *
+         * @return True if it is a date or string type, false otherwise
          */
         static bool
         isSimpleType(const std::string & type);
 
+
+        /**
+         * Check the validity of the element by checking the validity of his attributes/children
+         *
+         * @param element The xml parsed element
+         */
         void
         checkValidity(const Xml::Element * const element);
 
+        /**
+         * Get the value of the ref or name attribute
+         *
+         * @param xmlElement The xml parsed element
+         *
+         * @return The name of the element
+         */
         static std::string
         getNameOrRef(const Xml::Element * const xmlElement);
 
+        /**
+         * Check if the type is a reference
+         *
+         * @param xmlElement The xml parsed element
+         *
+         * @ return True if the element is a reference, false otherwise
+         */
         static bool
         isReference(const Xml::Element * const xmlElement);
 
-        static const Type *
-        parseSimpleType(const std::string & type);
-
+        /**
+         * Transforms the children nodes to string
+         *
+         * @param childrenElt The list of children element
+         *
+         * @return The string created
+         */
         std::string
         childrenToString(std::vector<Xml::Element const *> childrenElt);
 
+        /**
+         * Modify and returns the element regex given in parameter in order to add
+         * regex expression for the occurs attributes values
+         *
+         * @param xmlElement The xml parsed element
+         * @param eltRegex The name of the element whose we want the regex
+         *
+         * @return The string created
+         */
         static std::string
         getRegexFromOccurs(const Xml::Element * const xmlElement, const std::string & eltRegex);
 
+        /**
+         * Modifies the occurence of an element to be used in the regex
+         *
+         * @param xmlElement The xml parsed element
+         * @param occursAttrName The name of the occurence attribute
+         * @param occursAttrValue The value of the occurence attribute
+         *
+         * @return The new value of the occurence value
+         */
         static std::string
         getOccursFromElement(const Xml::Element & xmlElement, const std::string & occursAttrName, const std::string & occursAttrValue);
 
+        /**
+         * Gets the list of attributes of the type
+         *
+         * @return The list of attributes
+         */
         std::list<Attribute *>
         attributes() const;
 
     protected:
 
-        std::string mRegex;
-        std::list<Attribute *> mAttributes;
+        std::string mRegex;                             /// regex created for the type
+        std::list<Attribute *> mAttributes;             /// the list of attributes
 
-        static const std::string TYPE_SUFFIX;
-        static const std::string UNBOUNDED;
-        static const std::string UNBOUNDED_EXP_REG;
+        static const std::string TYPE_SUFFIX;           /// the "TYPE" suffix
+        static const std::string UNBOUNDED;             /// the "UNBOUNDED" value
+        static const std::string UNBOUNDED_EXP_REG;     /// the unbounded transformed value
     };
  }
 
