@@ -67,6 +67,6 @@ Quand on applique un template, on va renvoyer une liste de nœuds résultants (q
 
 \begin{enumerate}
     \item Les nœuds qui ne sont pas des éléments XML sont rajoutés directement.
-    \item Les nœuds qui sont des éléments XML, mais pas XSL, sont considérés comme des templates (car pouvant contenir des instructions XSL) et appliqués avec comme contexte le nœud d'application de la transformation XSL.
+    \item Les nœuds qui sont des éléments XML, mais pas XSL, sont clonés. On applique alors  puis considérés comme des templates (car pouvant contenir des instructions XSL) et appliqués avec comme contexte le nœud d'application de la transformation XSL.
     \item Les éléments XSL sont appliqués avec comme contexte le nœud d'application de la transformation XSL. Tous les nœuds résultants de cette application sont ajoutés à la liste des nœuds générés par l'application du template.
 \end{enumerate}
