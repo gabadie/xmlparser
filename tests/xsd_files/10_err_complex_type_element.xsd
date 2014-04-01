@@ -1,8 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="person" type="xs:string"/>
-    <xs:complexType>
-      <xs:element name="address" type="xs:string"/>
+    <xs:element name="person" type="personType"/>
+
+    <xs:complexType name="personType">
+        <xs:element ref=""/>
     </xs:complexType>
-  </xs:element>
+
+    <xs:element name="infos">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="surname" minOccurs="unbounded" maxOccurs="2"/>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="birth" type="xs:date"/>
+                <xs:choice minOccurs="2" maxOccurs="5">
+                    <xs:element name="tel" type="xs:string"/>
+                    <xs:choice>
+                        <xs:element name="patate" type="xs:string"/>
+                        <xs:element name="pomme" type="xs:string"/>
+                    </xs:choice>
+                    <xs:element name="mobile" type="xs:string"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute ref="validity" use="456"/>
+            <xs:attribute name="invalidity" type="xs:date" use="required"/>
+            <xs:attribute name="test" type="xs:string"/>
+            <xs:attribute name="test2" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:attr name="validity" type="date"/>
+
+    <element name="surname" type="xs:string"/>
 </xs:schema>

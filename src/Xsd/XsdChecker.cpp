@@ -48,7 +48,7 @@ namespace Xsd
         new Type(DATE_TYPE, dateRegex, std::list<Attribute *>());
         new Type(STRING_TYPE, stringRegex, std::list<Attribute *>());
 
-        if(!(xsdDoc->root()->attribute(NAME_ATTR).compare(SCHEMA_ELT) == 0))
+        if(!(xsdDoc->root()->name().compare(SCHEMA_ELT) == 0))
         {
             throwInvalidElementException(xsdDoc->root()->attribute(NAME_ATTR), SCHEMA_ELT);
         }
@@ -249,18 +249,17 @@ namespace Xsd
     bool
     Checker::parseXsd(const Xml::Document * const xsdDoc)
     {
-
-        if(instance != NULL)
-        {
-            std::cerr << "Error: An XSD document has already been parsed" << std::endl;
-            return false;
-        }
         if(xsdDoc == NULL)
         {
             std::cerr << "Error: The document received has not been initialized" << std::endl;
             return false;
         }
-        
+        if(instance != NULL)
+        {
+            std::cout << "Warning: Replacing the previous XSD parser" << std::endl;
+            delete instance;
+        }
+
         try
         {
             instance = new Checker(xsdDoc);
