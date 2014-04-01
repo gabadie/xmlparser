@@ -172,14 +172,6 @@ namespace Xml
         tag() const;
 
         /**
-         * Gets all the pairs name/value of the attributes
-         *
-         * @return The pairs name/value of all the attributes.
-         */
-        std::list<std::pair<std::string const, std::string const>>
-        attributesValue() const;
-
-        /**
          * Gets the value of an attribute by name
          *
          * @param name Name of the attribute to get.

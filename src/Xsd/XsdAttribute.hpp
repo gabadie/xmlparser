@@ -30,6 +30,9 @@ namespace Xsd
             std::string
             name();
 
+            bool
+            isRequired();
+
         protected:
             std::string mName;
             bool mRequired;

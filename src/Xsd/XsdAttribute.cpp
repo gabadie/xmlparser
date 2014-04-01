@@ -90,4 +90,10 @@ namespace Xsd
     {
         return mName;
     }
+
+    bool
+    Attribute::isRequired()
+    {
+        return mRequired;
+    }
 }
