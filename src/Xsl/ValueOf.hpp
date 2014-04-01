@@ -10,7 +10,8 @@ namespace Xsl
     public:
         virtual
         std::vector<Xml::Node *>
-        operator () (Xml::Element const * context,  const Xml::Document& xslDoc,  Xml::Element const * xslElement) const;
+        operator () (Xml::Element const * context, Xml::Document const & xslDoc,
+            Xml::Element const * xslElement) const override;
     };
 }
 
