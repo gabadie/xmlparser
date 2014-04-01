@@ -19,7 +19,6 @@ void yyerror(void ** e, const char * msg);
 
 %}
 
-
 /* ----------------------------------------------------------------------------- parse parameter */
 %parse-param {void ** e}
 
@@ -230,6 +229,57 @@ processinstr:
         free($2);
         delete $3;
         $$ = xmlpi;
+    };
+
+doctype:
+    /* ---------------------------------------------------- doctype node */
+    DOCTYPE NOM SUP
+    {
+        std::cerr << "Parsing 1 " << $2 << std::endl;
+        $$ = static_cast<Xml::Node *>(new Xml::Doctype(std::string($2)));
+        free($2);
+        std::cerr << "Parsing 1 END" << std::endl;
+    } |
+    DOCTYPE NOM doctype_decl SUP
+    {
+        std::cerr << "Parsing 2 " << $2 << " | " << $3 << std::endl;
+        if($3 != nullptr)
+        {
+            $$ = static_cast<Xml::Node *>(new Xml::Doctype(std::string($2) + " " + std::string(*$3)));
+            delete $3;
+        }
+        else
+        {
+            $$ = nullptr;
+        }
+        free($2);
+    } |
+    DOCTYPE error
+    {
+        std::cerr << "Error" << std::endl;
+        $$ = nullptr;
+        Xml::parserSemanticError("Wrong doctype declaration");
+    };
+
+doctype_decl:
+    NOM VALEUR
+    {
+        std::cerr << "Parsing " << $1 << " | " << $2 << std::endl;
+        $$ = new std::string(std::string($1) + " \"" + std::string($2) + "\"");
+        free($1);
+        free($2);
+    } |
+    NOM VALEUR VALEUR
+    {
+        $$ = new std::string(std::string($1) + " \"" + std::string($2) + "\" \"" + std::string($3) + "\"");
+        free($1);
+        free($2);
+        free($3);
+    } |
+    error
+    {
+        $$ = nullptr;
+        Xml::parserSemanticError("Wrong doctype declaration");
     };
 
 misc:
@@ -470,52 +520,6 @@ item:
     {
         /* ---------------------------------------------------- misc element */
         $$ = $1;
-    };
-
-doctype:
-    /* ---------------------------------------------------- doctype node */
-    DOCTYPE NOM SUP
-    {
-        $$ = static_cast<Xml::Node *>(new Xml::Doctype(std::string($2)));
-        free($2);
-    } |
-    DOCTYPE NOM doctype_decl SUP
-    {
-        if($3 != nullptr)
-        {
-            $$ = static_cast<Xml::Node *>(new Xml::Doctype(std::string($2) + " " + std::string(*$3)));
-            delete $3;
-        }
-        else
-        {
-            $$ = nullptr;
-        }
-        free($2);
-    } |
-    DOCTYPE error
-    {
-        $$ = nullptr;
-        Xml::parserSemanticError("Wrong doctype declaration");
-    };
-
-doctype_decl:
-    NOM VALEUR
-    {
-        $$ = new std::string(std::string($1) + " " + std::string($2));
-        free($1);
-        free($2);
-    } |
-    NOM VALEUR VALEUR
-    {
-        $$ = new std::string(std::string($1) + " " + std::string($2) + " " + std::string($3));
-        free($1);
-        free($2);
-        free($3);
-    } |
-    error
-    {
-        $$ = nullptr;
-        Xml::parserSemanticError("Wrong doctype declaration");
     };
 
 content:

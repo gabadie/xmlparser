@@ -4,6 +4,7 @@
 
 testRE2.cpp
 testXmlCharacterData.cpp
+testXmlDoctype.cpp
 testXmlDocument.cpp
 testXmlComment.cpp
 testXmlElement.cpp
