@@ -21,6 +21,12 @@ namespace Xml
         ~CharacterData() override;
 
         /**
+         * Override of Xml::Object::objectLabel()
+         */
+        ObjectLabel
+        objectLabel() const override;
+
+        /**
          * Override of clone abstract method
          */
         Node *

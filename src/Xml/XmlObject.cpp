@@ -56,7 +56,7 @@ namespace Xml
     bool
     Object::isElement() const
     {
-        return false;
+        return objectLabel() == ObjectLabel::Element;
     }
 
     void

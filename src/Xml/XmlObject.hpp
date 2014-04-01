@@ -41,6 +41,15 @@ namespace Xml
         document() const = 0;
 
         /**
+         * Returns the object's type label
+         *
+         * @return The object's type label
+         */
+        virtual
+        ObjectLabel
+        objectLabel() const = 0;
+
+        /**
          * Gets the object's parent
          *
          * @return The parent (either a Document or an Element)
@@ -121,7 +130,6 @@ namespace Xml
          *
          * @return True if the node is an Element, false otherwise.
          */
-        virtual
         bool
         isElement() const;
 

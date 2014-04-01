@@ -43,6 +43,12 @@ namespace Xml
         mChildren.clear();
     }
 
+    ObjectLabel
+    Document::objectLabel() const
+    {
+        return ObjectLabel::Document;
+    }
+
     Document const *
     Document::document() const
     {

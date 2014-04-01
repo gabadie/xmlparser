@@ -18,6 +18,19 @@ namespace Xml
     class ProcessingInstruction;
     class Text;
 
+    /*
+     * XML object's type label
+     */
+    enum class ObjectLabel
+    {
+        CharacterData,
+        Comment,
+        Document,
+        Element,
+        ProcessingInstruction,
+        Text
+    };
+
 }
 
 namespace Xsl

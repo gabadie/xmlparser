@@ -38,6 +38,12 @@ namespace Xml
         ~Element();
 
         /**
+         * Override of Xml::Object::objectLabel()
+         */
+        ObjectLabel
+        objectLabel() const override;
+
+        /**
          * Override of clone abstract method
          */
         Node *
@@ -251,15 +257,6 @@ namespace Xml
         void
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
-
-        /**
-         * Tells whether or not the node is an Element
-         *
-         * @return True if the node is an Element, false otherwise.
-         */
-        virtual
-        bool
-        isElement() const override;
 
         /**
          * Appends a node

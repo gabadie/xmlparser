@@ -34,6 +34,12 @@ namespace Xml
         ~Document() override;
 
         /**
+         * Override of Xml::Object::objectLabel()
+         */
+        ObjectLabel
+        objectLabel() const override;
+
+        /**
          * Gets the itself document (const version)
          *
          * @return The document

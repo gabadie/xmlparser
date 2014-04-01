@@ -40,6 +40,12 @@ namespace Xml
         }
     }
 
+    ObjectLabel
+    Element::objectLabel() const
+    {
+        return ObjectLabel::Element;
+    }
+
     Node *
     Element::clone()
     {
@@ -510,12 +516,6 @@ namespace Xml
         }
 
         stream << Utils::repeat(indent, level) << "</" << (mNamespaceName.size() > 0 ? mNamespaceName + ":" : "") << mName << ">";
-    }
-
-    bool
-    Element::isElement() const
-    {
-        return true;
     }
 
     void

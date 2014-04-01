@@ -16,6 +16,12 @@ namespace Xml
 
     }
 
+    ObjectLabel
+    Text::objectLabel() const
+    {
+        return ObjectLabel::Text;
+    }
+
     Node *
     Text::clone()
     {
