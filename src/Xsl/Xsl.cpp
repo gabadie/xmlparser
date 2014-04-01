@@ -159,9 +159,28 @@ vector <Xml::Node*>  Xsl::ForEach::operator () (const Xml::Element* context, Xml
 
  vector <Xml::Node*> Xsl::ApplyTemplate::operator () (const Xml::Element* context,Xml::Document& xslDoc, const Xml::Element * applyTemplateElement) const
 {
+    vector <Xml::Node*> resultNodes ;
+
     list <Xml::Element const *> matchingNodes = context->select(applyTemplateElement->attribute("select"));
-    for (auto node : matchingNodes){
-        Xml::Element const * xslTemplate = Xsl::getTemplate(xslDoc, node) ;
-        Xsl::applyTemplate(node, xslDoc, xslTemplate);
+    Xml::Element const * xslTemplate = Xsl::getTemplate(xslDoc, applyTemplateElement) ;
+    for ( auto element : matchingNodes)
+    {
+        Xml::Element * elementTemp = new Xml::Element();
+        for(auto elemTemp : Xml::applyTemplate(element, xslDoc, xslTemplate))
+        {
+            elementTemp->append(elemTemp);
+        }
+        resultNodes.push_back(elementTemp);
+       
+
     }
+   
+    
+    
+
+/*    for (auto node : matchingNodes){
+       
+        resultNodes.push_back();
+    }*/
+    return resultNodes
 }

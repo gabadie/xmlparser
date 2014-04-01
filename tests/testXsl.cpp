@@ -39,6 +39,7 @@ testXslTransform()
                 <xsl:for-each select="cd/title">
                     hihi
                 </xsl:for-each>
+                <xsl:apply-templates select="cd"/>
             </xsl:template>
 
         </xsl:stylesheet>
