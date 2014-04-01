@@ -523,6 +523,7 @@ namespace Xml
     {
         app_assert(node != nullptr);
         app_assert(node != this);
+        app_assert(canAppend(node));
 
         node->detach();
 
@@ -554,5 +555,20 @@ namespace Xml
 
         return false;
     }
+
+    bool
+    Element::canAppend(Node const * node)
+    {
+        app_assert(node != nullptr);
+
+        auto objectLabel = node->objectLabel();
+
+        return objectLabel == ObjectLabel::CharacterData ||
+            objectLabel == ObjectLabel::Comment ||
+            objectLabel == ObjectLabel::Element ||
+            objectLabel == ObjectLabel::ProcessingInstruction ||
+            objectLabel == ObjectLabel::Text;
+    }
+
 }
 

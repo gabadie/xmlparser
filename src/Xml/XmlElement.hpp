@@ -277,6 +277,14 @@ namespace Xml
         bool
         hasChild(Node const * node) const override;
 
+        /**
+         * Tests if can append this node to the document
+         *
+         * @return True if you can append the node
+         */
+        static bool
+        canAppend(Node const * node);
+
     protected:
         std::string mName;         ///< Name of the element
         std::string mNamespaceName;    ///< Namespace of the element

@@ -137,6 +137,14 @@ namespace Xml
         bool
         hasChild(Node const * node) const override;
 
+        /**
+         * Tests if can append this node to the document
+         *
+         * @return True if you can append the node
+         */
+        static bool
+        canAppend(Node const * node);
+
     private:
         Element * mRoot;     ///< Root of the XML document
         NodesList mChildren; ///< Children nodes
