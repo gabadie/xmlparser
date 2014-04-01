@@ -45,7 +45,7 @@ namespace Xsl
     Xml::Document *
     xslTransform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc ) ;
 
-    Xml::Node *
+    std::vector<Xml::Node *>
     applyDefaultTemplate(Xml::Node const * context,  Xml::Document const & xslDoc);
 
 

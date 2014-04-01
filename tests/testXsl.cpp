@@ -3,6 +3,52 @@
 #include "../src/Xml/XmlParser.hpp"
 #include "../src/Xsl/Xsl.hpp"
 
+
+void
+testSimpleXsl()
+{
+    // xml
+    std::string xmlContent (xml_code(
+        <catalog>
+                <root>
+                    <cd>
+                        <title>Title A</title>
+                    </cd>
+
+                    <cd>
+                        <title>Title B</title>
+                    </cd>
+                </root>
+        </catalog>
+    ));
+    Xml::Log xmlLog;
+    Xml::Document * xmlDoc = Xml::parse(xmlContent, &xmlLog);
+
+    // xsl
+    std::string xslContent (xml_code(
+        <xsl:stylesheet>
+            <xsl:template match="cd">
+                <a>lol</a>
+                <xsl:value-of select="title" />
+            </xsl:template>
+        </xsl:stylesheet>
+    ));
+    Xml::Log xslLog;
+    Xml::Document * xslDoc = Xml::parse(xslContent, &xslLog);
+
+    test_assert(xslDoc != 0);
+    test_assert(xmlDoc != 0);
+
+    Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc);
+
+    std::cerr << std::endl << *result << std::endl;
+
+    delete xmlDoc;
+    delete xslDoc;
+    delete result;
+}
+
+
 void
 testXslTransform()
 {
@@ -182,5 +228,6 @@ main()
     testXslTransform();
     testGetTemplate();
     testValueOf();
+    testSimpleXsl();
     return 0;
 }

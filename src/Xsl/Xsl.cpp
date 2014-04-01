@@ -39,31 +39,31 @@ const Xml::Element* Xsl::getTemplate(const Xml::Document& xslDoc, const Xml::Ele
 
 Xml::Document * Xsl::xslTransform( const Xml::Document& xmlDoc,  const Xml::Document& xslDoc)
 {
-    std::vector<Xml::Node*> resultNodes = findAndApplyTemplate(xmlDoc.root(), xslDoc);
-    app_assert(resultNodes.size() == 1);
-    app_assert(resultNodes[0]->isElement());
-    auto root = static_cast<Xml::Element *>(resultNodes[0]);
-
     Xml::Document * result = new Xml::Document();
+    std::vector<Xml::Node*> resultNodes = findAndApplyTemplate(xmlDoc.root(), xslDoc);
+
+    if (resultNodes.size() == 0) {
+        return result;
+    }
+
+    auto root = static_cast<Xml::Element *>(resultNodes[0]);
     result->setRoot(root);
 
     return result;
 }
 
 
-Xml::Node * Xsl::applyDefaultTemplate(Xml::Node const * context,  const Xml::Document& xslDoc)
+std::vector<Xml::Node *> Xsl::applyDefaultTemplate(Xml::Node const * context,  const Xml::Document& xslDoc)
 {
+    std::vector<Xml::Node *> result;
     if (!context->isElement())
     {
-        return context->clone();
+        result.push_back(context->clone());
+        return result;
     }
     else
     {
-        Xml::Element * resultElementNode = static_cast<Xml::Element*>(context->clone());
-        for (auto rNode : findAndApplyTemplate(static_cast<const Xml::Element*>(context), xslDoc)) {
-            resultElementNode->appendNode(rNode);
-        }
-        return resultElementNode;
+        return findAndApplyTemplate(static_cast<const Xml::Element*>(context), xslDoc);
     }
 }
 
@@ -77,22 +77,26 @@ std::vector<Xml::Node *> Xsl::findAndApplyTemplate(Xml::Element const * context,
         return applyTemplate(context, xslDoc, contextTemplate);
     }
     else {
-        std::vector<Xml::Node *> resultNodes;
-        resultNodes.push_back(applyDefaultTemplate(context, xslDoc));
-        return resultNodes;
+        std::vector<Xml::Node *> result;
+        for (auto child: context->children()) {
+            for (auto rNode : applyDefaultTemplate(child, xslDoc)) {
+                result.push_back(rNode);
+            }
+        }
+        return result;
     }
 }
 
 
 std::vector<Xml::Node *> Xsl::applyTemplate(Xml::Element const * context, const Xml::Document& xslDoc,  Xml::Element const * xslTemplate)
 {
-    std::vector<Xml::Node *> listNodes;
+    std::vector<Xml::Node *> result;
 
     // Attention, ici on parcours des éléments XSL, et pas le document XML qu'on transforme
     for (Xml::Node* templateNode : xslTemplate->children())
     {
         if (!templateNode->isElement()) {
-            listNodes.push_back(templateNode->clone());
+            result.push_back(templateNode->clone());
             continue;
         }
 
@@ -114,7 +118,7 @@ std::vector<Xml::Node *> Xsl::applyTemplate(Xml::Element const * context, const 
             std::vector <Xml::Node *> resultInstruction = (*xslInstruction)(context, xslDoc, xslElement);
             for (auto node : resultInstruction)
             {
-                listNodes.push_back(node);
+                result.push_back(node);
             }
         }
         else
@@ -126,10 +130,11 @@ std::vector<Xml::Node *> Xsl::applyTemplate(Xml::Element const * context, const 
                 clonedElement->appendNode(rNode);
             }
 
-            listNodes.push_back(clonedElement);
+            result.push_back(clonedElement);
         }
     }
-    return listNodes;
+
+    return result;
 
 }
 
@@ -168,4 +173,5 @@ std::vector <Xml::Node*> Xsl::ApplyTemplate::operator () (const Xml::Element* co
         Xml::Element const * xslTemplate = Xsl::getTemplate(xslDoc, node) ;
         Xsl::applyTemplate(node, xslDoc, xslTemplate);
     }
+    return std::vector<Xml::Node *>();
 }
