@@ -96,11 +96,6 @@ namespace Xsd
         mAttributesTypes.clear();
     }
 
-/*
-    using typesMap = std::map<std::string, Type const *>;
-    using elementsTypesMap = std::map<std::string, std::string>;
-    using attributesTypesMap = std::map<std::string, std::string>;
-*/
     void
     Checker::checkReferences()
     {

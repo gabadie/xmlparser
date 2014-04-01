@@ -16,7 +16,6 @@ namespace Xsd
     //Aliases
     using typesMap = std::map<std::string, Type * const>;
     using elementsTypesMap = std::map<std::string, std::string>;
-    //using attributesMap = std::map<std::string, Attribute const *>;
     using attributesTypesMap = std::map<std::string, std::string>;
 
     /**
