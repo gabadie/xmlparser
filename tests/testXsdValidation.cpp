@@ -124,9 +124,19 @@ void testValidation(const std::string & xmlContent, const std::string & xmlWrong
     Xml::Document * xmlWrongDoc = Xml::parse(xmlWrongContent, &log);
     Xml::Document * xsdDoc = Xml::parse(xsdContent, &log);
 
-    test_assert(xmlDoc != nullptr && xmlWrongDoc != nullptr && xsdDoc != nullptr);
+    if(xmlDoc == nullptr || xmlWrongDoc == nullptr || xsdDoc == nullptr)
+    {
+        std::cerr << "Error: A document could not be parsed" << std::endl;
+        return;
+    }
     test_assert(Xsd::Checker::parseXsd(xsdDoc));
+
     Xsd::Checker * checker = Xsd::Checker::getInstance();
+    if(checker == nullptr)
+    {
+        std::cerr << "Error: XSD document could not be built" << std::endl;
+        return;
+    }
     test_assert(checker->isValid(xmlDoc));
     test_assert(!checker->isValid(xmlWrongDoc));
 
@@ -202,7 +212,9 @@ testComplexType()
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
           <xs:element name="person">
             <xs:complexType>
-              <xs:element name="address" type="xs:string"/>
+                <xs:choice>
+                    <xs:element name="address" type="xs:string"/>
+                </xs:choice>
             </xs:complexType>
           </xs:element>
         </xs:schema>
@@ -233,10 +245,13 @@ testRecursiveComplexType()
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
             <xs:element name="person">
                 <xs:complexType>
+                    <xs:choice>
                     <xs:element name="address">
                         <xs:complexType>
                             <xs:attribute name="validity" type="xs:date" use="required"/>
                         </xs:complexType>
+                    </xs:element name="address">
+                    </xs:choice>
                 </xs:complexType>
             </xs:element>
         </xs:schema>
@@ -274,6 +289,7 @@ testSequence()
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
             <xs:element name="person">
                 <xs:complexType>
+                    <xs:choice>
                     <xs:element name="infos">
                         <xs:complexType>
                             <xs:sequence>
@@ -283,6 +299,7 @@ testSequence()
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
+                    </xs:choice>
                 </xs:complexType>
             </xs:element>
         </xs:schema>
@@ -379,11 +396,14 @@ testRefAttribute()
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
             <xs:element name="person">
                 <xs:complexType>
+                    <xs:choice>
                     <xs:element name="address">
                         <xs:complexType>
                             <xs:attribute name="patate" type="xs:string"/>
                             <xs:attribute ref="validity" use="required"/>
                         </xs:complexType>
+                    </xs:element>
+                    </xs:choice>
                 </xs:complexType>
             </xs:element>
 
@@ -414,7 +434,9 @@ testRefType()
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
             <xs:element name="person">
                 <xs:complexType>
-                    <xs:element name="address" type="addressType">
+                    <xs:choice>
+                        <xs:element name="address" type="addressType"/>
+                    </xs:choice>
                 </xs:complexType>
             </xs:element>
 
@@ -449,7 +471,9 @@ testRefElement()
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
             <xs:element name="person">
                 <xs:complexType>
-                    <xs:element ref="address">
+                    <xs:choice>
+                        <xs:element ref="address"/>
+                    <xs:choice>
                 </xs:complexType>
             </xs:element>
 
@@ -511,7 +535,9 @@ testOccurs()
             <xs:element name="person" type="personType"/>
 
             <xs:complexType name="personType">
-                <xs:element ref="infos"/>
+                <xs:choice>
+                    <xs:element ref="infos"/>
+                <xs:choice>
             </xs:complexType>
 
             <xs:element name="infos">

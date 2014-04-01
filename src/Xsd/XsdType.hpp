@@ -14,9 +14,9 @@ namespace Xsd
     class Type
     {
     public:
-        Type(const Xml::Element * const xmlElement, const std::string & name);
+        Type(const Xml::Element * const xmlElement);
 
-        Type(const std::string & name, const std::string & regex, std::list<Attribute *> attrs);
+        Type(const std::string & regex, std::list<Attribute *> attrs);
 
          /**
          * Destructor

@@ -2,7 +2,9 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name="person">
         <xs:complexType>
-            <xs:element name="address" type="addressType">
+            <xs:choice>
+                <xs:element name="address" type="addressType"/>
+            </xs:choice>
         </xs:complexType>
     </xs:element>
 
