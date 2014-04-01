@@ -1,3 +1,11 @@
+/**
+ * \file XsdChecker.cpp
+ * \brief XSD Checker
+ * \author rdomingues
+ * \version 0.1
+ * \date 18 mars 2014
+ */
+
 #include "XsdChecker.hpp"
 #include "XsdException.hpp"
 #include "../Xml/XmlParser.hpp"
@@ -112,14 +120,6 @@ namespace Xsd
         //Check that every attribute in every type has its type in elementsTypesMap
         //Type const * type;
 
-        /*
-            pour tous les elts
-                check le type de l elt
-
-            pour tous les types
-                pour tous les attrs
-                    check le type des attrs
-        */
 
         for (auto iterEltType = mElementsTypes.begin(); iterEltType != mElementsTypes.end(); ++iterEltType)
         {
@@ -184,14 +184,6 @@ namespace Xsd
     {
         mElementsTypes.insert(std::pair<std::string, std::string>(elementName, typeName));
     }
-
-/*
-    void
-    Checker::addAttribute(const std::string Checker::& attributeName, const Attribute * const attribute)
-    {
-        attributesMap.insert(std::pair<std::string, Attribute const *>(attributeName, attribute));
-    }
-*/
 
     void
     Checker::addTypedAttribute(const std::string & attributeName, const std::string & typeName)
