@@ -89,10 +89,16 @@ namespace Xsd
         Type *
         getType(const std::string & typeName);
 
-        static std::string
+        void
+        initDateType();
+
+        void
+        initStringType();
+
+        std::string
         getDateType();
 
-        static std::string
+        std::string
         getStringType();
 
         Type *
@@ -125,7 +131,9 @@ namespace Xsd
          */
         static Checker * instance;
 
-        std::string namespacePrefix;
+        std::string mNamespacePrefix;
+        std::string mDateType;
+        std::string mStringType;
 
         const Xml::Document * const mXsdDoc;
 

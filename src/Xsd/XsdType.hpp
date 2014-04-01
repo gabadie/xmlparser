@@ -17,16 +17,14 @@ namespace Xsd
     class Type
     {
     public:
-
         /*
          * Constructor
          *
-         * @param xmlElement the Xml parsed element
-         * @param name The Name of the element
+         * @param xmlElement xml parsed element
          */
-        Type(const Xml::Element * const xmlElement, const std::string & name);
+        Type(const Xml::Element * const xmlElement);
 
-        Type(const std::string & name, const std::string & regex, std::list<Attribute *> attrs);
+        Type(const std::string & regex, std::list<Attribute *> attrs);
 
          /**
          * Destructor

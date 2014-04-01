@@ -2,6 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name="person">
         <xs:complexType>
+            <xs:choice>
             <xs:element name="infos">
                 <xs:complexType>
                     <xs:sequence>
@@ -11,6 +12,7 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            </xs:choice>
         </xs:complexType>
     </xs:element>
 </xs:schema>

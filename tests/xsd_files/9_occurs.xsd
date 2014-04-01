@@ -3,7 +3,9 @@
     <xs:element name="person" type="personType"/>
 
     <xs:complexType name="personType">
-        <xs:element ref="infos"/>
+        <xs:choice>
+            <xs:element ref="infos"/>
+        <xs:choice>
     </xs:complexType>
 
     <xs:element name="infos">

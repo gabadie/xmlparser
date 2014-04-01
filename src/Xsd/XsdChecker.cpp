@@ -45,8 +45,6 @@ namespace Xsd
     {
         const std::string dateRegex = "[0-9]{2}-[0-9]{2}-[0-9]{4}";
         const std::string stringRegex = "*";
-        new Type(DATE_TYPE, dateRegex, std::list<Attribute *>());
-        new Type(STRING_TYPE, stringRegex, std::list<Attribute *>());
 
         if(!(xsdDoc->root()->name().compare(SCHEMA_ELT) == 0))
         {
@@ -59,15 +57,25 @@ namespace Xsd
         {
             if(iterAttr->second.compare("http://www.w3.org/2001/XMLSchema") == 0)
             {
-                namespacePrefix = iterAttr->first;
+                mNamespacePrefix = iterAttr->first;
                 break;
             }
             iterAttr++;
         }
         if (iterAttr == rootAttributesMap.end())
         {
-            namespacePrefix = "";
+            mNamespacePrefix = "";
         }
+
+        initDateType();
+        initStringType();
+
+        Type * typeDate = new Type(dateRegex, std::list<Attribute *>());
+        addType(mDateType, typeDate);
+
+        Type * typeString = new Type(stringRegex, std::list<Attribute *>());
+        addType(mStringType, typeString);
+
 
         //Building intermediary structure from xmlDoc
         std::list<Attribute *> attributes;
@@ -157,9 +165,10 @@ namespace Xsd
             getElementType(ROOT)->checkValidity(xsdDoc->root());
             return true;
         }
-        catch(const XSDValidationException & e)
+        catch(XSDValidationException * e)
         {
-            std::cerr << e.what() << std::endl;
+            std::cerr << e->what() << std::endl;
+            delete e;
             return false;
         }
     }
@@ -201,30 +210,43 @@ namespace Xsd
         return iterType->second;
     }
 
-    std::string
-    Checker::getDateType()
+    void
+    Checker::initDateType()
     {
-        if (getInstance()->namespacePrefix != "")
+        if (mNamespacePrefix != "")
         {
-            return getInstance()->namespacePrefix + ':' + DATE_TYPE;
+            mDateType = mNamespacePrefix + ':' + DATE_TYPE;
         }
         else
         {
-            return DATE_TYPE;
+            mDateType = DATE_TYPE;
         }
+    }
+
+    void
+    Checker::initStringType()
+    {
+        if (mNamespacePrefix != "")
+        {
+            mStringType = mNamespacePrefix + ':' + STRING_TYPE;
+        }
+        else
+        {
+            mStringType = STRING_TYPE;
+        }
+    }
+
+
+    std::string
+    Checker::getDateType()
+    {
+        return mDateType;
     }
 
     std::string
     Checker::getStringType()
     {
-        if (getInstance()->namespacePrefix != "")
-        {
-            return getInstance()->namespacePrefix + ':' + STRING_TYPE;
-        }
-        else
-        {
-            return STRING_TYPE;
-        }
+        return mStringType;
     }
 
     Type *
@@ -284,22 +306,26 @@ namespace Xsd
             delete instance;
         }
 
+        instance = new Checker(xsdDoc);
+        return true;
+        /*
         try
         {
             instance = new Checker(xsdDoc);
             return true;
         }
-        catch(const XSDValidationException & e)
+        catch(XSDConstructionException * e)
         {
-            std::cerr << e.what() << std::endl;
+            std::cerr << e->what() << std::endl;
+            delete e;
             return false;
-        }
+        }*/
     }
 
     void
     Checker::throwInvalidElementException(const std::string & received, const std::string & expected)
     {
-        throw new XSDConstructionException("Error: Invalid XSD root element received :" + received + " (" + expected + " expected");
+        throw new XSDConstructionException("Error: Invalid XSD element received: " + received + " (" + expected + " expected)");
     }
 
     void
