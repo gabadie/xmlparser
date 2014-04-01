@@ -13,9 +13,11 @@ fonctionnalités de transformation d'une feuille XSL, et de même pour les instr
     \label{oldXslClassDiagram}
 \end{figure}
 
-Néanmoins, cette conception présente de nombreux inconvénients : Elle nous forçait à parcourir tout le document XML afin de convertir les tags XSL en objets dédiés, ...
+Néanmoins, cette conception présente de nombreux inconvénients :
 
-\textbf{TODO : } rajouter d'autres raisons pour lesquelles l'ancienne conception est pas pratique
+En plus d'ajouter de nombreuses classe sans vraie valeur ajoutée, elle nous forçait à reconstruire l'arbre XML afin de convertir les tags
+XSL en objets dédiés. On ne profitait pas réellement d'un quelconque polymorphisme non plus puisque cela demandait de toucher aux classes
+XML, alors que celles ci n'ont pas comme responsabilité de gérer toutes les applications possibles de ce langage de représentation de données.
 
 \begin{landscape}
 \begin{figure}[h!]
@@ -29,20 +31,18 @@ Néanmoins, cette conception présente de nombreux inconvénients : Elle nous fo
 
 \section{Vue globale de l'algorithme}
 
-\textbf{TODO :} rajouter des détails sur cette partie.
-
 L'algorithme de transformation XSL s’exécute de manière récursive et bascule continuellement entre le document XSL et le document XML à transformer.
 
 Un même algorithme s'exécute pour chaque nœud (à quelques exceptions citées ci-dessous) :
 
 \begin{enumerate}
     \item Si le nœud n'est pas un élément, on le rajoute directement au résultat.
-    \item Si un \textit{template} correspond à ce nœud, on l'applique (plus sur l'application des templates ci-dessous) en prenant ce nœud comme \textit{contexte} et on ajoute le résultat de cette application au nœud contexte.
-    \item Sinon, on clone l'élément, et on ré-applique le même algorithme sur tous ses enfants, en ayant comme contexte le nœud qu'on a cloné et en rajoutant tous les résultats comme fils du clone du nœud.
+    \item Si un \textit{template} correspond à ce nœud, on l'applique (plus sur l'application des templates ci-dessous) en prenant ce nœud comme \textit{contexte} et on ajoute le résultat de cette application au nœud en cours de génération.
+    \item Sinon, on ré-applique le même algorithme sur tous ses enfants, en ayant comme contexte l'élément actuel et en concaténant les résultats des applications de l'algorithme à tous le fils.
 \end{enumerate}
 
-La transformation XSL débute en appliquant cet algorithme à la racine du document XML à transformer, et se propage par récursion à la totalité du document.
-
+La transformation XSL débute en appliquant cet algorithme à la racine du document XML à transformer, et se propage par récursions successives
+à la totalité du document.
 
 \section{Templates}
 
@@ -69,5 +69,4 @@ Quand on applique un template, on va renvoyer une liste de nœuds résultants (q
     \item Les nœuds qui ne sont pas des éléments XML sont rajoutés directement.
     \item Les nœuds qui sont des éléments XML, mais pas XSL, sont considérés comme des templates (car pouvant contenir des instructions XSL) et appliqués avec comme contexte le nœud d'application de la transformation XSL.
     \item Les éléments XSL sont appliqués avec comme contexte le nœud d'application de la transformation XSL. Tous les nœuds résultants de cette application sont ajoutés à la liste des nœuds générés par l'application du template.
-
 \end{enumerate}
