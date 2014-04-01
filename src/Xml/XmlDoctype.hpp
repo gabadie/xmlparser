@@ -26,6 +26,15 @@ namespace Xml
         Node *
         clone();
 
+        /**
+         * Returns the object's type label
+         *
+         * @return The object's type label
+         */
+        virtual
+        ObjectLabel
+        objectLabel() const;
+
     protected:
         /**
          * Constructor
@@ -43,6 +52,7 @@ namespace Xml
         void
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
+
 
     private:
         std::string const mContent;

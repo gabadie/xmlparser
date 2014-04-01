@@ -222,6 +222,7 @@ namespace Xml
         auto objectLabel = node->objectLabel();
 
         return objectLabel == ObjectLabel::Comment ||
+            objectLabel == ObjectLabel::Doctype ||
             objectLabel == ObjectLabel::Element ||
             objectLabel == ObjectLabel::ProcessingInstruction;
     }

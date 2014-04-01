@@ -73,7 +73,7 @@ testXmlDoctypeParsing2()
     Xml::Log log;
     Xml::Document * doc = Xml::parse(content, &log);
 
-    std::cerr << log;
+    //std::cerr << log;
 
     test_assert(doc != nullptr);
     if(doc == nullptr) return;
@@ -98,7 +98,7 @@ int
 main()
 {
     testXmlDoctypeNode();
-    std::cerr << "TEST n°1" << std::endl;
+    //std::cerr << "TEST n°1" << std::endl;
     testXmlDoctypeParsing1();
     //std::cerr << "TEST n°2" << std::endl;
     //testXmlDoctypeParsing1();

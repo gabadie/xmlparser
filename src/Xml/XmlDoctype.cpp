@@ -22,6 +22,12 @@ namespace Xml
         return new Doctype(this->mContent);
     }
 
+    ObjectLabel
+    Doctype::objectLabel() const
+    {
+        return ObjectLabel::Doctype;
+    }
+
     void
     Doctype::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
     {
