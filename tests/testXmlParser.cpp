@@ -5,15 +5,22 @@
 
 
 void
+testXmlNonExistingFile()
+{
+    Xml::Log log;
+    Xml::Document * doc = Xml::load("./unexisting.xml", &log);
+
+    test_assert(doc == nullptr);
+}
+
+void
 testXmlSyntaxError()
 {
     Xml::Log log;
     Xml::Document * doc = Xml::load("./xml_original_files/syntax_error.xml", &log);
 
-    test_assert(doc == 0);
+    test_assert(doc == nullptr);
     test_assert(log.find("line 2") == 1);
-
-    delete doc;
 }
 
 void
@@ -22,16 +29,15 @@ testXmlLexicalError()
     Xml::Log log;
     Xml::Document * doc = Xml::load("./xml_original_files/lexical_error.xml", &log);
 
-    test_assert(doc == 0);
+    test_assert(doc == nullptr);
     test_assert(log.find("line 1 (lexical error)") == 1);
-
-    delete doc;
 }
 
 
 int
 main()
 {
+    testXmlNonExistingFile();
     testXmlSyntaxError();
     testXmlLexicalError();
 
