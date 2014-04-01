@@ -222,9 +222,69 @@ testValueOf()
     delete result;
 }
 
+void
+testApplyTemplates()
+{
+    // xml
+    // xml
+    std::string xmlContent (xml_code(
+        <catalog>
+            <cd>
+                <title>Title A</title>
+                <artist>Artist A</artist>
+                <category>Category A</category>
+            </cd>
+
+            <cd>
+                <title>Title B</title>
+                <artist>Artist B</artist>
+                <category>Category B</category>
+            </cd>
+        </catalog>
+    ));
+
+    Xml::Log xmlLog;
+    Xml::Document * xmlDoc = Xml::parse(xmlContent, &xmlLog);
+
+    // xsl
+    std::string xslContent (xml_code(
+        <xsl:stylesheet>
+            <xsl:template match="/">
+                <root>
+                    <xsl:apply-templates select="cd"/>
+                </root>
+            </xsl:template>
+
+        <xsl:template match="cd">
+                CE TEMPLATE MATCH
+        </xsl:template>
+        </xsl:stylesheet>
+
+
+    ));
+
+    Xml::Log xslLog;
+    Xml::Document * xslDoc = Xml::parse(xslContent, &xslLog);
+
+    test_assert(xslDoc != 0);
+    test_assert(xmlDoc != 0);
+
+    Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc);
+
+    std::cerr << std::endl << *result << std::endl;
+
+    test_assert(result->root()->children()[0]->contentText() == "CE TEMPLATE MATCH");
+
+    delete xmlDoc;
+    delete xslDoc;
+    delete result;
+}
+
 int
 main()
 {
+    testApplyTemplates();
+
     testXslTransform();
     testGetTemplate();
     testValueOf();

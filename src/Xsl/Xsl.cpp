@@ -45,7 +45,6 @@ Xml::Document * Xsl::xslTransform( const Xml::Document& xmlDoc,  const Xml::Docu
     if (resultNodes.size() == 0) {
         return result;
     }
-
     auto root = static_cast<Xml::Element *>(resultNodes[0]);
     result->setRoot(root);
 
@@ -168,10 +167,16 @@ std::vector <Xml::Node*>  Xsl::ForEach::operator () (const Xml::Element* context
 
 std::vector <Xml::Node*> Xsl::ApplyTemplate::operator () (const Xml::Element* context,const Xml::Document& xslDoc,  Xml::Element const * applyTemplateElement) const
 {
-    auto matchingNodes = context->select(applyTemplateElement->attribute("select"));
-    for (auto node : matchingNodes){
-        Xml::Element const * xslTemplate = Xsl::getTemplate(xslDoc, node) ;
-        Xsl::applyTemplate(node, xslDoc, xslTemplate);
+    std::vector <Xml::Node*> resultNodes ;
+    std::list <Xml::Element const *> matchingNodes = context->select(applyTemplateElement->attribute("select"));
+
+    for ( auto element : matchingNodes)
+    {   
+        for ( auto  appliedElement : findAndApplyTemplate(element, xslDoc))
+        {
+            resultNodes.push_back(appliedElement);
+        }
     }
-    return std::vector<Xml::Node *>();
-}
+
+    return resultNodes;
+}   
