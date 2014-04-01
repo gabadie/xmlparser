@@ -17,7 +17,7 @@ namespace Xml
     }
 
     Node *
-    CharacterData::clone()
+    CharacterData::clone() const
     {
         return new CharacterData(this->mContent);
     }
