@@ -12,6 +12,7 @@ namespace Xml
     /*
      * Namespace's classes
      */
+    class CharacterData;
     class Comment;
     class Document;
     class DocumentNode;
@@ -33,7 +34,7 @@ namespace Xsl
     class Instruction;
     class ValueOf;
     class ForEach;
-    class ApplyTemplate; 
+    class ApplyTemplate;
 
 
 

@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "XmlParser.hpp"
+#include "XmlCharacterData.hpp"
 #include "XmlText.hpp"
 #include "XmlComment.hpp"
 #include "XmlProcessingInstruction.hpp"
@@ -111,6 +112,7 @@ document:
         *e = doc;
     };
 
+
 element:
     emptytag
     {
@@ -147,22 +149,53 @@ element:
         if ($1->tag() != *$3)
         {
             Xml::parserSemanticError("unexpected </" + *$3 + "> (it should have been </" + $1->name() + ">)");
-
-            delete $$;
-            $$ = nullptr;
         }
 
         /*
          * $3 has been created in content, then we delete it.
          */
         delete $3;
+    } |
+    stag content error
+    {
+        /* ---------------------------------------------------- element with children */
+
+        /*
+         * Xml::Element is allocated in stag.
+         */
+        $$ = $1;
+
+        for(Xml::Node * node : *$2)
+        {
+            if (node == nullptr)
+            {
+                continue;
+            }
+
+            $1->appendNode(node);
+        }
+
+        /*
+         * std::list<Xml::Node *> has been created in content, then we delete it.
+         */
+        delete $2;
+
+        Xml::parserSyntaxError("missing closing element </" + $1->name() + ">");
+        yyerrok;
     };
 
 miscitem:
     COMMENT
     {
         /* ---------------------------------------------------- comment node */
-        $$ = static_cast<Xml::Node *>(new Xml::Comment(std::string($1)));
+        if ($1[0] == 0)
+        {
+            $$ = nullptr;
+        }
+        else
+        {
+            $$ = static_cast<Xml::Node *>(new Xml::Comment(std::string($1)));
+        }
 
         /*
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
@@ -326,6 +359,19 @@ atts:
         free($2);
         free($4);
     } |
+    atts NOM COLON NOM EGAL VALEUR
+    {
+        /* ---------------------------------------------------- element's attributes with namespace */
+        std::string attrName = std::string($2) + ":" + std::string($4);
+        $1->insert({attrName, std::string($6)});
+
+        /*
+         * $2, $4 and $6 is char * allocated in XmlParser.lex with malloc(), then we free them.
+         */
+        free($2);
+        free($4);
+        free($6);
+    } |
     /* empty */
     {
         $$ = new Xml::Element::AttributesMap();
@@ -375,12 +421,41 @@ item:
     DONNEES
     {
         /* ---------------------------------------------------- text in an element */
-        $$ = static_cast<Xml::Node *>(new Xml::Text(std::string($1)));
+        if ($1[0] == 0)
+        {
+            $$ = nullptr;
+        }
+        else
+        {
+            $$ = static_cast<Xml::Node *>(new Xml::Text(std::string($1)));
+        }
 
         /*
          * $1 is char * allocated in XmlParser.lex with malloc(), then we free it.
          */
         free($1);
+    } |
+    CDATABEGIN CDATAEND
+    {
+        /* ---------------------------------------------------- CDATA node */
+        if ($2[0] == 0)
+        {
+            $$ = nullptr;
+        }
+        else
+        {
+            $$ = static_cast<Xml::Node *>(new Xml::CharacterData(std::string($2)));
+        }
+
+        /*
+         * $2 is char * allocated in XmlParser.lex with malloc(), then we free it.
+         */
+        free($2);
+    } |
+    CDATABEGIN error
+    {
+        /* ---------------------------------------------------- CDATA error */
+        $$ = nullptr;
     } |
     miscitem
     {
@@ -407,7 +482,7 @@ content:
 /* ----------------------------------------------------------------------------- C/C++ suffix */
 
 void
-yyerror(void ** e, const char * msg)
+yyerror(void **, const char * msg)
 {
     Xml::parserSyntaxError(msg);
 }

@@ -43,7 +43,7 @@ namespace Xml
     Node *
     Element::clone() const
     {
-        Xml::Element* elementClone =  new Element(this->mName);
+        Xml::Element* elementClone =  new Element(this->mName, this->mNamespaceName);
         elementClone->mAttributes = AttributesMap(this->mAttributes);
         return elementClone;
     }
@@ -121,6 +121,49 @@ namespace Xml
         return contentStream.str();
     }
 
+    std::string
+    Element::fullText() const
+    {
+        std::ostringstream contentStream;
+
+        for(auto const & c : mChildren)
+        {
+            app_assert(c != nullptr);
+            app_assert(c->mParent == this);
+
+            if(c->isElement())
+            {
+                std::string const text = static_cast<Element *>(c)->fullText();
+
+                if(text.size() > 0)
+                {
+                    if (contentStream.tellp() != 0)
+                    {
+                        contentStream << Xml::CAT_SEPARATOR;
+                    }
+
+                    contentStream << text;
+                }
+            }
+
+            std::string const text = c->contentText();
+
+            if(text.size() == 0)
+            {
+                continue;
+            }
+
+            if (contentStream.tellp() != 0)
+            {
+                contentStream << Xml::CAT_SEPARATOR;
+            }
+
+            contentStream << text;
+        }
+
+        return contentStream.str();
+    }
+
     void
     Element::setContent(std::string const & content)
     {
@@ -152,13 +195,18 @@ namespace Xml
     void
     Element::appendText(std::string const & text)
     {
+        if (text == "")
+        {
+            return;
+        }
+
         this->appendNode(new Text(text));
     }
 
     bool
     Element::remove(Node * node)
     {
-        app_assert(node != 0);
+        app_assert(node != nullptr);
 
         if (node->mParent != this)
         {
@@ -351,7 +399,7 @@ namespace Xml
         }
         else {
             auto lastToken = pattern.substr(slashPos + 1, pattern.size() - 1);
-            if (this->name() != lastToken || !this->parent()->isElement()) {
+            if (this->name() != lastToken || this->parent() == nullptr || !this->parent()->isElement()) {
                 return false;
             }
             auto parent = static_cast<Xml::Element const *>(this->parent());
@@ -388,7 +436,7 @@ namespace Xml
         {
             auto results = this->select(xPathQuery);
             // Keep only the first result
-            return results.size() > 0 ? (*std::begin(results))->text() : "";
+            return results.size() > 0 ? (*std::begin(results))->fullText() : "";
         }
 
         return "";
@@ -397,7 +445,7 @@ namespace Xml
     void
     Element::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
     {
-        stream << Utils::repeat(indent, level) << "<" << mName;
+        stream << Utils::repeat(indent, level) << "<" << (mNamespaceName.size() > 0 ? mNamespaceName + ":" : "") << mName;
 
         for(auto const & a : mAttributes)
         {
@@ -407,7 +455,7 @@ namespace Xml
         // If the element has no child, we close the tag and stop
         if(mChildren.size() == 0)
         {
-            stream << "/>\n";
+            stream << "/>";
             return;
         }
 
@@ -423,7 +471,7 @@ namespace Xml
             stream << "\n";
         }
 
-        stream << Utils::repeat(indent, level) << "</" << mName << ">";
+        stream << Utils::repeat(indent, level) << "</" << (mNamespaceName.size() > 0 ? mNamespaceName + ":" : "") << mName << ">";
     }
 
     bool

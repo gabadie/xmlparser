@@ -26,6 +26,11 @@ namespace Xml
     void
     Object::appendComment(std::string const & comment)
     {
+        if (comment == "")
+        {
+            return;
+        }
+
         this->appendNode(new Comment(comment));
     }
 
@@ -36,7 +41,7 @@ namespace Xml
     }
 
     bool
-    Object::remove(Node * node)
+    Object::remove(Node *)
     {
         /*
          * Object::remove is overloaded in Xml::Document and Xml::Element.

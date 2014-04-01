@@ -83,19 +83,34 @@ testXmlElementParsingNamespace()
 void
 testXmlElementParsingUnclosed()
 {
-    std::string content (xml_code(
+    std::string content (R"XML(
         <hello>
             <balise1>
             <balise1>
             <balise2>
             </balise2>
         </hello>
-    ));
+    )XML");
     Xml::Log log;
 
     Xml::Document * doc = Xml::parse(content, &log);
 
-    test_assert(doc == 0);
+    test_assert(doc != 0);
+    test_assert(doc->root() != 0);
+
+    test_assert(doc->root()->tag() == "hello");
+    test_assert(doc->root()->mChildren.size() == 1);
+    test_assert(doc->root()->elements()[0]->tag() == "balise1");
+    test_assert(doc->root()->elements()[0]->mChildren.size() == 1);
+    test_assert(doc->root()->elements()[0]->elements()[0]->tag() == "balise1");
+    test_assert(doc->root()->elements()[0]->elements()[0]->mChildren.size() == 1);
+    test_assert(doc->root()->elements()[0]->elements()[0]->elements()[0]->tag() == "balise2");
+
+    test_assert(log.find("unexpected </hello>") == 1);
+    test_assert(log.find("missing closing element </balise1>") == 3);
+    test_assert(log.find("missing closing element </hello>") == 5);
+
+    delete doc;
 }
 
 void
@@ -114,7 +129,7 @@ testXmlElementParsingBadClose()
     Xml::Document * doc = Xml::parse(content, &log);
 
     test_assert(doc != 0);
-    test_assert(doc->root()->elements("balise1").size() == 0);
+    test_assert(doc->root()->elements("balise1").size() == 1);
     test_assert(doc->root()->elements("balise2").size() == 1);
 
     delete doc;
@@ -145,6 +160,35 @@ testXmlElementParsingAttributes()
     test_assert(balise1[0]->attribute("attr1") == "value1");
     test_assert(balise2[0]->attribute("attr2") == "value2");
     test_assert(balise2[0]->attribute("attr3") == "value3");
+
+    delete doc;
+}
+
+void
+testXmlElementParsingAttributesNamespace()
+{
+    std::string content (xml_code(
+        <hello>
+            <balise1 xs:attr1="value1">
+            </balise1>
+            <balise2 xsd:attr2="value2" nspc:attr3="value3">
+            </balise2>
+        </hello>
+    ));
+    Xml::Log log;
+
+    Xml::Document * doc = Xml::parse(content, &log);
+
+    test_assert(doc != nullptr);
+
+    auto balise1 = doc->root()->elements("balise1");
+    auto balise2 = doc->root()->elements("balise2");
+
+    test_assert(balise1.size() == 1);
+    test_assert(balise2.size() == 1);
+    test_assert(balise1[0]->attribute("xs:attr1") == "value1");
+    test_assert(balise2[0]->attribute("xsd:attr2") == "value2");
+    test_assert(balise2[0]->attribute("nspc:attr3") == "value3");
 
     delete doc;
 }
@@ -245,6 +289,7 @@ main()
     testXmlElementParsingUnclosed();
     testXmlElementParsingBadClose();
     testXmlElementParsingAttributes();
+    testXmlElementParsingAttributesNamespace();
     testXmlElementParsingBadAttributes();
     testXmlElementParsingWoContent();
     testXmlElementParsingWoContentBad();

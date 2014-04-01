@@ -1,4 +1,5 @@
 #include "XmlComment.hpp"
+#include "../AppDebug.hpp"
 #include "../Utils.hpp"
 
 namespace Xml
@@ -7,7 +8,7 @@ namespace Xml
         DocumentNode(),
         mContent(content)
     {
-
+        app_assert(content != "");
     }
 
     Comment::~Comment()

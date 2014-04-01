@@ -55,6 +55,8 @@ static char * nettoieCommentaire(char *s) {
 /* we don't have yywrap() */
 %option 8bit noyywrap
 %option yylineno
+%option nounput
+%option noinput
 
 
 /* ----------------------------------------------------------------------------- Terminals' definitions */
@@ -75,8 +77,8 @@ chaine      \"([^"&]|{esc})*\"|\'([^'&]|{esc})*\'
 doctype     {esp}?"<!DOCTYPE"{esp}
 infspecial {esp}?"<?"
 supspecial "?>"{nl}?
-cdata      "<![CDATA["
-endcdata   "]]>"
+cdata      {inf}"![CDATA["
+endcdata   "]]"{sup}
 
 /*
  * Le mode CONTENU est utilisé entre les balises ouvrantes et fermantes
