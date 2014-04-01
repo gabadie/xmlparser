@@ -138,8 +138,8 @@ namespace Xsd
     Type::isSimpleType(const std::string & type)
     {
         //throw new NotImplementedException("Not implemented yet");
-        return (type.compare(Checker::STRING_TYPE) == 0)
-            || (type.compare(Checker::DATE_TYPE) == 0);
+        return (type.compare(Checker::getStringType()) == 0)
+            || (type.compare(Checker::getDateType()) == 0);
     }
 
     std::string

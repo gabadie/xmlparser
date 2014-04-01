@@ -90,6 +90,12 @@ namespace Xsd
         Type *
         getType(const std::string & typeName);
 
+        static std::string
+        getDateType();
+
+        static std::string
+        getStringType();
+
         Type *
         getElementType(const std::string & elementName);
 /*
