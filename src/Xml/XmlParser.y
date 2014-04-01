@@ -43,14 +43,13 @@ void yyerror(void ** e, const char * msg);
 /* ----------------------------------------------------------------------------- types */
 %start document
 %type <attrs> atts
-%type <e> element
-%type <e> emptytag
+%type <e> node_element
 %type <e> stag
 %type <nodeList> content
 %type <nodeList> misc
 %type <node> item
 %type <node> miscitem
-%type <node> processinstr
+%type <node> node_processinstr
 %type <str> etag
 
 
@@ -58,7 +57,7 @@ void yyerror(void ** e, const char * msg);
 /* ----------------------------------------------------------------------------- types rules */
 
 document:
-    misc element misc
+    misc node_element misc
     {
         /* ---------------------------------------------------- root */
         /*
@@ -112,12 +111,33 @@ document:
         *e = doc;
     };
 
-
-element:
-    emptytag
+node_element:
+    INF NOM atts SLASH SUP
     {
-        /* ---------------------------------------------------- empty element */
-        $$ = $1;
+        /* ---------------------------------------------------- empty element tag */
+        $$ = new Xml::Element(std::string($2));
+
+        for(auto const & p : *$3)
+        {
+            $$->setAttribute(p.first, p.second);
+        }
+
+        free($2);
+        delete $3;
+    } |
+    INF NOM COLON NOM atts SLASH SUP
+    {
+        /* ---------------------------------------------------- empty element tag with namespace*/
+        $$ = new Xml::Element(std::string($4), std::string($2));
+
+        for(auto const & p : *$5)
+        {
+            $$->setAttribute(p.first, p.second);
+        }
+
+        free($2);
+        free($4);
+        delete $5;
     } |
     stag content etag
     {
@@ -184,6 +204,22 @@ element:
         yyerrok;
     };
 
+node_processinstr:
+    INFSPECIAL NOM atts SUPSPECIAL
+    {
+        /* ------------------------------------------ processing instruction */
+        Xml::ProcessingInstruction * xmlpi = new Xml::ProcessingInstruction(std::string($2), "", "");
+
+        for(auto const & p : *$3)
+        {
+            xmlpi->setAttribute(p.first, p.second);
+        }
+
+        free($2);
+        delete $3;
+        $$ = xmlpi;
+    };
+
 miscitem:
     COMMENT
     {
@@ -202,26 +238,10 @@ miscitem:
          */
         free($1);
     } |
-    processinstr
+    node_processinstr
     {
         /* ------------------------------------------ processing instruction */
         $$ = $1;
-    };
-
-processinstr:
-    INFSPECIAL NOM atts SUPSPECIAL
-    {
-        /* ------------------------------------------ processing instruction */
-        Xml::ProcessingInstruction * xmlpi = new Xml::ProcessingInstruction(std::string($2), "", "");
-
-        for(auto const & p : *$3)
-        {
-            xmlpi->setAttribute(p.first, p.second);
-        }
-
-        free($2);
-        delete $3;
-        $$ = xmlpi;
     };
 
 misc:
@@ -265,35 +285,6 @@ misc:
          * if misc is empty, we return an empty list.
          */
         $$ = nullptr;
-    };
-
-emptytag:
-    INF NOM atts SLASH SUP
-    {
-        /* ---------------------------------------------------- empty element tag */
-        $$ = new Xml::Element(std::string($2));
-
-        for(auto const & p : *$3)
-        {
-            $$->setAttribute(p.first, p.second);
-        }
-
-        free($2);
-        delete $3;
-    } |
-    INF NOM COLON NOM atts SLASH SUP
-    {
-        /* ---------------------------------------------------- empty element tag with namespace*/
-        $$ = new Xml::Element(std::string($4), std::string($2));
-
-        for(auto const & p : *$5)
-        {
-            $$->setAttribute(p.first, p.second);
-        }
-
-        free($2);
-        free($4);
-        delete $5;
     };
 
 stag:
@@ -413,7 +404,7 @@ atts:
     }; /**/
 
 item:
-    element
+    node_element
     {
         /* ---------------------------------------------------- element in another element */
         $$ = static_cast<Xml::Node *>($1);
