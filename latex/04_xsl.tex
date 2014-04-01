@@ -13,11 +13,14 @@ fonctionnalités de transformation d'une feuille XSL, et de même pour les instr
     \label{oldXslClassDiagram}
 \end{figure}
 
-Néanmoins, cette conception présente de nombreux inconvénients :
+Néanmoins, cette conception présente de nombreux inconvénients : En plus d'ajouter de nombreuses classe sans vraie valeur ajoutée, elle
+nous forçait à reconstruire l'arbre XML afin de convertir les tags XSL en objets dédiés. On ne profitait pas réellement d'un quelconque
+polymorphisme non plus puisque cela demandait de toucher aux classes XML, alors que celles ci n'ont pas comme responsabilité de gérer toutes
+les applications possibles de ce langage de représentation de données. Il aurait aussi fallu tester le namespace des éléments XML parcourus
+avant de les caster à la bonne classe, donc pas grand d’intérêt au "polymorphisme".
 
-En plus d'ajouter de nombreuses classe sans vraie valeur ajoutée, elle nous forçait à reconstruire l'arbre XML afin de convertir les tags
-XSL en objets dédiés. On ne profitait pas réellement d'un quelconque polymorphisme non plus puisque cela demandait de toucher aux classes
-XML, alors que celles ci n'ont pas comme responsabilité de gérer toutes les applications possibles de ce langage de représentation de données.
+Nous avons donc choisis de passer à une architecture plus simple : pas d'héritage, et simplement une map globale faisant la liaison entre le nom des instructions Xsl
+et des foncteurs qui génèrent des nœuds XML à partir d'un contexte donné.
 
 \begin{landscape}
 \begin{figure}[h!]
@@ -47,21 +50,18 @@ La transformation XSL débute en appliquant cet algorithme à la racine du docum
 \section{Templates}
 
 Les \textit{templates} sont les seuls fils de la racine (\textit{stylesheet}) d'un document XSL et se présentent de la manière suivante :
-\\
-\\
-\textbf{
-\lstinline$<xsl:template match="cd/title">$\\
-\indent \lstinline$<tagxml></tagxml>$\\
-\indent \lstinline$<xsl:uneinstruction select="untag/unautretag" />$\\
-\indent \lstinline$<encoreunautretagxml />$\\
-\lstinline$</xsl:template>$
-}
-\\
-\\
+
+\begin{lstlisting}[frame=single]
+    <xsl:template match="cd/title">
+        <tagxml></tagxml>
+        <xsl:uneinstruction select="untag/unautretag"/>
+    </xsl:template>
+\end{lstlisting}
+
 Ils peuvent contenir des tags XML "normaux", ainsi que des instructions XSL.
 On dit qu'un template \textit{match} un élément si l'élément est compatible avec la valeur de l'attribut \textit{match} du template, par exemple :
 
-Si un élément XML a comme nom "title" et est le fils d'un élément qui a comme nom "cd", il match le template vu ci-dessus.
+Si un élément XML a comme nom "unautretag" et est le fils d'un élément qui a comme nom "untag", il match le template vu ci-dessus.
 
 Quand on applique un template, on va renvoyer une liste de nœuds résultants (qui vont en général être ajoutés comme fils d'un document ou d'un élément). Cette liste est générée de la manière suivante :\\
 
@@ -70,3 +70,14 @@ Quand on applique un template, on va renvoyer une liste de nœuds résultants (q
     \item Les nœuds qui sont des éléments XML, mais pas XSL, sont clonés. On applique alors  puis considérés comme des templates (car pouvant contenir des instructions XSL) et appliqués avec comme contexte le nœud d'application de la transformation XSL.
     \item Les éléments XSL sont appliqués avec comme contexte le nœud d'application de la transformation XSL. Tous les nœuds résultants de cette application sont ajoutés à la liste des nœuds générés par l'application du template.
 \end{enumerate}
+
+\section{Instructions XSL}
+
+    \subsection{for-each}
+        Bla bla
+
+    \subsection{value-of}
+        Bla bla
+
+    \subsection{for-each}
+        Bla bla
