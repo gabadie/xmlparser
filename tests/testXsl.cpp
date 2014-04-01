@@ -41,8 +41,6 @@ testSimpleXsl()
 
     Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc);
 
-    std::cerr << std::endl << *result << std::endl;
-
     delete xmlDoc;
     delete xslDoc;
     delete result;
@@ -101,8 +99,6 @@ testXslTransform()
     test_assert(xmlDoc != 0);
 
     Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc);
-
-    std::cerr << "XSL output = " << std::endl << *result << std::endl;
 
     delete xmlDoc;
     delete xslDoc;
@@ -213,8 +209,6 @@ testValueOf()
 
     Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc);
 
-    std::cerr << std::endl << *result << std::endl;
-
     test_assert(result->root()->children()[0]->contentText() == "ABC");
 
     delete xmlDoc;
@@ -225,7 +219,6 @@ testValueOf()
 void
 testApplyTemplates()
 {
-    // xml
     // xml
     std::string xmlContent (xml_code(
     <catalog>
@@ -259,15 +252,15 @@ testApplyTemplates()
         <xsl:template match="/">
               <html>
               <body>
-              <h2>My CD Collection</h2>  
-              <xsl:apply-templates />  
+              <h2>My CD Collection</h2>
+              <xsl:apply-templates />
               </body>
               </html>
             </xsl:template>
 
             <xsl:template match="cd">
               <p>
-                <xsl:apply-templates select="title"/>  
+                <xsl:apply-templates select="title"/>
                 <xsl:apply-templates select="artist"/>
               </p>
             </xsl:template>
@@ -296,9 +289,7 @@ testApplyTemplates()
 
     Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc);
 
-    std::cerr << std::endl << *result << std::endl;
-
-    //xtest_assert(result->root()->children()[0]->contentText() == "CE TEMPLATE MATCH");
+    // TODO : add asserts
 
     delete xmlDoc;
     delete xslDoc;
@@ -314,5 +305,6 @@ main()
     testValueOf();
     testSimpleXsl();
     testApplyTemplates();
+
     return 0;
 }
