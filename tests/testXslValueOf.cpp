@@ -75,7 +75,7 @@ textXslHello()
     auto r = valueOf(xmlDoc->root(), *xslDoc, xslDoc->root(), transformLog);
 
     test_assert(r[0]->contentText() == "hello");
- 
+
 
     delete xmlDoc;
     delete xslDoc;
@@ -109,7 +109,7 @@ textXslNonExist()
     auto r = valueOf(xmlDoc->root(), *xslDoc, xslDoc->root(), transformLog);
 
     test_assert(r.size() == 0);
- 
+
 
     delete xmlDoc;
     delete xslDoc;
@@ -143,10 +143,10 @@ textXslNonRecursive()
 
     Xml::Log transformLog;
     auto r = valueOf(xmlDoc->root(), *xslDoc, xslDoc->root(), transformLog);
-    std::cerr << ((Xml::Element *)r[0])->contentText() << std::endl;
+    //std::cerr << ((Xml::Element *)r[0])->contentText() << std::endl;
 
     test_assert(((Xml::Element *)r[0])->contentText() == "hello");
- 
+
 
     delete xmlDoc;
     delete xslDoc;
@@ -156,9 +156,9 @@ textXslNonRecursive()
 int
 main()
 {
-    //testXslEmptyValue();
+    testXslEmptyValue();
     textXslHello();
-    //textXslNonExist();
+    textXslNonExist();
     //textXslNonRecursive();
 
     return 0;

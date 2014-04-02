@@ -301,7 +301,7 @@ testApplyTemplates()
     Xml::Log transformLog;
     Xml::Document* result = Xsl::transform(*xmlDoc, *xslDoc, transformLog);
 
-    std::cerr << transformLog << std::endl;
+    //std::cerr << transformLog << std::endl;
     // TODO : add asserts
 
     delete xmlDoc;
