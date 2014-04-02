@@ -63,7 +63,7 @@ namespace Xml
         return nullptr;
     }
 
-    Document::NodesList const &
+    NodeList const &
     Document::children() const
     {
         return mChildren;

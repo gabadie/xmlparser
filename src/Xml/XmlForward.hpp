@@ -2,6 +2,8 @@
 #define _H_XML_FORWARD
 
 #include <vector>
+#include <string>
+#include <map>
 
 
 namespace Xml
@@ -20,6 +22,10 @@ namespace Xml
     class Node;
     class Object;
     class ProcessingInstruction; class Text;
+
+    using AttributesMap = std::map<std::string, std::string>;
+    using NodeList      = std::vector<Node *>;
+    using ElementList   = std::vector<Element const *>;
 
     /*
      * XML object's type label

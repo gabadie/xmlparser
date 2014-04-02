@@ -57,13 +57,13 @@ namespace Xml
     }
 
 
-    Element::NodeList const  &
+    NodeList const  &
     Element::children() const
     {
         return mChildren;
     }
 
-    Element::ElementList
+    ElementList
     Element::elements() const
     {
         ElementList elements;
@@ -80,7 +80,7 @@ namespace Xml
         return elements;
     }
 
-    Element::ElementList
+    ElementList
     Element::elements(std::string const & tag) const
     {
         ElementList elements;
@@ -283,16 +283,16 @@ namespace Xml
         return (it != std::end(mAttributes)) ? it->second : notFound;
     }
 
-    Element::AttributesMap const &
+    AttributesMap const &
     Element::attributes() const
     {
         return mAttributes;
     }
 
-    Element::AttributesMap
+    AttributesMap
     Element::namespaceAttributes(std::string const & name) const
     {
-        Element::AttributesMap map;
+        AttributesMap map;
 
         if (name == "")
         {

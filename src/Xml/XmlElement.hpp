@@ -19,11 +19,6 @@ namespace Xml
     {
     public:
 
-        // Type aliases
-        using AttributesMap = std::map<std::string, std::string>;
-        using NodeList      = std::vector<Node *>;
-        using ElementList   = std::vector<Element const *>;
-
         /**
          * Constructor
          *

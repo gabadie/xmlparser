@@ -3,7 +3,6 @@
 
 #include <iosfwd>
 #include <string>
-#include <vector>
 
 #include "XmlForward.hpp"
 #include "XmlObject.hpp"
@@ -18,8 +17,6 @@ namespace Xml
     class Document final : public Object
     {
     public:
-
-        using NodesList = std::vector<DocumentNode *>;
 
         /**
          * Constructor
@@ -93,7 +90,7 @@ namespace Xml
          *
          * @return The children nodes of the document
          */
-        NodesList const &
+        NodeList const &
         children() const;
 
         /**
@@ -147,7 +144,7 @@ namespace Xml
 
     private:
         Element * mRoot;     ///< Root of the XML document
-        NodesList mChildren; ///< Children nodes
+        NodeList mChildren; ///< Children nodes
         //DocType mDocType;  ///< DocType of the XML document //TODO
         std::string mVersionInfo; ///< Version of the xml
         std::string mEncoding; ///< Encoding format

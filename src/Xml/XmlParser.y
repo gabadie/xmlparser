@@ -471,7 +471,7 @@ atts:
     } |
     /* empty */
     {
-        $$ = new Xml::Element::AttributesMap();
+        $$ = new Xml::AttributesMap();
     } |
 
     /* Handle Xml::Element's attributes parsing errors */
