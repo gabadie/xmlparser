@@ -65,11 +65,13 @@ namespace
 
             totalSize += block.size;
 
-
-            log << "##########################################" << std::endl << std::endl;
+            #ifdef APP_MEMORY_TRACE
             printInfo("Leak", ptr, block.size, block.file, block.line);
+            #else
+            std::cerr << "MEMORY LEAK OF " << ptr << std::endl;// << " AT " << block.file << ":" << block.line << std::endl;
+            #endif
 
-            //std::free(ptr);
+            std::free(ptr);
         }
 
 
@@ -81,11 +83,19 @@ namespace
             return w + (count > 1 ? "s" : singular);
         };
 
+        #ifndef APP_MEMORY_TRACE
+        #define log std::cerr
+        #endif
+
         log << std::endl;
         log << "=> ";
         log << nbBlocks << " leaked " << pluralize("block", nbBlocks, "");
         log << " : " << totalLoss << pluralize(" byte", totalLoss, " ") << " lost.";
         log << std::endl;
+
+        #ifndef APP_MEMORY_TRACE
+        #undef log
+        #endif
     }
 
     MemoryLeakTracker::~MemoryLeakTracker()
@@ -102,11 +112,19 @@ namespace
         }
         else
         {
+            #ifndef APP_MEMORY_TRACE
+            #define log std::cerr
+            #endif
+
             log << std::endl;
             log << "=======================================" << std::endl;
             log << "     Some leaks have been detected     " << std::endl;
             log << "=======================================" << std::endl;
             log << std::endl;
+
+            #ifndef APP_MEMORY_TRACE
+            #undef log
+            #endif
 
             reportLeaks();
         }
@@ -118,10 +136,16 @@ namespace
                 << " have been detected." << std::endl;
         }
 
+        #ifdef APP_MEMORY_TRACE
+        std::cerr << "\n>>> MEMORY TRACE <<<" << std::endl;
+        std::cerr << log.str();
+        #else
         if(leaks)
         {
-            std::cerr << log.str();
+            //std::cerr << "\n>>> MEMORY TRACE <<<" << std::endl;
+            //std::cerr << log.str();
         }
+        #endif
     }
 }
 
@@ -144,7 +168,6 @@ void memory_free(void * ptr, bool array)
 
     if(it == std::end(memBlocks))
     {
-        std::cerr << "Unknown ptr " << ptr << std::endl;
         std::free(ptr);
         return;
     }
@@ -172,10 +195,17 @@ void memory_free(void * ptr, bool array)
         }
     }
 
-    printInfo("Deallocation", ptr, block.size, deleteStack.top().file, deleteStack.top().line);
+    if(!deleteStack.empty())
+    {
+        printInfo("Deallocation", ptr, block.size, deleteStack.top().file, deleteStack.top().line);
+        deleteStack.pop();
+    }
+    else
+    {
+        log << "Deallocation of " << ptr << " from outside MemoryLeakTracker reach" << std::endl;
+    }
 
     memBlocks.erase(it);
-    deleteStack.pop();
 
     std::free(ptr);
 }

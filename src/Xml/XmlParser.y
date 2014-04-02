@@ -13,6 +13,8 @@
 #include "XmlProcessingInstruction.hpp"
 #include "XmlText.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 int yylex(void);
 
 void yyerror(void ** e, const char * msg);
@@ -514,6 +516,7 @@ atts:
 %%
 /* ----------------------------------------------------------------------------- C/C++ suffix */
 
+
 void
 yyerror(void **, const char * msg)
 {
@@ -567,3 +570,5 @@ Xml::parse(std::istream & xmlContent, Xml::Log * log)
 
     return e;
 }
+
+#include "../MemoryLeakTrackerOff.hpp"
