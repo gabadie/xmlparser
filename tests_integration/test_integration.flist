@@ -9,4 +9,4 @@ cmd_toomuch_params
 cmd_xml_parse
 cmd_xsl_transform
 cmd_xsl_transform2
-#cmd_xsl_foreach
+cmd_xsl_foreach
