@@ -7,10 +7,10 @@
 
 
 Xml::Document *
-Xsl::xslTransform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc)
+Xsl::xslTransform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc, Xml::Log & xslLog)
 {
     Xml::Document * result = new Xml::Document();
-    std::vector<Xml::Node *> resultNodes = findAndApplyTemplate(xmlDoc.root(), xslDoc);
+    std::vector<Xml::Node *> resultNodes = findAndApplyTemplate(xmlDoc.root(), xslDoc, xslLog);
 
     if (resultNodes.size() == 0)
     {

@@ -23,7 +23,8 @@ namespace Xsl
         operator () (
             Xml::Element const * context,
             Xml::Document const & xslDoc,
-            Xml::Element const * forEachElement
+            Xml::Element const * forEachElement,
+            Xml::Log & xslLog
         ) const = 0;
     };
 

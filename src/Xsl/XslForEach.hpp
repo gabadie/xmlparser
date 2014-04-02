@@ -17,7 +17,7 @@ namespace Xsl
         virtual
         std::vector<Xml::Node *>
         operator () (Xml::Element const * context, Xml::Document const & xslDoc,
-            Xml::Element const * forEachElement) const override;
+            Xml::Element const * forEachElement, Xml::Log & xslLog) const override;
 
     };
 

@@ -53,7 +53,7 @@ namespace
 } // Anonymous namespace
 
 std::vector<Xml::Node *>
-Xsl::applyDefaultTemplate(Xml::Node const * context, Xml::Document const & xslDoc)
+Xsl::applyDefaultTemplate(Xml::Node const * context, Xml::Document const & xslDoc, Xml::Log & xslLog)
 {
     app_assert(context != nullptr);
 
@@ -65,7 +65,7 @@ Xsl::applyDefaultTemplate(Xml::Node const * context, Xml::Document const & xslDo
     }
     else
     {
-        return findAndApplyTemplate(static_cast<Xml::Element const *>(context), xslDoc);
+        return findAndApplyTemplate(static_cast<Xml::Element const *>(context), xslDoc, xslLog);
     }
 }
 
@@ -92,7 +92,7 @@ Xsl::getTemplate(Xml::Document const & xslDoc, Xml::Element const * element)
 }
 
 std::vector<Xml::Node *>
-Xsl::findAndApplyTemplate(Xml::Element const * context, Xml::Document const & xslDoc)
+Xsl::findAndApplyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, Xml::Log & xslLog)
 {
     app_assert(context != nullptr);
 
@@ -101,7 +101,7 @@ Xsl::findAndApplyTemplate(Xml::Element const * context, Xml::Document const & xs
     // if the context a template matches the context, we apply it
     if (contextTemplate != nullptr)
     {
-        return applyTemplate(context, xslDoc, contextTemplate);
+        return applyTemplate(context, xslDoc, contextTemplate, xslLog);
     }
     else
     {
@@ -110,7 +110,7 @@ Xsl::findAndApplyTemplate(Xml::Element const * context, Xml::Document const & xs
         {
             app_assert(child != nullptr);
 
-            for (auto rNode : applyDefaultTemplate(child, xslDoc))
+            for (auto rNode : applyDefaultTemplate(child, xslDoc, xslLog))
             {
                 app_assert(rNode != nullptr);
                 result.push_back(rNode);
@@ -121,7 +121,7 @@ Xsl::findAndApplyTemplate(Xml::Element const * context, Xml::Document const & xs
 }
 
 std::vector<Xml::Node *>
-Xsl::applyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, Xml::Element const * xslTemplate)
+Xsl::applyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, Xml::Element const * xslTemplate, Xml::Log & xslLog)
 {
     app_assert(context != nullptr);
     app_assert(xslTemplate != nullptr);
@@ -147,7 +147,7 @@ Xsl::applyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, X
 
             if (instructionPair == xslInstructions.end()) {
                 // Le tag XSL comprends une instruction inconnue
-                // TODO : logger
+                // TODO : xslLogger
                 std::cerr << "instruction inconnue ! " << xslElement->name() << std::endl;
                 continue;
             }
@@ -156,7 +156,7 @@ Xsl::applyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, X
 
             app_assert(xslInstruction != nullptr);
 
-            std::vector <Xml::Node *> resultInstruction = (*xslInstruction)(context, xslDoc, xslElement);
+            std::vector <Xml::Node *> resultInstruction = (*xslInstruction)(context, xslDoc, xslElement, xslLog);
             for (auto node : resultInstruction)
             {
                 app_assert(node != nullptr);
@@ -166,7 +166,7 @@ Xsl::applyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, X
         else
         {
             auto clonedElement = static_cast<Xml::Element *>(templateElement->clone());
-            auto resultNodes = applyTemplate(context, xslDoc, templateElement);
+            auto resultNodes = applyTemplate(context, xslDoc, templateElement, xslLog);
 
             app_assert(clonedElement != nullptr);
 

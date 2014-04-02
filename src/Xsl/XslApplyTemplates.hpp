@@ -20,7 +20,7 @@ namespace Xsl
         virtual
         std::vector<Xml::Node *>
         operator () (Xml::Element const * context, Xml::Document const & xslDoc,
-            Xml::Element const * applyTemplatesElement) const override;
+            Xml::Element const * applyTemplatesElement, Xml::Log & xslLog) const override;
 
     };
 

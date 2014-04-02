@@ -11,7 +11,7 @@
 
 std::vector<Xml::Node *>
 Xsl::ForEach::operator () (Xml::Element const * context,
-    Xml::Document const & xslDoc, Xml::Element const * forEachElement) const
+    Xml::Document const & xslDoc, Xml::Element const * forEachElement, Xml::Log & xslLog) const
 {
     app_assert(context != nullptr);
     app_assert(forEachElement != nullptr);
@@ -24,7 +24,7 @@ Xsl::ForEach::operator () (Xml::Element const * context,
     {
         app_assert(node != nullptr);
 
-        auto returnedNodes = Xsl::applyTemplate(node, xslDoc, forEachElement);
+        auto returnedNodes = Xsl::applyTemplate(node, xslDoc, forEachElement, xslLog);
 
         resultNodes.reserve(resultNodes.size() + returnedNodes.size());
 

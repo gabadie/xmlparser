@@ -29,7 +29,8 @@ testXslEmptyValue()
 
     Xsl::ValueOf valueOf;
 
-    auto r = valueOf(xmlDoc->root(), *xslDoc, xslDoc->root());
+    Xml::Log transformLog;
+    auto r = valueOf(xmlDoc->root(), *xslDoc, xslDoc->root(), transformLog);
 
     test_assert(r.size() == 0);
 
