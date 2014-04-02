@@ -1,5 +1,6 @@
 
 #include <sstream>
+#include <re2/re2.h>
 
 #include "../AppDebug.hpp"
 
@@ -24,9 +25,11 @@ namespace Xsd
         app_assert(xsdElement != nullptr);
         app_assert(xsdElement->tag() == "xsd:element");
 
-        if (xmlElement->tag() != xsdElement->attribute("name"))
+        auto xmlElementTheoricName = xsdElement->attribute("name");
+
+        if (xmlElement->tag() != xmlElementTheoricName)
         {
-            // TODO: log
+            log.append("XSD: element <" + xmlElement->tag() + " /> mismatch (should have been <" + xmlElementTheoricName + "/>)" );
             return false;
         }
 
@@ -37,25 +40,33 @@ namespace Xsd
         {
             if (instructionElement->namespaceName() != "xsd")
             {
-                // TODO: log
+                log.append("XSD: unexpected element <" + instructionElement->tag() + "/>");
                 return false;
             }
 
             std::string instructionName = instructionElement->name();
-            std::string instructionRegex;
-
             auto instruction = Xsd::instruction(instructionName);
 
             if (instruction == nullptr)
             {
-                // TODO log
+                log.append("XSD: unknown instruction <xsd:" + instructionName + "/>");
                 return false;
             }
+
+            std::string instructionRegex;
 
             elementRegex << instructionRegex;
         }
 
-        return false;
+        if (!RE2::FullMatch(elementContent, elementRegex.str()))
+        {
+            log.append("XSD: element's children mismatch");
+            return false;
+        }
+
+        // TODO: recusively check
+
+        return true;
     }
 
     bool
@@ -75,7 +86,7 @@ namespace Xsd
 
         if (name == "")
         {
-            // missing attribute name
+            log.append("XSD: missing attributes name");
             return false;
         }
 
