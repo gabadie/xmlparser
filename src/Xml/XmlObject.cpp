@@ -53,12 +53,6 @@ namespace Xml
         return false;
     }
 
-    bool
-    Object::isElement() const
-    {
-        return objectLabel() == ObjectLabel::Element;
-    }
-
     void
     Object::appendNode(Node *)
     {

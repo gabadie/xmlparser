@@ -5,9 +5,8 @@
 
 namespace Xsl
 {
-
     /**
-     * TODO: doc
+     * TODO : Doc
      */
     class ForEach final: public Instruction
     {

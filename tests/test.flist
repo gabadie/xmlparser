@@ -15,3 +15,4 @@ testXmlProcessingInstruction.cpp
 testXmlText.cpp
 testXPath.cpp
 testXsl.cpp
+testXslValueOf.cpp
