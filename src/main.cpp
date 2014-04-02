@@ -75,7 +75,7 @@ appTransform(std::string const & xmlPath, std::string const & xslPath)
     }
 
     Xml::Log transformLog;
-    Xml::Document * transformedDoc = Xsl::xslTransform(*xmlDoc, *xslDoc, transformLog);
+    Xml::Document * transformedDoc = Xsl::transform(*xmlDoc, *xslDoc, transformLog);
 
     std::cout << (*transformedDoc) << std::endl;
     std::cerr << transformLog;

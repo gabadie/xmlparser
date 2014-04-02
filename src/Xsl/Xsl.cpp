@@ -9,7 +9,7 @@
 
 
 Xml::Document *
-Xsl::xslTransform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc, Xml::Log & xslLog)
+Xsl::transform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc, Xml::Log & xslLog)
 {
     auto result = new Xml::Document();
     auto resultNodes = findAndApplyTemplate(xmlDoc.root(), xslDoc, xslLog);

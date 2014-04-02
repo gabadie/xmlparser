@@ -47,7 +47,7 @@ testSimpleXsl()
     test_assert(xmlDoc != 0);
 
     Xml::Log transformLog;
-    Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc, transformLog);
+    Xml::Document* result = Xsl::transform(*xmlDoc, *xslDoc, transformLog);
 
     delete xmlDoc;
     delete xslDoc;
@@ -107,7 +107,7 @@ testXslTransform()
     test_assert(xmlDoc != 0);
 
     Xml::Log transformLog;
-    Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc, transformLog);
+    Xml::Document* result = Xsl::transform(*xmlDoc, *xslDoc, transformLog);
 
     delete xmlDoc;
     delete xslDoc;
@@ -217,7 +217,7 @@ testValueOf()
     test_assert(xmlDoc != 0);
 
     Xml::Log transformLog;
-    Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc, transformLog);
+    Xml::Document* result = Xsl::transform(*xmlDoc, *xslDoc, transformLog);
 
     test_assert(result->root()->children()[0]->contentText() == "ABC");
 
@@ -298,7 +298,7 @@ testApplyTemplates()
     test_assert(xmlDoc != 0);
 
     Xml::Log transformLog;
-    Xml::Document* result = Xsl::xslTransform(*xmlDoc, *xslDoc, transformLog);
+    Xml::Document* result = Xsl::transform(*xmlDoc, *xslDoc, transformLog);
 
     // TODO : add asserts
 

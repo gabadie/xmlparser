@@ -14,7 +14,7 @@ namespace Xsl
      * @return TNew Document XML transformed
      */
     Xml::Document *
-    xslTransform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc, Xml::Log & xslLog);
+    transform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc, Xml::Log & xslLog);
 
 }
 

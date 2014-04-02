@@ -28,7 +28,7 @@ testXslSeveralsRoot()
     test_assert(xmlDoc != nullptr);
     test_assert(xslDoc != nullptr);
 
-    auto xmlNewDoc = Xsl::xslTransform(*xmlDoc, *xslDoc, log);
+    auto xmlNewDoc = Xsl::transform(*xmlDoc, *xslDoc, log);
 
     test_assert(xmlNewDoc->root()->tag() == "root1");
 
@@ -59,7 +59,7 @@ testXslNoRoot()
     test_assert(xmlDoc != nullptr);
     test_assert(xslDoc != nullptr);
 
-    auto xmlNewDoc = Xsl::xslTransform(*xmlDoc, *xslDoc, log);
+    auto xmlNewDoc = Xsl::transform(*xmlDoc, *xslDoc, log);
 
     test_assert(xmlNewDoc->root() == nullptr);
 
@@ -93,7 +93,7 @@ testXslBadDocumentAppend()
     test_assert(xmlDoc != nullptr);
     test_assert(xslDoc != nullptr);
 
-    auto xmlNewDoc = Xsl::xslTransform(*xmlDoc, *xslDoc, log);
+    auto xmlNewDoc = Xsl::transform(*xmlDoc, *xslDoc, log);
 
     test_assert(xmlNewDoc->root() != nullptr);
     test_assert(xmlNewDoc->root()->tag() == "root1");

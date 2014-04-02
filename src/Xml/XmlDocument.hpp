@@ -154,7 +154,7 @@ namespace Xml
 
         friend
         Xml::Document *
-        Xsl::xslTransform(Xml::Document const &, Xml::Document const &, Xml::Log &);
+        Xsl::transform(Xml::Document const &, Xml::Document const &, Xml::Log &);
         friend XML_BISON_MAIN();
     };
 

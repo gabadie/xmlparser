@@ -52,7 +52,7 @@ namespace Xsl
      * Xsl transformation
      */
     Xml::Document *
-    xslTransform(Xml::Document const &, Xml::Document const &, Xml::Log &);
+    transform(Xml::Document const &, Xml::Document const &, Xml::Log &);
 
 }
 
