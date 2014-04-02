@@ -45,6 +45,17 @@ namespace Xml
         mChildren.clear();
     }
 
+    ElementList
+    Document::elements() const
+    {
+        if (mRoot == nullptr)
+        {
+            return {};
+        }
+
+        return {mRoot};
+    }
+
     ObjectLabel
     Document::objectLabel() const
     {

@@ -54,23 +54,10 @@ namespace Xml
         children() const;
 
         /**
-         * Gets the ordered list of the children of the element
-         *
-         * @return Return a container of Element const *
+         * Overrides Xml::Object::elements() const
          */
         ElementList
-        elements() const;
-
-        /**
-         * Gets the ordered list of the direct children of the element
-         * with the given tag
-         *
-         * @param tag Tag to search for
-         *
-         * @return Return a container of Element const *
-         */
-        ElementList
-        elements(std::string const & tag) const;
+        elements() const override;
 
         /**
          * Get the text content of the element
@@ -288,6 +275,7 @@ namespace Xml
         NodeList mChildren;        ///< Children elements
 
         friend XML_BISON_MAIN();
+        friend class Xml::Object;
         friend class Xsl::Instruction;
         friend class Xsl::ValueOf;
         friend class Xsl::ForEach;

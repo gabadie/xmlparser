@@ -80,27 +80,6 @@ namespace Xml
         return elements;
     }
 
-    ElementList
-    Element::elements(std::string const & tag) const
-    {
-        ElementList elements;
-        for(auto const & c : mChildren)
-        {
-            app_assert(c != nullptr);
-            app_assert(c->mParent == this);
-
-            if(c->isElement())
-            {
-                auto const element = static_cast<Element const *>(c);
-                if(element->tag() == tag)
-                {
-                    elements.push_back(element);
-                }
-            }
-        }
-        return elements;
-    }
-
     std::string
     Element::text() const
     {

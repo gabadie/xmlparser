@@ -45,6 +45,12 @@ namespace Xml
         document() const override final;
 
         /**
+         * Overrides Xml::Object::elements() const
+         */
+        ElementList
+        elements() const override;
+
+        /**
          * Gets the parent xml object (const version)
          *
          * @return nullptr

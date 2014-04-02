@@ -2,6 +2,7 @@
 #include "../AppDebug.hpp"
 #include "XmlObject.hpp"
 #include "XmlComment.hpp"
+#include "XmlElement.hpp"
 #include "XmlProcessingInstruction.hpp"
 
 #include "../MemoryLeakTrackerOn.hpp"
@@ -23,6 +24,41 @@ namespace Xml
     Object::parent()
     {
         return const_cast<Object *>(static_cast<Object const *>(this)->parent());
+    }
+
+    ElementList
+    Object::elements() const
+    {
+        /*
+         * Object::remove is overloaded in Xml::Document and Xml::Element.
+         * but other classes don't because they are not supposed to have
+         * children elements
+         */
+        app_unreachable();
+
+        return {};
+    }
+
+    ElementList
+    Object::elements(std::string const & tag) const
+    {
+        ElementList filteredElements;
+        ElementList allElements = elements();
+
+        for(auto const & c : allElements)
+        {
+            app_assert(c != nullptr);
+            app_assert(c->mParent == this);
+            app_assert(c->isElement() == true);
+
+            auto const element = static_cast<Element const *>(c);
+            if(element->tag() == tag)
+            {
+                filteredElements.push_back(element);
+            }
+        }
+
+        return filteredElements;
     }
 
     void

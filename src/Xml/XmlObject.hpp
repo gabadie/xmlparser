@@ -74,6 +74,26 @@ namespace Xml
         parent() const = 0;
 
         /**
+         * Gets the ordered list of the children of the element
+         *
+         * @return Return a container of Element const *
+         */
+        virtual
+        ElementList
+        elements() const;
+
+        /**
+         * Gets the ordered list of the direct children of the element
+         * with the given tag
+         *
+         * @param tag Tag to search for
+         *
+         * @return Return a container of Element const *
+         */
+        ElementList
+        elements(std::string const & tag) const;
+
+        /**
          * Implements standart stream operator
          */
         inline
