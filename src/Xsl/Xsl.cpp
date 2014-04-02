@@ -96,5 +96,6 @@ Xsl::XslCheckValidity(Xml::Document const & xslDoc, Xml::Log & xslLog)
             return false;
         }
     }
+    
     return true;
 }

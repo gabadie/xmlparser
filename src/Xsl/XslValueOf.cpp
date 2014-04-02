@@ -26,6 +26,5 @@ Xsl::ValueOf::operator () (Xml::Element const * context,
         return {};
     }
 
-    std::cerr << " VALUE OF => " << value << std::endl;
     return {new Xml::Text(value)};
 }
