@@ -18,3 +18,4 @@ testXsl.cpp
 testXslTransform.cpp
 testXslValueOf.cpp
 testXsd.cpp
+testXsdValidate.cpp
