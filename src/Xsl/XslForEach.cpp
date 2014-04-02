@@ -1,10 +1,11 @@
 
+#include "XslForEach.hpp"
 #include "XslTemplate.hpp"
-#include "ForEach.hpp"
 
 #include "../Xml/XmlDocument.hpp"
 #include "../Xml/XmlElement.hpp"
 #include "../Xml/XmlNode.hpp"
+
 
 std::vector<Xml::Node *>
 Xsl::ForEach::operator () (Xml::Element const * context,

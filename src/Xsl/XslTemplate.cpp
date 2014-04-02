@@ -6,8 +6,8 @@
 #include <vector>
 
 #include "ApplyTemplates.hpp"
-#include "ForEach.hpp"
 
+#include "XslForEach.hpp"
 #include "XslInstruction.hpp"
 #include "XslTemplate.hpp"
 #include "XslValueOf.hpp"
