@@ -17,3 +17,4 @@ testXPath.cpp
 testXsl.cpp
 testXslTransform.cpp
 testXslValueOf.cpp
+testXsd2.cpp
