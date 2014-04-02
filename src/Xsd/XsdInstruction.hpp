@@ -17,16 +17,17 @@ namespace Xsd
         validate(
             Xml::Element const * xmlElement,
             Xml::Document const * xsdDocument,
-            Xml::Element const * xsdElement
+            Xml::Element const * xsdElement,
+            Xml::Log & log
         ) const = 0;
 
         virtual
         bool
         regex(
             std::string & regexOut,
-            Xml::Element const * xmlElement,
             Xml::Document const * xsdDocument,
-            Xml::Element const * xsdElement
+            Xml::Element const * xsdElement,
+            Xml::Log & log
         ) const = 0;
 
     };
