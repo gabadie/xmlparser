@@ -2,11 +2,10 @@
 #define _H_XSD_VALIDATE
 
 #include "../Xml/XmlForward.hpp"
+#include "XsdInstruction.hpp"
 
-
-namespace Xsl
+namespace Xsd
 {
-
     bool
     validate(
         Xml::Document const * xmlDoc,
