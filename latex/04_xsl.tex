@@ -73,11 +73,21 @@ Quand on applique un template, on va renvoyer une liste de nœuds résultants (q
 
 \section{Instructions XSL}
 
-    \subsection{for-each}
-        Bla bla
+    \subsection{apply-template}
+        Apply-template consiste à appliquer un template au noeud correspondant au chemin indiqué par l'expression XPath de l'attribut "select". Ce template doit se trouver dans la feuille de style Xsl que l'on est en train de parcourir pour transformer le document Xml. Si l'attribut select vaut "X" et qu'il existe dans le Xml le noeud correspondant au chemin de X dans le contexte courant, il doit donc exister dans le Xsl :
+        \begin{lstlisting}[frame=single]
+            <xsl:template match="X">
+                ...........
+                ...........
+            </xsl:template>
+        \end{lstlisting}.
+         L'idée est alors de réappliquer le template trouvé à l'élément correspondant à X depuis le contexte courant de lecture du xml.
+         Le template est appliqué et relance le traitement du Xml par l'appel des fonctions d'application de template habituelles.
+         L'attribut "select" est optionnel, dans le cas de son absence, il faut alors chercher et appliquer les templates correspondants à tous les Noeuds Xml du contexte Xml courant, non récursivement. C'est à dire que si ces enfants ont des enfants, apply-templates ne forcera pas l'application des templates leurs correspondants
 
     \subsection{value-of}
-        Bla bla
+        Value-of est une instruction Xsl permettant de retourner la valeur textuelle des éléments contenus au chemin indiqué par l'expression XPath requise comme paramêtre de "select". Cette instruction procède par récursion, c'est à dire que même les éléments textuels des éléments enfants sont affichés. Tout les textes retournés sont concatainés à l'emplacement de l'instruction Value-of.
+        Value-of permet également d'afficher la valeur d'un attribut d'un noeud. En effet, en précisant @nomdelattribut en bout de chemin de l'expression XPath, la valeur de l'attribut appartenant à l'élément correspondant à l'expression XPath sera affichée.
 
     \subsection{for-each}
-        Bla bla
+        For-each permet d'appliquer le templates contenus dans l'élément "for-each" à tous les noeuds dont le chemin est celui de l'expression XPath indiqué dans l'attribut "select" de for-each. Pour cela, il faut récupérer dans le document Xml tous les noeuds correspondants au XPath, puis appliquer à chacun le template contenu entre les balises for-each, comme ci c'était un template normal dans le déroulement de nos algorithmes. On retourne ensuite tout cela pour que ce soit ajouté à notre document transformé.
