@@ -13,7 +13,7 @@
 
 std::vector<Xml::Node *>
 Xsl::ValueOf::operator () (Xml::Element const * context,
-    Xml::Document const &, Xml::Element const * xslElement, Xml::Log & xslLog) const
+    Xml::Document const &, Xml::Element const * xslElement, Xml::Log &) const
 {
     app_assert(context != nullptr);
     app_assert(xslElement != nullptr);
