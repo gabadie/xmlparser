@@ -14,7 +14,8 @@ testXmlParser.cpp
 testXmlProcessingInstruction.cpp
 testXmlText.cpp
 testXPath.cpp
+testXsd.cpp
+testXsdElement.cpp
 testXsl.cpp
 testXslTransform.cpp
 testXslValueOf.cpp
-testXsd.cpp
