@@ -13,12 +13,19 @@ namespace Xsd
     public:
 
         virtual
-        std::vector <Xml::Node *>
-        operator () (
-            Xml::Element const * context,
-            Xml::Document const & xslDoc,
-            Xml::Element const * forEachElement,
-            Xml::Log & xslLog
+        bool
+        validate(
+            Xml::Element const * xmlElement,
+            Xml::Document const * xsdDocument,
+            Xml::Element const * xsdElement
+        ) const = 0;
+
+        virtual
+        std::string
+        regex(
+            Xml::Element const * xmlElement,
+            Xml::Document const * xsdDocument,
+            Xml::Element const * xsdElement
         ) const = 0;
 
     };
