@@ -23,10 +23,16 @@ namespace Xml
         ~Text() override;
 
         /**
+         * Override of Xml::Object::objectLabel()
+         */
+        ObjectLabel
+        objectLabel() const override;
+
+        /**
          * Override of clone abstract method
          */
         Node *
-        clone();
+        clone() const override;
 
     protected:
         /**
@@ -59,6 +65,7 @@ namespace Xml
         std::string const mText; ///< Text content
 
         friend class Xml::Element;
+        friend class Xsl::ValueOf;
         friend XML_BISON_MAIN();
     };
 }

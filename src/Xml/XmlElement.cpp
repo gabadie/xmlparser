@@ -16,6 +16,8 @@
 #include "XmlElement.hpp"
 #include "XmlText.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 namespace Xml
 {
     Element::Element(std::string const & name, std::string const & namespaceName):
@@ -40,22 +42,28 @@ namespace Xml
         }
     }
 
-    Node *
-    Element::clone()
+    ObjectLabel
+    Element::objectLabel() const
     {
-        Xml::Element* elementClone =  new Element(this->mName);
+        return ObjectLabel::Element;
+    }
+
+    Node *
+    Element::clone() const
+    {
+        Xml::Element* elementClone =  new Element(this->mName, this->mNamespaceName);
         elementClone->mAttributes = AttributesMap(this->mAttributes);
         return elementClone;
     }
 
 
-    Element::NodeList const  &
+    NodeList const  &
     Element::children() const
     {
         return mChildren;
     }
 
-    Element::ElementList
+    ElementList
     Element::elements() const
     {
         ElementList elements;
@@ -72,7 +80,7 @@ namespace Xml
         return elements;
     }
 
-    Element::ElementList
+    ElementList
     Element::elements(std::string const & tag) const
     {
         ElementList elements;
@@ -275,16 +283,16 @@ namespace Xml
         return (it != std::end(mAttributes)) ? it->second : notFound;
     }
 
-    Element::AttributesMap const &
+    AttributesMap const &
     Element::attributes() const
     {
         return mAttributes;
     }
 
-    Element::AttributesMap
+    AttributesMap
     Element::namespaceAttributes(std::string const & name) const
     {
-        Element::AttributesMap map;
+        AttributesMap map;
 
         if (name == "")
         {
@@ -437,7 +445,7 @@ namespace Xml
         }
         else {
             auto lastToken = pattern.substr(slashPos + 1, pattern.size() - 1);
-            if (this->name() != lastToken || !this->parent()->isElement()) {
+            if (this->name() != lastToken || this->parent() == nullptr || !this->parent()->isElement()) {
                 return false;
             }
             auto parent = static_cast<Xml::Element const *>(this->parent());
@@ -512,17 +520,12 @@ namespace Xml
         stream << Utils::repeat(indent, level) << "</" << (mNamespaceName.size() > 0 ? mNamespaceName + ":" : "") << mName << ">";
     }
 
-    bool
-    Element::isElement() const
-    {
-        return true;
-    }
-
     void
     Element::appendNode(Node * node)
     {
         app_assert(node != nullptr);
         app_assert(node != this);
+        app_assert(canAppend(node));
 
         node->detach();
 
@@ -554,5 +557,21 @@ namespace Xml
 
         return false;
     }
+
+    bool
+    Element::canAppend(Node const * node)
+    {
+        app_assert(node != nullptr);
+
+        auto objectLabel = node->objectLabel();
+
+        return objectLabel == ObjectLabel::CharacterData ||
+            objectLabel == ObjectLabel::Comment ||
+            objectLabel == ObjectLabel::Element ||
+            objectLabel == ObjectLabel::ProcessingInstruction ||
+            objectLabel == ObjectLabel::Text;
+    }
+
 }
 
+#include "../MemoryLeakTrackerOff.hpp"

@@ -3,7 +3,6 @@
 
 #include <iosfwd>
 #include <string>
-#include <vector>
 
 #include "XmlForward.hpp"
 #include "XmlObject.hpp"
@@ -19,8 +18,6 @@ namespace Xml
     {
     public:
 
-        using NodesList = std::vector<DocumentNode *>;
-
         /**
          * Constructor
          *
@@ -32,6 +29,12 @@ namespace Xml
          * Destructor
          */
         ~Document() override;
+
+        /**
+         * Override of Xml::Object::objectLabel()
+         */
+        ObjectLabel
+        objectLabel() const override;
 
         /**
          * Gets the itself document (const version)
@@ -54,12 +57,12 @@ namespace Xml
          *
          * @return The document root
          */
-        Element *
+       /* Element *
         root()
         {
             return mRoot;
         }
-
+*/
         Element const *
         root() const
         {
@@ -87,7 +90,7 @@ namespace Xml
          *
          * @return The children nodes of the document
          */
-        NodesList const &
+        NodeList const &
         children() const;
 
         /**
@@ -131,13 +134,21 @@ namespace Xml
         bool
         hasChild(Node const * node) const override;
 
+        /**
+         * Tests if can append this node to the document
+         *
+         * @return True if you can append the node
+         */
+        static bool
+        canAppend(Node const * node);
+
     private:
         Element * mRoot;     ///< Root of the XML document
-        NodesList mChildren; ///< Children nodes
-        //DocType mDocType;  ///< DocType of the XML document //TODO
-        std::string mVersionInfo; ///< Version of the xml
-        std::string mEncoding; ///< Encoding format
+        NodeList mChildren; ///< Children nodes
 
+        friend
+        Xml::Document *
+        Xsl::transform(Xml::Document const &, Xml::Document const &, Xml::Log &);
         friend XML_BISON_MAIN();
     };
 

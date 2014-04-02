@@ -1,6 +1,7 @@
 
 #include "XmlLog.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
 
 namespace Xml
 {
@@ -44,3 +45,5 @@ namespace Xml
     }
 
 }
+
+#include "../MemoryLeakTrackerOff.hpp"

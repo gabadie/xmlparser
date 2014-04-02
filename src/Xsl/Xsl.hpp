@@ -1,56 +1,25 @@
 #ifndef _H_XSL_XSL
 #define _H_XSL_XSL
 
-#include <vector>
-#include <map>
-using namespace std;
-
-#include "../Xml/XmlNode.hpp"
-#include "../Xml/XmlText.hpp"
-#include "../Xml/XmlDocument.hpp"
-
-namespace Xsl {
-
-    class Instruction
-    {
-        virtual void operator () (Xml::Element * xslElement, Xml::Node* XmlContext) = 0;
-    };
+#include "../Xml/XmlForward.hpp"
 
 
-    class ValueOf : public Instruction
-    {
-        virtual void operator () (Xml::Node* context, const Xml::Document& xslDoc,  vector <Xml::Node*> &resultNodes, const Xml::Element xslElement);
-    };
+namespace Xsl
+{
 
-    class ForEach: public Instruction
-    {
-        virtual void operator () (Xml::Node* context,const Xml::Document& xslDoc,  vector <Xml::Node*> &resultNodes,  const Xml::Element forEachElement);
-    };
 
-    class ApplyTemplate: public Instruction
-    {
-        virtual void operator () (const Xml::Node* context,const Xml::Document& xslDoc, vector <Xml::Node*> &resultNodes, const Xml::Element applyTemplateElement);
-
-    };
-
-    Xml::Document* xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc ) ;
-
+    bool 
+    XslCheckValidity(Xml::Document const & xslDoc, Xml::Log & xslLog);
 
     /**
-     * Returns the appropriate template (if any) that should be applied
-     * to the given element
-     *
-     * @param xslDoc The XSL document containing the templates
-     * @param element The element that the returned template should be applied to
-     *
-     * @return the template that matches the given element. If no template matches, we return nullptr
+     * Transform an <xmlDoc> into a new document Xml applying a style sheet <xslDoc>
+     * @param <xmlDoc> The document Xml to transform
+     * @param <xslDoc> style sheet Xsl used to apply the transformation
+     * @return TNew Document XML transformed
      */
-    const
-    Xml::Element *
-    getTemplate(Xml::Document& xslDoc, const Xml::Element* element);
+    Xml::Document *
+    transform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc, Xml::Log & xslLog);
 
-    void applyDefaultTemplate( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes) ;
-
-    void applyTemplate ( Xml::Node* context, Xml::Document& xslDoc, vector< Xml::Node*> &resultNodes, Xml::Element& xslTemplate) ;
 }
+
 #endif //_H_XSL_XSL

@@ -4,6 +4,8 @@
 #include "XmlComment.hpp"
 #include "XmlProcessingInstruction.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 namespace Xml
 {
     Object::~Object()
@@ -53,12 +55,6 @@ namespace Xml
         return false;
     }
 
-    bool
-    Object::isElement() const
-    {
-        return false;
-    }
-
     void
     Object::appendNode(Node *)
     {
@@ -83,3 +79,5 @@ namespace Xml
         return 0;
     }
 }
+
+#include "../MemoryLeakTrackerOff.hpp"
