@@ -1,4 +1,6 @@
 
+#include <sstream>
+
 #include "../AppDebug.hpp"
 
 #include "XsdElement.hpp"
@@ -22,8 +24,9 @@ namespace Xsd
         return false;
     }
 
-    std::string
+    bool
     Element::regex(
+        std::string & regexOut,
         Xml::Element const * xmlElement,
         Xml::Document const * xsdDocument,
         Xml::Element const * xsdElement
@@ -34,8 +37,25 @@ namespace Xsd
         app_assert(xsdElement != nullptr);
         app_assert(xsdElement->tag() == "xsd:element");
 
-        // TODO CANTENOT
-        return "";
+        std::ostringstream s;
+
+        for (auto child : xsdElement->elements())
+        {
+            std::string regex;
+
+            /*if (!child->regex(regex, nullptr, xsdDocument, xsdElement))
+            {
+                return false;
+            }*/
+
+            (void)child;
+
+            s << regex;
+        }
+
+        regexOut = s.str();
+
+        return true;
     }
 
 }

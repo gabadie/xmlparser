@@ -11,21 +11,20 @@ namespace Xsd
     {
     public:
 
-        virtual
         bool
         validate(
             Xml::Element const * xmlElement,
             Xml::Document const * xsdDocument,
             Xml::Element const * xsdElement
-        ) const;
+        ) const override;
 
-        virtual
-        std::string
+        bool
         regex(
+            std::string & regexOut,
             Xml::Element const * xmlElement,
             Xml::Document const * xsdDocument,
             Xml::Element const * xsdElement
-        ) const;
+        ) const override;
 
     };
 
