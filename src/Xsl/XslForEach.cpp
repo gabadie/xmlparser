@@ -19,7 +19,7 @@ Xsl::ForEach::operator () (Xml::Element const * context,
     std::vector<Xml::Node *> resultNodes;
 
     auto matchingNodes = context->select(forEachElement->attribute("select"));
-
+   // std::cerr << "====>" << matchingNodes.size() << std::endl;
     for (auto node : matchingNodes)
     {
         app_assert(node != nullptr);

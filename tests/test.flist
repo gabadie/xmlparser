@@ -18,3 +18,4 @@ testXsl.cpp
 testXslTransform.cpp
 testXslValueOf.cpp
 testXslForEach.cpp
+testXslApplyTemplate.cpp
