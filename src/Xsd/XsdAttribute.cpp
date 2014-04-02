@@ -17,7 +17,16 @@ namespace Xsd
         app_assert(xsdElement != nullptr);
         app_assert(xsdElement->tag() == "xsd:attribute");
 
-        return false;
+        bool valid = true;
+
+        std::string attrName = xsdElement->attribute("name");
+
+        if(attrName != "")
+        {
+            valid &= (xmlElement->attribute(attrName) != "");
+        }
+
+        return valid;
     }
 
     bool
@@ -35,7 +44,7 @@ namespace Xsd
 
         regexOut = "";
 
-        return false;
+        return true;
     }
 
 }

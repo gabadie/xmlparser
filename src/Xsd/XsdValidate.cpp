@@ -5,6 +5,7 @@
 
 #include "../AppDebug.hpp"
 
+#include "XsdAttribute.hpp"
 #include "XsdElement.hpp"
 #include "XsdInstruction.hpp"
 #include "XsdValidate.hpp"
@@ -19,9 +20,9 @@ namespace
 {
     std::map<std::string, Xsd::Instruction const *> xsdInstructions =
     {
-        {"element", new Xsd::Element}
+        {"element", new Xsd::Element},
         //{"choice", new Xsd::Choice},
-        //{"attribute", new Xsd::Attribute}
+        {"attribute", new Xsd::Attribute}
     };
 }
 
@@ -55,5 +56,27 @@ namespace Xsd
         std::string date = "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$";
 
         return RE2::FullMatch(str, date);
+    }
+
+    bool
+    hasRequired(Xml::Document const * xsdDoc,
+        std::string const & name, std::string const & attrValue)
+    {
+        app_assert(xsdDoc != nullptr);
+        app_assert(xsdDoc->root() != nullptr);
+
+        auto const elements = xsdDoc->root()->elements("xsd:" + name);
+
+        bool found = false;
+
+        for(auto const e : elements)
+        {
+            if((found |= (e->attribute("name") == attrValue)))
+            {
+                break;
+            }
+        }
+
+        return found;
     }
 }
