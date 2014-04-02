@@ -15,14 +15,16 @@ namespace Xsd
         validate(
             Xml::Element const * xmlElement,
             Xml::Document const * xsdDocument,
-            Xml::Element const * xsdElement
+            Xml::Element const * xsdElement,
+            Xml::Log & log
         ) const override;
 
         bool
         regex(
             std::string & regexOut,
             Xml::Document const * xsdDocument,
-            Xml::Element const * xsdElement
+            Xml::Element const * xsdElement,
+            Xml::Log & log
         ) const override;
 
     };

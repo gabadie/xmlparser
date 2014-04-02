@@ -17,7 +17,8 @@ namespace Xsd
         validate(
             Xml::Element const * xmlElement,
             Xml::Document const * xsdDocument,
-            Xml::Element const * xsdElement
+            Xml::Element const * xsdElement,
+            Xml::Log & log
         ) const = 0;
 
         virtual
@@ -25,7 +26,8 @@ namespace Xsd
         regex(
             std::string & regexOut,
             Xml::Document const * xsdDocument,
-            Xml::Element const * xsdElement
+            Xml::Element const * xsdElement,
+            Xml::Log & log
         ) const = 0;
 
     };

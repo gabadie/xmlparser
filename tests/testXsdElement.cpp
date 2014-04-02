@@ -19,7 +19,7 @@ testXsdElementRegex()
 
         std::string regex;
 
-        elementInstruction.regex(regex, xsdDoc, xsdDoc->root());
+        elementInstruction.regex(regex, xsdDoc, xsdDoc->root(), log);
 
         test_assert(regex == "<hello>");
     }

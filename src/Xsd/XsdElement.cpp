@@ -15,7 +15,8 @@ namespace Xsd
     Element::validate(
         Xml::Element const * xmlElement,
         Xml::Document const * xsdDocument,
-        Xml::Element const * xsdElement
+        Xml::Element const * xsdElement,
+        Xml::Log & log
     ) const
     {
         app_assert(xmlElement != nullptr);
@@ -61,7 +62,8 @@ namespace Xsd
     Element::regex(
         std::string & regexOut,
         Xml::Document const * xsdDocument,
-        Xml::Element const * xsdElement
+        Xml::Element const * xsdElement,
+        Xml::Log & log
     ) const
     {
         app_assert(xsdDocument != nullptr);
