@@ -4,6 +4,8 @@
 
 #include <re2/re2.h>
 
+#include "../src/MemoryLeakTrackerOn.hpp"
+
 int
 main()
 {
@@ -19,3 +21,5 @@ main()
 
     return 0;
 }
+
+#include "../src/MemoryLeakTrackerOff.hpp"
