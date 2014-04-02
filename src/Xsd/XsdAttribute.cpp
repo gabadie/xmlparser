@@ -1,3 +1,11 @@
+/**
+ * \file XsdAttribute.cpp
+ * \brief XSD Attribute
+ * \author jcourlet
+ * \version 0.1
+ * \date 18 mars 2014
+ */
+
 #include "XsdAttribute.hpp"
 #include "XsdException.hpp"
 #include "XsdChecker.hpp"

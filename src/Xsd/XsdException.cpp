@@ -1,3 +1,11 @@
+/**
+ * \file XsdException.cpp
+ * \brief XSD Exception
+ * \author rdomingues
+ * \version 0.1
+ * \date 18 mars 2014
+ */
+
 #include "XsdException.hpp"
 
 #ifdef APP_DEBUG

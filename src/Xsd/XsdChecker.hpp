@@ -48,7 +48,7 @@ namespace Xsd
         static const std::string OR_SEPARATOR;
         static const std::string AND_SEPARATOR;
 
-        /*
+        /**
          * Gets the checker singleton
          *
          * @return The checker instance
@@ -56,7 +56,7 @@ namespace Xsd
         static Checker *
         getInstance();
 
-        /*
+        /**
          * Lauches the parsing of an xsd document
          *
          * @param The xsd document
@@ -71,7 +71,7 @@ namespace Xsd
          */
         virtual ~Checker();
 
-        /*
+        /**
          * Checks if all the reference are included in the associated map
          */
         void
@@ -142,19 +142,19 @@ namespace Xsd
         Type *
         getType(const std::string & typeName);
 
-        /*
+        /**
          * Initialize the date type value for the type attribute
          */
         void
         initDateType();
 
-        /*
+        /**
          * Initialize the string type value for the type attribute
          */
         void
         initStringType();
 
-        /*
+        /**
          * Get the date type
          *
          * @return the namespace concatenated with the date string
@@ -162,7 +162,7 @@ namespace Xsd
         std::string
         getDateType();
 
-        /*
+        /**
          * Get the string type
          *
          * @return the namespace concatenated with the "string" string
@@ -170,7 +170,7 @@ namespace Xsd
         std::string
         getStringType();
 
-        /*
+        /**
          * Get the type associated to an element
          *
          * @param elementName The element Name
@@ -180,7 +180,7 @@ namespace Xsd
         Type *
         getElementType(const std::string & elementName);
 
-        /*
+        /**
          * Get the type associated to an attribute
          *
          * @param attributreName The attribute Name
@@ -190,7 +190,7 @@ namespace Xsd
         Type *
         getAttributeType(const std::string & attributeName);
 
-        /*
+        /**
          * Throw an invalid element exception
          *
          * @param received The string received
@@ -199,7 +199,7 @@ namespace Xsd
         static void
         throwInvalidElementException(const std::string & received, const std::string & expected);
 
-        /*
+        /**
          * Throw a missing attribute exception
          *
          * @param element The element name
@@ -208,7 +208,7 @@ namespace Xsd
         static void
         throwMissingAttributeException(const std::string & element, const std::string & missingAttr);
 
-        /*
+        /**
          * Throw an invalid attribute value exception
          *
          * @param element The element name
