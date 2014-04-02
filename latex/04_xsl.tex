@@ -4,7 +4,7 @@
 
 Dans un premier temps, nous avions choisi de suivre une conception orientée objet, et c'est donc
 naturellement que nous avons proposé une classe dédiée aux documents \textit{XSL}, proposant les
-fonctionnalités de transformation d'une feuille XSL, et de même pour les instructions \textit{XSL}.
+fonctionnalités de transformation d'une feuille \textit{XSL}, et de même pour les instructions \textit{XSL}.
 
 \begin{figure}[h!]
     \centering
@@ -14,13 +14,14 @@ fonctionnalités de transformation d'une feuille XSL, et de même pour les instr
 \end{figure}
 
 Néanmoins, cette conception présente de nombreux inconvénients : En plus d'ajouter de nombreuses classe sans vraie valeur ajoutée, elle
-nous forçait à reconstruire l'arbre XML afin de convertir les tags XSL en objets dédiés. On ne profitait pas réellement d'un quelconque
+nous forçait à reconstruire l'arbre \textit{XML} afin de convertir les tags XSL en objets dédiés. On ne profitait pas réellement d'un quelconque
 polymorphisme non plus puisque cela demandait de toucher aux classes XML, alors que celles ci n'ont pas comme responsabilité de gérer toutes
-les applications possibles de ce langage de représentation de données. Il aurait aussi fallu tester le namespace des éléments XML parcourus
+les applications possibles de ce langage de représentation de données. Il aurait aussi fallu tester le namespace des éléments \textit{XML} parcourus
 avant de les caster à la bonne classe, donc pas grand d’intérêt au "polymorphisme".
 
-Nous avons donc choisis de passer à une architecture plus simple : pas d'héritage, et simplement une map globale faisant la liaison entre le nom des instructions Xsl
-et des foncteurs qui génèrent des nœuds XML à partir d'un contexte donné.
+Nous avons donc choisis de passer à une architecture plus simple : pas d'héritage, enfin si. Mais d'aucune classe du \lstinline$namespace Xml$.
+Simplement une map constante faisant officie de virtual table, la liaison entre le nom des instructions \textit{Xsl} et des foncteurs qui
+génèrent des nœuds \textit{XML} à partir d'un contexte donné.
 
 \begin{landscape}
 \begin{figure}[h!]
@@ -34,7 +35,8 @@ et des foncteurs qui génèrent des nœuds XML à partir d'un contexte donné.
 
 \section{Vue globale de l'algorithme}
 
-L'algorithme de transformation XSL s’exécute de manière récursive et bascule continuellement entre le document XSL et le document XML à transformer.
+L'algorithme de transformation \textit{XSL} s’exécute de manière récursive et bascule continuellement entre le document \textit{XSL} et le
+document \textit{XML} à transformer.
 
 Un même algorithme s'exécute pour chaque nœud (à quelques exceptions citées ci-dessous) :
 
@@ -44,12 +46,12 @@ Un même algorithme s'exécute pour chaque nœud (à quelques exceptions citées
     \item Sinon, on ré-applique le même algorithme sur tous ses enfants, en ayant comme contexte l'élément actuel et en concaténant les résultats des applications de l'algorithme à tous le fils.
 \end{enumerate}
 
-La transformation XSL débute en appliquant cet algorithme à la racine du document XML à transformer, et se propage par récursions successives
+La transformation \textit{XSL} débute en appliquant cet algorithme à la racine du document \textit{XML} à transformer, et se propage par récursions successives
 à la totalité du document.
 
 \section{Templates}
 
-Les \textit{templates} sont les seuls fils de la racine (\textit{stylesheet}) d'un document XSL et se présentent de la manière suivante :
+Les \textit{templates} sont les seuls fils de la racine (\textit{stylesheet}) d'un document \textit{XSL} et se présentent de la manière suivante :
 
 \begin{lstlisting}[frame=single]
     <xsl:template match="cd/title">
@@ -58,7 +60,7 @@ Les \textit{templates} sont les seuls fils de la racine (\textit{stylesheet}) d'
     </xsl:template>
 \end{lstlisting}
 
-Ils peuvent contenir des tags XML "normaux", ainsi que des instructions XSL.
+Ils peuvent contenir des tags \textit{XML} "normaux", ainsi que des instructions XSL.
 On dit qu'un template \textit{match} un élément si l'élément est compatible avec la valeur de l'attribut \textit{match} du template, par exemple :
 
 Si un élément XML a comme nom "unautretag" et est le fils d'un élément qui a comme nom "untag", il match le template vu ci-dessus.
@@ -66,9 +68,9 @@ Si un élément XML a comme nom "unautretag" et est le fils d'un élément qui a
 Quand on applique un template, on va renvoyer une liste de nœuds résultants (qui vont en général être ajoutés comme fils d'un document ou d'un élément). Cette liste est générée de la manière suivante :\\
 
 \begin{enumerate}
-    \item Les nœuds qui ne sont pas des éléments XML sont rajoutés directement.
-    \item Les nœuds qui sont des éléments XML, mais pas XSL, sont clonés. On applique alors  puis considérés comme des templates (car pouvant contenir des instructions XSL) et appliqués avec comme contexte le nœud d'application de la transformation XSL.
-    \item Les éléments XSL sont appliqués avec comme contexte le nœud d'application de la transformation XSL. Tous les nœuds résultants de cette application sont ajoutés à la liste des nœuds générés par l'application du template.
+    \item Les nœuds qui ne sont pas des éléments \textit{XML} sont rajoutés directement.
+    \item Les nœuds qui sont des éléments \textit{XML}, mais pas \textit{XSL}, sont clonés. On applique alors  puis considérés comme des templates (car pouvant contenir des instructions \textit{XSL}) et appliqués avec comme contexte le nœud d'application de la transformation \textit{XSL}.
+    \item Les éléments \textit{XSL} sont appliqués avec comme contexte le nœud d'application de la transformation \textit{XSL}. Tous les nœuds résultants de cette application sont ajoutés à la liste des nœuds générés par l'application du template.
 \end{enumerate}
 
 \section{Instructions XSL}
