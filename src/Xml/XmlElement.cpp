@@ -308,105 +308,6 @@ namespace Xml
         mAttributes[name] = value;
     }
 
-    std::list<Element const *>
-    Element::select(std::string const & xPathQuery) const
-    {
-        std::list<Element const *> results;
-
-        if(xPathQuery == "")
-        {
-            return results;
-        }
-
-        if(xPathQuery == "/")
-        {
-            auto doc = this->document();
-            auto root = doc ? doc->root() : nullptr;
-
-            if(root != nullptr)
-            {
-                results.push_back(root);
-            }
-        }
-        else if(xPathQuery == ".")
-        {
-            results.push_back(this);
-        }
-        else if(xPathQuery == "..")
-        {
-            if(mParent != nullptr && mParent->isElement())
-            {
-                results.push_back(static_cast<Element *>(mParent));
-            }
-        }
-        // If the XPath query has no '/'
-        else if(xPathQuery.find("/") == std::string::npos)
-        {
-            // We retrieve the element children that match the query
-            for(auto const & c : mChildren)
-            {
-                app_assert(c != nullptr);
-                app_assert(c->mParent == this);
-
-                if(!c->isElement())
-                {
-                    continue;
-                }
-
-                auto elt = static_cast<Element *>(c);
-                if(elt->tag() == xPathQuery)
-                {
-                    results.push_back(elt);
-                }
-            }
-        }
-        // Else if the XPath query has at least one '/'
-        else
-        {
-            // If '/' is the first char, we start the query from the root
-            if(xPathQuery[0] == '/')
-            {
-                auto doc = this->document();
-                auto root = doc ? doc->root() : nullptr;
-                if(root != nullptr)
-                {
-                    return root->select(xPathQuery.substr(1));
-                }
-            }
-            // Otherwise we get the first token...
-            else
-            {
-                auto slashPos = xPathQuery.find("/");
-
-                app_assert(slashPos != std::string::npos);
-                app_assert(slashPos != xPathQuery.size() - 1);
-
-                auto token = xPathQuery.substr(0, slashPos);
-
-                // And apply the rest of the query recursively to the Element children
-                for(auto const & c : mChildren)
-                {
-                    app_assert(c != nullptr);
-
-                    if(!c->isElement())
-                    {
-                        continue;
-                    }
-
-                    auto elt = static_cast<Element *>(c);
-                    if(elt->tag() == token)
-                    {
-                        auto res = elt->select(xPathQuery.substr(slashPos + 1));
-                        results.splice(std::end(results), res); // Concatenate the results
-                    }
-                }
-            }
-        }
-
-        return results;
-    }
-
-
     bool
     Element::matches(std::string const & pattern) const {
         if (pattern == "") {
@@ -452,16 +353,41 @@ namespace Xml
         if(atPos != std::string::npos)
         {
             auto results = this->select(xPathQuery.substr(0, atPos));
+
+            if (results.size() == 0)
+            {
+                return "";
+            }
+
+            auto node = *std::begin(results);
+
+            if (node->isElement() == false)
+            {
+                return "";
+            }
+
             // Keep only the first result
-            return results.size() > 0 ?
-                (*std::begin(results))->attribute(xPathQuery.substr(atPos + 2)) : "";
+            return static_cast<Element const *>(node)->attribute(xPathQuery.substr(atPos + 2));
         }
         // Else if we request the content of an element
         else
         {
             auto results = this->select(xPathQuery);
+
+            if (results.size() == 0)
+            {
+                return "";
+            }
+
+            auto node = *std::begin(results);
+
+            if (node->isElement() == false)
+            {
+                return "";
+            }
+
             // Keep only the first result
-            return results.size() > 0 ? (*std::begin(results))->fullText() : "";
+            return static_cast<Element const *>(node)->fullText(); // TODO: move fullText -> Object
         }
 
         return "";

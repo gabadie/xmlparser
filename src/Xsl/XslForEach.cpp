@@ -24,7 +24,9 @@ Xsl::ForEach::operator () (Xml::Element const * context,
     {
         app_assert(node != nullptr);
 
-        auto returnedNodes = Xsl::applyTemplate(node, xslDoc, forEachElement, xslLog);
+        app_assert(node->isElement() == true);
+
+        auto returnedNodes = Xsl::applyTemplate(static_cast<Xml::Element const *>(node), xslDoc, forEachElement, xslLog);
 
         resultNodes.reserve(resultNodes.size() + returnedNodes.size());
 

@@ -2,6 +2,7 @@
 #include "../AppDebug.hpp"
 #include "XmlObject.hpp"
 #include "XmlComment.hpp"
+#include "XmlDocument.hpp"
 #include "XmlElement.hpp"
 #include "XmlProcessingInstruction.hpp"
 
@@ -40,7 +41,7 @@ namespace Xml
     }
 
     ElementList
-    Object::elements(std::string const & tag) const
+    Object::elementsByTag(std::string const & tag) const
     {
         ElementList filteredElements;
         ElementList allElements = elements();
@@ -89,6 +90,90 @@ namespace Xml
         app_unreachable();
 
         return false;
+    }
+
+    std::list<Object const *>
+    Object::select(std::string const & xPathQuery) const
+    {
+        if (xPathQuery == "")
+        {
+            return {};
+        }
+
+        if (xPathQuery == "/")
+        {
+            auto doc = this->document();
+
+            if(doc == nullptr)
+            {
+                return {};
+            }
+
+            return {static_cast<Object const *>(doc)};
+        }
+
+        if (xPathQuery == ".")
+        {
+            return {this};
+        }
+
+        else if (xPathQuery == "..")
+        {
+            auto p = parent();
+
+            if (p == nullptr)
+            {
+                return {};
+            }
+
+            return {p};
+        }
+        // If the XPath query has no '/'
+        else if (xPathQuery.find("/") == std::string::npos)
+        {
+            auto elementList = elementsByTag(xPathQuery);
+
+            std::list<Object const *> results;
+
+            for (auto elem : elementList)
+            {
+                results.push_back(elem);
+            }
+
+            return results;
+        }
+
+        // If '/' is the first char, we start the query from the root
+        if (xPathQuery[0] == '/')
+        {
+            auto doc = this->document();
+
+            if (doc != nullptr)
+            {
+                return doc->select(xPathQuery.substr(1));
+            }
+
+            return {};
+        }
+
+        std::list<Object const *> results;
+
+        auto slashPos = xPathQuery.find("/");
+
+        app_assert(slashPos != std::string::npos);
+        app_assert(slashPos != xPathQuery.size() - 1);
+
+        auto token = xPathQuery.substr(0, slashPos);
+
+        // And apply the rest of the query recursively to the Element children
+        for (auto const & c : elementsByTag(token))
+        {
+            auto res = c->select(xPathQuery.substr(slashPos + 1));
+
+            results.splice(std::end(results), res); // Concatenate the results
+        }
+
+        return results;
     }
 
     void

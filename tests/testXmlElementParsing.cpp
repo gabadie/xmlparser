@@ -129,8 +129,8 @@ testXmlElementParsingBadClose()
     Xml::Document * doc = Xml::parse(content, &log);
 
     test_assert(doc != 0);
-    test_assert(doc->root()->elements("balise1").size() == 1);
-    test_assert(doc->root()->elements("balise2").size() == 1);
+    test_assert(doc->root()->elementsByTag("balise1").size() == 1);
+    test_assert(doc->root()->elementsByTag("balise2").size() == 1);
 
     delete doc;
 }
@@ -152,8 +152,8 @@ testXmlElementParsingAttributes()
 
     test_assert(doc != nullptr);
 
-    auto balise1 = doc->root()->elements("balise1");
-    auto balise2 = doc->root()->elements("balise2");
+    auto balise1 = doc->root()->elementsByTag("balise1");
+    auto balise2 = doc->root()->elementsByTag("balise2");
 
     test_assert(balise1.size() == 1);
     test_assert(balise2.size() == 1);
@@ -181,8 +181,8 @@ testXmlElementParsingAttributesNamespace()
 
     test_assert(doc != nullptr);
 
-    auto balise1 = doc->root()->elements("balise1");
-    auto balise2 = doc->root()->elements("balise2");
+    auto balise1 = doc->root()->elementsByTag("balise1");
+    auto balise2 = doc->root()->elementsByTag("balise2");
 
     test_assert(balise1.size() == 1);
     test_assert(balise2.size() == 1);
@@ -210,8 +210,8 @@ testXmlElementParsingBadAttributes()
 
     test_assert(doc != nullptr);
 
-    auto balise1 = doc->root()->elements("balise1");
-    auto balise2 = doc->root()->elements("balise2");
+    auto balise1 = doc->root()->elementsByTag("balise1");
+    auto balise2 = doc->root()->elementsByTag("balise2");
 
     // If the following tests don't pass, see in XmlParser.y the rule "atts"
     // The error may be caused by a shift/reduce conflict.
@@ -240,8 +240,8 @@ testXmlElementParsingWoContent()
 
     test_assert(doc != nullptr);
 
-    auto balise1 = doc->root()->elements("balise1");
-    auto balise2 = doc->root()->elements("balise2");
+    auto balise1 = doc->root()->elementsByTag("balise1");
+    auto balise2 = doc->root()->elementsByTag("balise2");
 
     test_assert(balise1.size() == 1);
     test_assert(balise2.size() == 1);
@@ -268,8 +268,8 @@ testXmlElementParsingWoContentBad()
 
     test_assert(doc != nullptr);
 
-    auto balise1 = doc->root()->elements("balise1");
-    auto balise2 = doc->root()->elements("balise2");
+    auto balise1 = doc->root()->elementsByTag("balise1");
+    auto balise2 = doc->root()->elementsByTag("balise2");
 
     test_assert(balise1.size() == 1);
     test_assert(balise2.size() == 1);

@@ -55,7 +55,7 @@ testXmlElementAttributes()
     std::string value1 = "value1";
     std::string attr2 = "attr2";
     std::string value2 = "value2";
-test_assert(attr1 != attr2);
+    test_assert(attr1 != attr2);
     test_assert(value1 != value2);
 
     test_assert(root.attribute(attr1) == "");
@@ -215,8 +215,8 @@ testXmlElementNamespace()
 
     test_assert(root.elements().size() == 1);
     test_assert(root.elements()[0] == xmlElt1_1);
-    test_assert(root.elements("ns:elt1").size() == 1);
-    test_assert(root.elements("ns:elt1")[0] == xmlElt1_1);
+    test_assert(root.elementsByTag("ns:elt1").size() == 1);
+    test_assert(root.elementsByTag("ns:elt1")[0] == xmlElt1_1);
 
     auto xmlElt1_2 = new Xml::Element("elt1", "ns");
     root.append(xmlElt1_2);
@@ -224,9 +224,9 @@ testXmlElementNamespace()
     test_assert(root.elements().size() == 2);
     test_assert(root.elements()[0] == xmlElt1_1);
     test_assert(root.elements()[1] == xmlElt1_2);
-    test_assert(root.elements("ns:elt1").size() == 2);
-    test_assert(root.elements("ns:elt1")[0] == xmlElt1_1);
-    test_assert(root.elements("ns:elt1")[1] == xmlElt1_2);
+    test_assert(root.elementsByTag("ns:elt1").size() == 2);
+    test_assert(root.elementsByTag("ns:elt1")[0] == xmlElt1_1);
+    test_assert(root.elementsByTag("ns:elt1")[1] == xmlElt1_2);
 
     auto xmlElt2 = new Xml::Element("elt2", "namespace");
     root.append(xmlElt2);
@@ -235,8 +235,8 @@ testXmlElementNamespace()
     test_assert(root.elements()[0] == xmlElt1_1);
     test_assert(root.elements()[1] == xmlElt1_2);
     test_assert(root.elements()[2] == xmlElt2);
-    test_assert(root.elements("namespace:elt2").size() == 1);
-    test_assert(root.elements("namespace:elt2")[0] == xmlElt2);
+    test_assert(root.elementsByTag("namespace:elt2").size() == 1);
+    test_assert(root.elementsByTag("namespace:elt2")[0] == xmlElt2);
 }
 
 void testXmlElementMatches() {

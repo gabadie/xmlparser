@@ -33,8 +33,9 @@ Xsl::ApplyTemplates::operator () (Xml::Element const * context,
         for (auto element : context->select(applyTemplatesElement->attribute("select")))
         {
             app_assert(element != nullptr);
+            app_assert(element->isElement()); // TODO
 
-            for (auto appliedElement : findAndApplyTemplate(element, xslDoc, xslLog))
+            for (auto appliedElement : findAndApplyTemplate(static_cast<Xml::Element const *>(element), xslDoc, xslLog))
             {
                 app_assert(appliedElement != nullptr);
                 resultNodes.push_back(appliedElement);

@@ -169,9 +169,9 @@ testGetTemplate()
     test_assert(xslDoc != 0);
 
     const Xml::Element* cdElement = xmlDoc->root()->elements()[0];
-    const Xml::Element* titleElement = cdElement->elements("title")[0];
-    const Xml::Element* artistElement = cdElement->elements("artist")[0];
-    const Xml::Element* categoryElement = cdElement->elements("category")[0];
+    const Xml::Element* titleElement = cdElement->elementsByTag("title")[0];
+    const Xml::Element* artistElement = cdElement->elementsByTag("artist")[0];
+    const Xml::Element* categoryElement = cdElement->elementsByTag("category")[0];
 
     const Xml::Element* titleTemplate = Xsl::getTemplate(*xslDoc, titleElement);
     test_assert(titleTemplate != nullptr);

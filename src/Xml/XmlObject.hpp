@@ -2,6 +2,7 @@
 #define _H_XML_OBJECT
 
 #include <iostream>
+#include <list>
 
 #include "XmlForward.hpp"
 
@@ -91,7 +92,7 @@ namespace Xml
          * @return Return a container of Element const *
          */
         ElementList
-        elements(std::string const & tag) const;
+        elementsByTag(std::string const & tag) const;
 
         /**
          * Implements standart stream operator
@@ -138,6 +139,16 @@ namespace Xml
         virtual
         bool
         remove(Node * node);
+
+        /**
+         * Returns the element of the XPath query
+         *
+         * @param xPathQuery XPath query
+         *
+         * @return The list of Element result of the XPath query
+         */
+        std::list<Object const *>
+        select(std::string const & xPathQuery) const;
 
     protected:
         /**
