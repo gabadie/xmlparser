@@ -12,6 +12,8 @@
 #include "../src/Xml/XmlCharacterData.hpp"
 #include "../src/Xml/XmlParser.hpp"
 
+#include "../src/MemoryLeakTrackerOn.hpp"
+
 void
 testXmlCharacterDataNode()
 {
@@ -68,3 +70,5 @@ main()
 
     return 0;
 }
+
+#include "../src/MemoryLeakTrackerOff.hpp"
