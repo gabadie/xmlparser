@@ -5,8 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "ApplyTemplates.hpp"
-
+#include "XslApplyTemplates.hpp"
 #include "XslForEach.hpp"
 #include "XslInstruction.hpp"
 #include "XslTemplate.hpp"

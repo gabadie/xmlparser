@@ -1,5 +1,5 @@
 
-#include "ApplyTemplates.hpp"
+#include "XslApplyTemplates.hpp"
 #include "XslTemplate.hpp"
 
 #include "../Xml/XmlElement.hpp"
