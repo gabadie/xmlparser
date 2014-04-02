@@ -159,14 +159,10 @@ namespace Xml
         tag() const;
 
         /**
-         * Gets the value of an attribute by name
-         *
-         * @param name Name of the attribute to get.
-         *
-         * @return The value of the attribute if found, an empty string otherwise.
+         * Ovverrides Xml::Object::attributes(std::string const & namespaceName)
          */
         std::string const &
-        attribute(std::string const & namespaceName) const;
+        attribute(std::string const & namespaceName) const override;
 
         /**
          * Gets all attributes
@@ -207,16 +203,6 @@ namespace Xml
          */
         bool
         matches(std::string const & pattern) const;
-
-        /**
-         * Gets the value of the result of the XPath query
-         *
-         * @param xPathQuery XPath query
-         *
-         * @return The value of the result of the XPath query
-         */
-        std::string
-        valueOf(std::string const & xPathQuery) const;
 
         /**
          * Appends a node

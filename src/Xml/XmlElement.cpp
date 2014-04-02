@@ -334,65 +334,6 @@ namespace Xml
         }
     }
 
-    std::string
-    Element::valueOf(std::string const & xPathQuery) const
-    {
-        if(xPathQuery == "")
-        {
-            return "";
-        }
-
-        // If we request an attribute of the current element
-        if(xPathQuery[0] == '@')
-        {
-            return this->attribute(xPathQuery.substr(1));
-        }
-
-        // If we request the attribute of another element
-        auto atPos = xPathQuery.find("/@");
-        if(atPos != std::string::npos)
-        {
-            auto results = this->select(xPathQuery.substr(0, atPos));
-
-            if (results.size() == 0)
-            {
-                return "";
-            }
-
-            auto node = *std::begin(results);
-
-            if (node->isElement() == false)
-            {
-                return "";
-            }
-
-            // Keep only the first result
-            return static_cast<Element const *>(node)->attribute(xPathQuery.substr(atPos + 2));
-        }
-        // Else if we request the content of an element
-        else
-        {
-            auto results = this->select(xPathQuery);
-
-            if (results.size() == 0)
-            {
-                return "";
-            }
-
-            auto node = *std::begin(results);
-
-            if (node->isElement() == false)
-            {
-                return "";
-            }
-
-            // Keep only the first result
-            return static_cast<Element const *>(node)->fullText(); // TODO: move fullText -> Object
-        }
-
-        return "";
-    }
-
     void
     Element::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
     {
