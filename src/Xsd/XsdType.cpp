@@ -319,12 +319,6 @@ namespace Xsd
             supOccurs = out.str();
         }
 
-        // Name and ref attributes
-        if(isReference(xmlElement))
-        {
-            name = ref;
-        }
-
         // Create the regex
         regex = "(<" + eltRegex + ">){" + minOccurs + "}";
         if(supOccurs != "0")

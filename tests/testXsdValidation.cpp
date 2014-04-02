@@ -622,8 +622,8 @@ testWrongXsd()
 int
 main()
 {
-    testOneElement();
-    //testComplexType();
+    //testOneElement();
+    testComplexType();
     //testRecursiveComplexType();
     // testSequence();
     // testChoice();
