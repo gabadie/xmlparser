@@ -18,6 +18,7 @@ Xml/XmlParserInput.cpp
 Xml/XmlProcessingInstruction.cpp
 Xml/XmlText.cpp
 Xsd/Xsd.cpp
+Xsd/XsdAttribute.cpp
 Xsd/XsdElement.cpp
 Xsd/XsdValidate.cpp
 Xsl/Xsl.cpp
