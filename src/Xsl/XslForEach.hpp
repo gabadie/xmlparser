@@ -6,7 +6,9 @@
 namespace Xsl
 {
     /**
-     * TODO : Doc
+     * Comportment of an Instruction corresponding to "foreach" in an xsl document.
+     * for-each loops loops through each node in the specified "select" node set and applies the 
+     * contained xsl instructions .
      */
     class ForEach final: public Instruction
     {

@@ -7,7 +7,8 @@ namespace Xsl
 {
 
     /**
-     * TODO: doc
+     * Comportment of an Instruction corresponding to "value_of" in an xsl document.
+     * value-of search for the textual value of the xml element corresponding to the attribute "select"
      */
     class ValueOf final: public Instruction
     {
