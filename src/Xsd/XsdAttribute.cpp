@@ -21,10 +21,19 @@ namespace Xsd
         bool valid = true;
 
         std::string attrName = xsdElement->attribute("name");
+        std::string refName = xsdElement->attribute("ref");
 
         if(attrName != "")
         {
             valid &= (xmlElement->attribute(attrName) != "");
+        }
+        else if(refName != "")
+        {
+
+        }
+        else
+        {
+            valid = false;
         }
 
         return valid;

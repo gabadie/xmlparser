@@ -71,6 +71,8 @@ namespace Xsd
 
         for(auto const e : elements)
         {
+            app_assert(e != nullptr);
+
             if((found |= (e->attribute("name") == attrValue)))
             {
                 break;
