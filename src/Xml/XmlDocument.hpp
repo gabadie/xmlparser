@@ -145,9 +145,6 @@ namespace Xml
     private:
         Element * mRoot;     ///< Root of the XML document
         NodeList mChildren; ///< Children nodes
-        //DocType mDocType;  ///< DocType of the XML document //TODO
-        std::string mVersionInfo; ///< Version of the xml
-        std::string mEncoding; ///< Encoding format
 
         friend
         Xml::Document *
