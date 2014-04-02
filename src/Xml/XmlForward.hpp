@@ -1,10 +1,8 @@
 #ifndef _H_XML_FORWARD
 #define _H_XML_FORWARD
+
 #include <vector>
 
-#define private public
-#define protected public 
-//TODO
 
 namespace Xml
 {
@@ -43,14 +41,12 @@ namespace Xsl
 {
 
     /*
-     * Namespace's classes
+     * Xsl namespace's classes
      */
+    class ApplyTemplate;
+    class ForEach;
     class Instruction;
     class ValueOf;
-    class ForEach;
-    class ApplyTemplate;
-
-
 
 }
 

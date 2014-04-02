@@ -1,5 +1,11 @@
 #include "testhelper.hpp"
 
+/*
+ * To test the Xml parser, we need to access some protected/private field
+ */
+#define protected public
+#define private public
+
 #include "../src/Xml/XmlParser.hpp"
 #include "../src/Xsl/Xsl.hpp"
 #include "../src/Xsl/XslTemplate.hpp"

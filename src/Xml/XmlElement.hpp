@@ -8,6 +8,7 @@
 #include "XmlForward.hpp"
 #include "XmlDocumentNode.hpp"
 
+
 namespace Xml
 {
 
@@ -245,6 +246,14 @@ namespace Xml
         std::string
         valueOf(std::string const & xPathQuery) const;
 
+        /**
+         * Appends a node
+         *
+         * @param node Node to append
+         */
+        void
+        appendNode(Node * node) override;
+
     protected:
         /**
          * Exports to a <stream> with a given <indent>
@@ -257,14 +266,6 @@ namespace Xml
         void
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
-
-        /**
-         * Appends a node
-         *
-         * @param node Node to append
-         */
-        void
-        appendNode(Node * node) override;
 
         /**
          * Tells whether or not the element has the given node in

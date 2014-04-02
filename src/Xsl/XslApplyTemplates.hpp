@@ -7,7 +7,9 @@ namespace Xsl
 {
 
     /**
-     * TODO: doc
+     * ApplyTemplates implements the apply-templates XSL instruction.
+     * It looks for all elements that match its "select" attribute and applies
+     * their templates (if any)
      */
     class ApplyTemplates final: public Instruction
     {
