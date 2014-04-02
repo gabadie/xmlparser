@@ -16,47 +16,47 @@
 
 namespace Xsd
 {
-    Attribute::Attribute(const std::string & name, bool required, const std::string & typeName, bool ref)
+    Attribute::Attribute(const std::string & name, bool required, const std::string & typeName, bool ref, Checker * checker)
     {
-        init(name, required, typeName, ref);
+        init(name, required, typeName, ref, checker);
     }
 
     void
-    Attribute::init(const std::string & name, bool required, const std::string & typeName, bool ref)
+    Attribute::init(const std::string & name, bool required, const std::string & typeName, bool ref, Checker * checker)
     {
         mName = name;
         mRequired = required;
         //Xsd::Checker::addAttribute(name, this);
         if(!ref)
         {
-            Xsd::Checker::getInstance()->addTypedAttribute(name, typeName);
+            checker->addTypedAttribute(name, typeName);
         }
 
     }
 
     Attribute *
-    Attribute::parseAttribute(const Xml::Element * const xmlElement)
+    Attribute::parseAttribute(const Xml::Element * const xmlElement, Checker * checker)
     {
         bool required = false, isRef = false;
         std::string notFound = "";
-        std::string name = xmlElement->attribute(Checker::NAME_ATTR);
-        std::string ref = xmlElement->attribute(Checker::REF_ATTR);
-        std::string type = xmlElement->attribute(Checker::TYPE_ATTR);
-        std::string use = xmlElement->attribute(Checker::USE_ATTR);
+        std::string name = xmlElement->attribute(checker->NAME_ATTR);
+        std::string ref = xmlElement->attribute(checker->REF_ATTR);
+        std::string type = xmlElement->attribute(checker->TYPE_ATTR);
+        std::string use = xmlElement->attribute(checker->USE_ATTR);
 
         if(name != notFound)
         {
             // Add an attribute to the attribute type map
-            if(type != notFound && Xsd::Type::isSimpleType(type))
+            if(type != notFound && Xsd::Type::isSimpleType(type, checker))
             {
                     std::vector<std::string> tokens;
                     //throw new NotImplementedException("Not implemented yet");
                     //boost::algorithm::split(tokens, type, boost::algorithm::is_any_of(":"));
-                    Checker::getInstance()->addTypedElement(name, tokens.back());
+                    checker->addTypedElement(name, tokens.back());
             }
             else
             {
-                Checker::throwInvalidAttributeValueException(name, Checker::TYPE_ATTR, type);
+                checker->throwInvalidAttributeValueException(name, checker->TYPE_ATTR, type);
             }
         }
         else if(ref != notFound)
@@ -66,28 +66,28 @@ namespace Xsd
         }
         else
         {
-            Checker::throwMissingAttributeException(name, Checker::TYPE_ATTR);
+            checker->throwMissingAttributeException(name, checker->TYPE_ATTR);
         }
 
         if(use != notFound)
         {
-            if(use == Checker::USE_REQUIRED_VALUE)
+            if(use == checker->USE_REQUIRED_VALUE)
             {
                 required = true;
             }
             else
             {
-                Checker::throwInvalidAttributeValueException(name, Checker::USE_ATTR, use);
+                checker->throwInvalidAttributeValueException(name, checker->USE_ATTR, use);
             }
         }
 
-        return new Attribute(name, required, type, isRef);
+        return new Attribute(name, required, type, isRef, checker);
     }
 
     void
-    Attribute::checkValidity(const std::string & value)
+    Attribute::checkValidity(const std::string & value, Checker * checker)
     {
-        if(!Checker::getInstance()->getAttributeType(mName)->isValid(value))
+        if(!checker->getAttributeType(mName)->isValid(value))
         {
             throw new XSDValidationException("Error: Invalid attribute: " + mName);
         }

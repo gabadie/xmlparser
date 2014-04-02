@@ -42,7 +42,6 @@ namespace Xsd
     const std::string Checker::OR_SEPARATOR = "|";
     const std::string Checker::AND_SEPARATOR = "";
 
-    Checker * Checker::instance;
 
     Checker::Checker(const Xml::Document * const xsdDoc):
         mXsdDoc(xsdDoc),
@@ -52,7 +51,7 @@ namespace Xsd
         mAttributesTypes()
     {
         const std::string dateRegex = "[0-9]{2}-[0-9]{2}-[0-9]{4}";
-        const std::string stringRegex = "*";
+        const std::string stringRegex = ".*";
 
         if(xsdDoc->root()->name() != SCHEMA_ELT)
         {
@@ -142,20 +141,19 @@ namespace Xsd
     bool
     Checker::existType(const std::string & typeName)
     {
-        if(getInstance()->mTypes.find(typeName) == getInstance()->mTypes.end())
+        if(mTypes.find(typeName) == mTypes.end())
         {
             return false;
         }
         return true;
     }
 
-
     bool
-    Checker::isValid(const Xml::Document * const xsdDoc)
+    Checker::isValid(const Xml::Document * const xsdDoc, Checker * checker)
     {
         try
         {
-            getElementType(ROOT)->checkValidity(xsdDoc->root());
+            Xsd::Type::checkRootValidity(xsdDoc->root(), checker);
             return true;
         }
         catch(XSDValidationException * e)
@@ -272,46 +270,33 @@ namespace Xsd
     }
 
     Checker *
-    Checker::getInstance()
-    {
-        return instance;
-    }
-
-    bool
     Checker::parseXsd(const Xml::Document * const xsdDoc)
     {
         if(xsdDoc == NULL)
         {
             std::cerr << "Error: The document received has not been initialized" << std::endl;
-            return false;
+            return NULL;
         }
-        if(instance != NULL)
-        {
-            std::cout << "Warning: Replacing the previous XSD parser" << std::endl;
-            delete instance;
-        }
-
-        instance = new Checker(xsdDoc);
-        
-        //Building intermediary structure from xmlDoc
-        std::list<Attribute *> attributes;
-        Xsd::Type::parseComplexType(xsdDoc->root(), OR_SEPARATOR, true, attributes, true);
-
-        instance->checkReferences();
-        
-        return true;
-        /*
         try
         {
-            instance = new Checker(xsdDoc);
-            return true;
+            Checker * checker = new Checker(xsdDoc);
+            //Building intermediary structure from xmlDoc
+            std::list<Attribute *> attributes;
+            std::string rootRegex = Xsd::Type::parseComplexType(xsdDoc->root(), OR_SEPARATOR, true, attributes, true, checker);
+            checker->addType(ROOT + "Type", new Type(rootRegex, attributes));
+            checker->addTypedElement(ROOT, ROOT + "Type");
+
+            checker->checkReferences();
+            return checker;
         }
         catch(XSDConstructionException * e)
         {
             std::cerr << e->what() << std::endl;
             delete e;
-            return false;
-        }*/
+            return NULL;
+        }
+
+
     }
 
     void

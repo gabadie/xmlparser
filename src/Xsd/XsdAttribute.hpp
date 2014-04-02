@@ -7,7 +7,7 @@
 namespace Xsd
 {
     class Type;
-
+    class Checker;
     /**
      * Defines the schema of an XML attribute
      */
@@ -17,17 +17,18 @@ namespace Xsd
             /**
              * Constructor
              */
-            Attribute(const std::string & name, bool required, const std::string & typeName, bool ref);
+            Attribute(const std::string & name, bool required, const std::string & typeName, bool ref, Checker * checker);
 
             /**
              * Creates an attribute with an xml parsed element
              *
              * @param xmlElement The xml element
+             * @param checker The checker
              *
              * @return The attribute created
              */
             static Attribute *
-            parseAttribute(const Xml::Element * const xmlElement);
+            parseAttribute(const Xml::Element * const xmlElement, Checker * checker);
 
             /**
              * Destructor
@@ -61,17 +62,19 @@ namespace Xsd
              * @param required Indicates if the attribute is required or not
              * @param typeName the type name of the attribute
              * @param ref Indicates if this is a reference or not
+             * @param checker The checker
              */
             void
-            init(const std::string & name, bool required, const std::string & typeName, bool ref);
+            init(const std::string & name, bool required, const std::string & typeName, bool ref, Checker * checker);
 
             /**
              * Checks the validity of the value of an attribute
              *
              * @param value The value to check
+             * @param checker The checker
              */
             void
-            checkValidity(const std::string & value);
+            checkValidity(const std::string & value, Checker * checker);
 
     };
 }

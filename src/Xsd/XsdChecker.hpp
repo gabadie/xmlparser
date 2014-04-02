@@ -49,21 +49,13 @@ namespace Xsd
         static const std::string AND_SEPARATOR;
 
         /**
-         * Gets the checker singleton
-         *
-         * @return The checker instance
-         */
-        static Checker *
-        getInstance();
-
-        /**
          * Lauches the parsing of an xsd document
          *
          * @param The xsd document
          *
          * @return True if the validation is of, false otherwise
          */
-        static bool
+        static Checker *
         parseXsd(const Xml::Document * const xsdDoc);
 
         /**
@@ -81,11 +73,12 @@ namespace Xsd
          * Check if an xsd document is valid
          *
          * @param xsdDoc The xsd document
+         * @param typeName The type name
          *
          * @return True if the XML file respects the XML schema definition
          */
         bool
-        isValid(const Xml::Document * const xsdDoc);
+        isValid(const Xml::Document * const xsdDoc, Checker * checker);
 
         /**
          * Add the type to the type map
@@ -119,7 +112,7 @@ namespace Xsd
          *
          * @param typeName The type name
          */
-        static void
+        void
         checkExistType(const std::string & typeName);
 
         /**
@@ -129,7 +122,7 @@ namespace Xsd
          *
          * @return True if the type exists, false otherwise
          */
-        static bool
+        bool
         existType(const std::string & typeName);
 
         /**
@@ -224,11 +217,6 @@ namespace Xsd
          * Constructor
          */
         Checker(const Xml::Document * const xmlDoc);
-
-        /**
-         * Unique private instance
-         */
-        static Checker * instance;
 
         std::string mNamespacePrefix;           /// the namespace of the xsd document
         std::string mDateType;                  /// the string associated to the date type
