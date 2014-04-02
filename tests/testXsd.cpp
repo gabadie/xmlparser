@@ -8,7 +8,7 @@
 #define protected public
 #define private public
 
-#include "../src/Xsd2/Xsd.hpp"
+#include "../src/Xsd/Xsd.hpp"
 #include "../src/Xml/XmlParser.hpp"
 #include "../src/Xml/XmlDocument.hpp"
 
