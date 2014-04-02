@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <iostream>
 #include <map>
+#include <sstream>
 #include <stack>
 
 namespace
@@ -10,7 +11,8 @@ namespace
     class MemoryLeakTracker
     {
     public:
-        MemoryLeakTracker() = default;
+        MemoryLeakTracker() {
+        std::cerr << "MemoryLeakTracker creation" << std::endl; }
         ~MemoryLeakTracker();
     } mlt;
 
@@ -41,15 +43,16 @@ namespace
     MemBlockInfoMap memBlocks;
     MemBlockInfoStack deleteStack;
     std::size_t errors(0);
+    std::stringstream log;
 
     void printInfo(std::string const & action, void * ptr,
         std::size_t size, std::string const & file, int line)
     {
-        std::cerr << "[" << action << "] : " << std::setw(10) << ptr;
-        std::cerr << " | " << std::setw(5) << std::setfill(' ');
-        std::cerr << static_cast<int>(size) << " byte" << (size > 1 ? "s" : " ");
-        std::cerr << " | " << file << " |" << line << "|";
-        std::cerr << std::endl;
+        log << "[" << action << "] : " << std::setw(10) << ptr;
+        log << " | " << std::setw(5) << std::setfill(' ');
+        log << static_cast<int>(size) << " byte" << (size > 1 ? "s" : " ");
+        log << " | " << file << " |" << line << "|";
+        log << std::endl;
     }
 
     void reportLeaks()
@@ -63,10 +66,13 @@ namespace
 
             totalSize += block.size;
 
+
+            log << "##########################################" << std::endl << std::endl;
             printInfo("Leak", ptr, block.size, block.file, block.line);
 
-            std::free(ptr);
+            //std::free(ptr);
         }
+
 
         auto nbBlocks = static_cast<int>(memBlocks.size());
         auto totalLoss = static_cast<int>(totalSize);
@@ -76,44 +82,48 @@ namespace
             return w + (count > 1 ? "s" : singular);
         };
 
-        std::cerr << std::endl;
-        std::cerr << "=> ";
-        std::cerr << nbBlocks << " leaked " << pluralize("block", nbBlocks, "");
-        std::cerr << " : " << totalLoss << pluralize(" byte", totalLoss, " ") << " lost.";
-        std::cerr << std::endl;
+        log << std::endl;
+        log << "=> ";
+        log << nbBlocks << " leaked " << pluralize("block", nbBlocks, "");
+        log << " : " << totalLoss << pluralize(" byte", totalLoss, " ") << " lost.";
+        log << std::endl;
     }
 
     MemoryLeakTracker::~MemoryLeakTracker()
     {
-        if(memBlocks.empty())
+        std::cerr << "MemoryLeakTracker destruction" << std::endl;
+        bool leaks = !memBlocks.empty();
+
+        if(!leaks)
         {
-            std::cerr << std::endl;
-            std::cerr << "=======================================" << std::endl;
-            std::cerr << "            No leak detected !         " << std::endl;
-            std::cerr << "=======================================" << std::endl;
-            std::cerr << std::endl;
+            log << std::endl;
+            log << "=======================================" << std::endl;
+            log << "            No leak detected !         " << std::endl;
+            log << "=======================================" << std::endl;
+            log << std::endl;
         }
         else
         {
-            std::cerr << std::endl;
-            std::cerr << "=======================================" << std::endl;
-            std::cerr << "     Some leaks have been detected     " << std::endl;
-            std::cerr << "=======================================" << std::endl;
-            std::cerr << std::endl;
+            log << std::endl;
+            log << "=======================================" << std::endl;
+            log << "     Some leaks have been detected     " << std::endl;
+            log << "=======================================" << std::endl;
+            log << std::endl;
 
             reportLeaks();
         }
 
         if(errors > 0)
         {
-            std::cerr << std::endl;
-            std::cerr << "[WARNING] : " << errors << " error" << (errors > 1 ? "s" : "")
+            log << std::endl;
+            log << "[WARNING] : " << errors << " error" << (errors > 1 ? "s" : "")
                 << " have been detected." << std::endl;
         }
 
-        std::cerr << std::endl;
-        std::cerr << "--------------------------------------------------------------";
-        std::cerr << std::endl << std::endl;
+        if(leaks)
+        {
+            //std::cerr << log.str();
+        }
     }
 }
 
@@ -136,6 +146,7 @@ void memory_free(void * ptr, bool array)
 
     if(it == std::end(memBlocks))
     {
+        std::cerr << "Unknown ptr " << ptr << std::endl;
         std::free(ptr);
         return;
     }
@@ -145,26 +156,25 @@ void memory_free(void * ptr, bool array)
     {
         if(array)
         {
-            std::cerr << std::endl;
-            std::cerr << " [ERROR] : " << block.file << "|" <<  block.line
+            log << std::endl;
+            log << " [ERROR] : " << block.file << "|" <<  block.line
                 << "| ~> Mismatched operations : delete[] after new" << std::endl;
-            std::cerr << std::endl;
+            log << std::endl;
 
             ++errors;
         }
         else
         {
-            std::cerr << std::endl;
-            std::cerr << " [ERROR] : " << block.file << "|" <<  block.line
+            log << std::endl;
+            log << " [ERROR] : " << block.file << "|" <<  block.line
                 << "| ~> Mismatched operations : delete after new[]" << std::endl;
-            std::cerr << std::endl;
+            log << std::endl;
 
             ++errors;
         }
     }
 
-    printInfo("Deallocation", ptr, block.size, deleteStack.top().file,
-              deleteStack.top().line);
+    printInfo("Deallocation", ptr, block.size, deleteStack.top().file, deleteStack.top().line);
 
     memBlocks.erase(it);
     deleteStack.pop();
