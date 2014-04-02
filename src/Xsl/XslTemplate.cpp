@@ -128,7 +128,7 @@ Xsl::applyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, X
 
     std::vector<Xml::Node *> result;
 
-    // Attention, ici on parcourt des éléments XSL, et pas le document XML qu'on transforme
+    // We iterate over the XSL template's children
     for (Xml::Node * templateNode : xslTemplate->children())
     {
         app_assert(templateNode != nullptr);
@@ -146,9 +146,8 @@ Xsl::applyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, X
             auto instructionPair = xslInstructions.find(xslElement->name());
 
             if (instructionPair == xslInstructions.end()) {
-                // Le tag XSL comprends une instruction inconnue
-                // TODO : xslLogger
-                std::cerr << "instruction inconnue ! " << xslElement->name() << std::endl;
+                // Unknown XSL instruction
+                xslLog.append("Unknown XSL instruction: " + xslElement->name() + "\n");
                 continue;
             }
 
