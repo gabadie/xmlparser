@@ -6,7 +6,7 @@
 
 
 void
-testXslSeveralsRoot()
+testXslSeveralRoot()
 {
     std::string xml = xml_code(
         <root />
@@ -106,7 +106,7 @@ testXslBadDocumentAppend()
 int
 main()
 {
-    testXslSeveralsRoot();
+    testXslSeveralRoot();
     testXslNoRoot();
     testXslBadDocumentAppend();
 
