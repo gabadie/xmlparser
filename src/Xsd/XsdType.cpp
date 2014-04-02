@@ -34,9 +34,9 @@ namespace Xsd
 
     Type::~Type()
     {
-        for(auto iterator = mAttributes.begin(); iterator != mAttributes.end(); iterator++)
+        for(auto iterator : mAttributes)
         {
-            delete *iterator;
+            delete iterator;
         }
         mAttributes.clear();
     }
@@ -52,14 +52,14 @@ namespace Xsd
     {
         std::map<std::string, std::string> attributeMapElement = element->attributes();
 
-        for (auto iterAttr = mAttributes.begin(); iterAttr != mAttributes.end(); ++iterAttr)
+        for (auto iterAttr : mAttributes)
         {
-            auto iterMap = attributeMapElement.find((*iterAttr)->name());
+            auto iterMap = attributeMapElement.find(iterAttr->name());
             if ((iterMap == attributeMapElement.end()))
             {
-                if ((*iterAttr)->isRequired())
+                if (iterAttr->isRequired())
                 {
-                    throw new XSDValidationException("Error : attribute " + (*iterAttr)->name() + "  in element " + element->name() + " is missing");
+                    throw new XSDValidationException("Error : attribute " + iterAttr->name() + "  in element " + element->name() + " is missing");
                 }
             }
             else
@@ -76,11 +76,11 @@ namespace Xsd
             throw new XSDValidationException("Error: Invalid element: " + element->name());
         }
 
-        for (auto iter = element->elements().begin(); iter != element->elements().end(); ++iter)
+        for (auto iter : element->elements())
         {
             Checker * checker = Checker::getInstance();
-            Type * typePt = checker-> getElementType((*iter)->name());
-            typePt->checkValidity(*iter);
+            Type * typePt = checker-> getElementType(iter->name());
+            typePt->checkValidity(iter);
         }
     }
 
@@ -88,9 +88,9 @@ namespace Xsd
     Type::childrenToString(std::vector<Xml::Element const *> childrenElt)
     {
         std::string str = "";
-        for (auto iter = childrenElt.begin(); iter != childrenElt.end(); ++iter)
+        for (auto iter : childrenElt)
         {
-            str += "<" + (*iter)->name() + ">";
+            str += "<" + iter->name() + ">";
         }
         return str;
     }
@@ -106,38 +106,38 @@ namespace Xsd
             separator += ".*";
         }
 
-        for (auto ci = xmlElement->elements().begin(); ci != xmlElement->elements().end(); ++ci)
+        for (auto ci : xmlElement->elements())
         {
-            if((*ci)->name().compare(Checker::SEQUENCE_ELT) == 0)
+            if(ci->name().compare(Checker::SEQUENCE_ELT) == 0)
             {
-                regex += getRegexFromOccurs(*ci, parseComplexType(*ci, Checker::AND_SEPARATOR, true, attributes, false)) + separator;
+                regex += getRegexFromOccurs(ci, parseComplexType(ci, Checker::AND_SEPARATOR, true, attributes, false)) + separator;
             }
-            else if((*ci)->name().compare(Checker::CHOICE_ELT) == 0)
+            else if(ci->name().compare(Checker::CHOICE_ELT) == 0)
             {
-                regex += getRegexFromOccurs(*ci, parseComplexType(*ci, Checker::OR_SEPARATOR, true, attributes, false)) + separator;
+                regex += getRegexFromOccurs(ci, parseComplexType(ci, Checker::OR_SEPARATOR, true, attributes, false)) + separator;
             }
-            else if((*ci)->name().compare(Checker::ELEMENT_ELT) == 0)
+            else if(ci->name().compare(Checker::ELEMENT_ELT) == 0)
             {
                 if(eltSeqChoice)
                 {
-                    regex += parseElement(*ci) + separator;
+                    regex += parseElement(ci) + separator;
                 }
                 else
                 {
-                    Checker::throwInvalidElementException(getNameOrRef(*ci), Checker::ELEMENT_ELT);
+                    Checker::throwInvalidElementException(getNameOrRef(ci), Checker::ELEMENT_ELT);
                 }
             }
-            else if((*ci)->name().compare(Checker::ATTRIBUTE_ELT) == 0)
+            else if(ci->name().compare(Checker::ATTRIBUTE_ELT) == 0)
             {
                 if(!acceptAttributes)
                 {
-                    Checker::throwInvalidElementException(getNameOrRef(*ci), Checker::ELEMENT_ELT);
+                    Checker::throwInvalidElementException(getNameOrRef(ci), Checker::ELEMENT_ELT);
                 }
-                attributes.push_back(Xsd::Attribute::parseAttribute(*ci));
+                attributes.push_back(Xsd::Attribute::parseAttribute(ci));
             }
             else
             {
-                Checker::throwInvalidElementException((*ci)->name(), Checker::COMPLEX_TYP_ELT);
+                Checker::throwInvalidElementException(ci->name(), Checker::COMPLEX_TYP_ELT);
             }
         }
 
@@ -199,15 +199,15 @@ namespace Xsd
         std::string ref = xmlElement->attribute(Checker::REF_ATTR);
 
         // Name and ref attributes
-        if((name.compare(notFound) == 0) && (ref.compare(notFound) != 0))
+        if(name.compare(notFound) != 0)
+        {
+            return false;
+        }
+        if(ref.compare(notFound) != 0)
         {
             return true;
         }
-        else
-        {
-            Checker::throwMissingAttributeException(Checker::ELEMENT_ELT, Checker::NAME_ATTR);
-        }
-
+        Checker::throwMissingAttributeException(Checker::ELEMENT_ELT, Checker::NAME_ATTR);
         return false;
     }
 
@@ -257,12 +257,12 @@ namespace Xsd
                 }
                 else
                 {
-                    throw new XSDConstructionException("Error: type attribute or element cannot be found for " + Checker::ELEMENT_ELT + " element");
+                    throw new XSDConstructionException("Error: type attribute or element cannot be found for " + name + " element");
                 }
             }
             else
             {
-                throw new XSDConstructionException("Error: type attribute or element cannot be found for " + Checker::ELEMENT_ELT + " element");
+                throw new XSDConstructionException("Error: type description (attribute or element) cannot be found for " + name + " element");
             }
         }
 
@@ -294,7 +294,7 @@ namespace Xsd
         }
         else
         {
-            supOccurs = "0";
+            supOccurs = "1";
         }
 
         if((minOccurs.compare(UNBOUNDED_EXP_REG) == 0 && supOccurs.compare(UNBOUNDED_EXP_REG) != 0)

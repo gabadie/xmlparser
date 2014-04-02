@@ -87,9 +87,9 @@ namespace Xsd
 
     Checker::~Checker()
     {
-        for(auto iterator = mTypes.begin(); iterator != mTypes.end(); iterator++)
+        for(auto iterator : mTypes)
         {
-            delete iterator->second;
+            delete iterator.second;
         }
         mTypes.clear();
 
@@ -121,17 +121,17 @@ namespace Xsd
                     check le type des attrs
         */
 
-        for (auto iterEltType = mElementsTypes.begin(); iterEltType != mElementsTypes.end(); ++iterEltType)
+        for (auto iterEltType : mElementsTypes)
         {
-            checkExistType(iterEltType->second);
+            checkExistType(iterEltType.second);
         }
 
-        for (auto iterType = mTypes.begin(); iterType != mTypes.end(); ++iterType)
+        for (auto iterType : mTypes)
         {
-            std::list<Attribute *> attributes = iterType->second->attributes();
-            for (auto iterAttr = attributes.begin(); iterAttr != attributes.end(); ++iterAttr)
+            std::list<Attribute *> attributes = iterType.second->attributes();
+            for (auto iterAttr : attributes)
             {
-                checkExistType((*iterAttr)->name());
+                checkExistType(iterAttr->name());
             }
         }
     }
