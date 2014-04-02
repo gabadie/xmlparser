@@ -83,14 +83,6 @@ namespace Xsd
 
         Type * typeString = new Type(stringRegex, std::list<Attribute *>());
         addType(mStringType, typeString);
-
-
-        //Building intermediary structure from xmlDoc
-        std::list<Attribute *> attributes;
-        Xsd::Type::parseComplexType(xsdDoc->root(), OR_SEPARATOR, true, attributes, true);
-
-        checkReferences();
-
     }
 
     Checker::~Checker()
@@ -156,6 +148,7 @@ namespace Xsd
         }
         return true;
     }
+
 
     bool
     Checker::isValid(const Xml::Document * const xsdDoc)
@@ -299,6 +292,13 @@ namespace Xsd
         }
 
         instance = new Checker(xsdDoc);
+        
+        //Building intermediary structure from xmlDoc
+        std::list<Attribute *> attributes;
+        Xsd::Type::parseComplexType(xsdDoc->root(), OR_SEPARATOR, true, attributes, true);
+
+        instance->checkReferences();
+        
         return true;
         /*
         try
