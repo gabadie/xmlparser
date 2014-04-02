@@ -16,6 +16,8 @@
 #include "XmlElement.hpp"
 #include "XmlText.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 namespace Xml
 {
     Element::Element(std::string const & name, std::string const & namespaceName):
@@ -572,3 +574,4 @@ namespace Xml
 
 }
 
+#include "../MemoryLeakTrackerOff.hpp"

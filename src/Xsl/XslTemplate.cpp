@@ -51,6 +51,7 @@ namespace
         std::string matchB = xslTemplateB->attribute("match");
         return std::count(matchA.begin(), matchA.end(), '/') >= std::count(matchB.begin(), matchB.end(), '/') ;
     }
+
 } // Anonymous namespace
 
 std::vector<Xml::Node *>
@@ -125,6 +126,7 @@ Xsl::findAndApplyTemplate(Xml::Element const * context, Xml::Document const & xs
     }
 }
 
+
 std::vector<Xml::Node *>
 Xsl::applyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, Xml::Element const * xslTemplate, Xml::Log & xslLog)
 {
@@ -140,8 +142,9 @@ Xsl::applyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, X
 
         if (!templateNode->isElement())
         {
-            Xml::ObjectLabel label = context->objectLabel();
-            if (label == Xml::ObjectLabel::Text || label == Xml::ObjectLabel::CharacterData) {
+            Xml::ObjectLabel label = templateNode->objectLabel();
+            if (label == Xml::ObjectLabel::Text || label == Xml::ObjectLabel::CharacterData)
+            {
                 result.push_back(templateNode->clone());
             }
             continue;

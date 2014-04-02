@@ -3,6 +3,7 @@
 
 #include "XmlParserError.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
 
 namespace
 {
@@ -74,3 +75,5 @@ namespace Xml
     }
 
 }
+
+#include "../MemoryLeakTrackerOff.hpp"

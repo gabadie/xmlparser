@@ -6,7 +6,7 @@
 
 
 void
-testXslSeveralsRoot()
+testXslSeveralRoot()
 {
     std::string xml = xml_code(
         <root />
@@ -150,7 +150,7 @@ testIgnoredXMLTags()
 int
 main()
 {
-    testXslSeveralsRoot();
+    testXslSeveralRoot();
     testXslNoRoot();
     testXslBadDocumentAppend();
     testIgnoredXMLTags();
