@@ -3,8 +3,10 @@
 
 namespace Xsd
 {
-    class Instruction;
+    class Attribute;
+    class Choice;
     class Element;
+    class Instruction;
 }
 
 #endif //_H_XSD_FORWARD
