@@ -9,7 +9,7 @@ namespace Xsl
     /**
      * TODO: doc
      */
-    class ForEach: public Instruction
+    class ForEach final: public Instruction
     {
     public:
         /**

@@ -9,7 +9,7 @@ namespace Xsl
     /**
      * TODO: doc
      */
-    class ApplyTemplates: public Instruction
+    class ApplyTemplates final: public Instruction
     {
     public:
         /**

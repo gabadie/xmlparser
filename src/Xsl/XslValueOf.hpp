@@ -9,7 +9,7 @@ namespace Xsl
     /**
      * TODO: doc
      */
-    class ValueOf : public Instruction
+    class ValueOf final: public Instruction
     {
     public:
         /**
