@@ -8,7 +8,7 @@
 
 std::vector<Xml::Node *>
 Xsl::ApplyTemplates::operator () (Xml::Element const * context,
-    Xml::Document const & xslDoc, Xml::Element const * applyTemplatesElement) const
+    Xml::Document const & xslDoc, Xml::Element const * applyTemplatesElement, Xml::Log & xslLog) const
 {
     app_assert(context != nullptr);
     app_assert(applyTemplatesElement != nullptr);
@@ -21,7 +21,7 @@ Xsl::ApplyTemplates::operator () (Xml::Element const * context,
         {
             app_assert(element != nullptr);
 
-            for (auto appliedElement : findAndApplyTemplate(element, xslDoc))
+            for (auto appliedElement : findAndApplyTemplate(element, xslDoc, xslLog))
             {
                 app_assert(appliedElement != nullptr);
                 resultNodes.push_back(appliedElement);
@@ -34,7 +34,7 @@ Xsl::ApplyTemplates::operator () (Xml::Element const * context,
         {
             app_assert(element != nullptr);
 
-            for (auto appliedElement : findAndApplyTemplate(element, xslDoc))
+            for (auto appliedElement : findAndApplyTemplate(element, xslDoc, xslLog))
             {
                 app_assert(appliedElement != nullptr);
                 resultNodes.push_back(appliedElement);

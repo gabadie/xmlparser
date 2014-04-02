@@ -48,6 +48,12 @@ namespace Xsl
     class Instruction;
     class ValueOf;
 
+    /*
+     * Xsl transformation
+     */
+    Xml::Document *
+    transform(Xml::Document const &, Xml::Document const &, Xml::Log &);
+
 }
 
 /*

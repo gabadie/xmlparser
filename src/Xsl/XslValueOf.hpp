@@ -7,7 +7,8 @@ namespace Xsl
 {
 
     /**
-     * TODO: doc
+     * Comportment of an Instruction corresponding to "value_of" in an xsl document.
+     * value-of search for the textual value of the xml element corresponding to the attribute "select"
      */
     class ValueOf final: public Instruction
     {
@@ -18,7 +19,7 @@ namespace Xsl
         virtual
         std::vector<Xml::Node *>
         operator () (Xml::Element const * context, Xml::Document const & xslDoc,
-            Xml::Element const * xslElement) const override;
+            Xml::Element const * xslElement, Xml::Log &) const override;
 
     };
 

@@ -64,20 +64,21 @@ appTransform(std::string const & xmlPath, std::string const & xslPath)
     }
 
 
-    Xml::Log xslLog;
-    Xml::Document * xslDoc = Xml::load(xslPath, &xslLog);
+    Xml::Log xslLoadLog;
+    Xml::Document * xslDoc = Xml::load(xslPath, &xslLoadLog);
 
     if(xmlDoc == nullptr)
     {
         std::cerr << "Failed to parse XSL file: " << xmlPath << std::endl;
-        std::cerr << xslLog;
+        std::cerr << xslLoadLog;
         return PARSE_ERROR;
     }
 
-    Xml::Document * transformedDoc = Xsl::xslTransform(*xmlDoc, *xslDoc);
+    Xml::Log transformLog;
+    Xml::Document * transformedDoc = Xsl::transform(*xmlDoc, *xslDoc, transformLog);
 
     std::cout << (*transformedDoc) << std::endl;
-    //std::cerr << transformLog;
+    std::cerr << transformLog;
 
     delete xmlDoc;
     delete xslDoc;
