@@ -20,9 +20,9 @@
 
 namespace
 {
-
     /**
-     * TODO: doc
+     * The map of supporter XSL instructions. Keys are the names of the instruction's XML tag,
+     * value is a functor that applies the given template.
      */
     std::map<std::string, Xsl::Instruction const *> const xslInstructions
     {
@@ -32,7 +32,13 @@ namespace
     };
 
     /**
-     * TODO: doc
+     * Says which template has a deeper, more "specific", match attribute.
+     * i.e : "cd/title" is more specific than "title".
+     *
+     * @param xslTemplateA first template element that's being compared
+     * @param xslTemplateB second template element that's being compared
+     *
+     * @return true if xslTemplateA has a deeper or equal match than xslTemplateB, false otherwise
      */
     bool
     deeperMatch(Xml::Element const * xslTemplateA, Xml::Element const * xslTemplateB)
