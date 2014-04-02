@@ -17,13 +17,20 @@ namespace Xsd
     class Type
     {
     public:
-        /*
+        /**
          * Constructor
          *
          * @param xmlElement xml parsed element
          */
         Type(const Xml::Element * const xmlElement);
 
+
+        /**
+         * Constructor
+         *
+         * @param regex The regex
+         * @param attrs The list of attributes
+         */
         Type(const std::string & regex, std::list<Attribute *> attrs);
 
          /**
@@ -32,7 +39,7 @@ namespace Xsd
         virtual
         ~Type();
 
-        /*
+        /**
          * Create the regex with an xml parsed element
          *
          * @param xmlElement The xml parsed element
@@ -45,7 +52,7 @@ namespace Xsd
         static std::string
         parseComplexType(const Xml::Element * const xmlElement, std::string separator, bool eltSeqChoice, std::list<Attribute *> attributes, bool acceptAttributes);
 
-        /*
+        /**
          * Returns the regex of an element, adds its type and type relation to the maps if it's not a ref
          *
          * @param xmlElement The xml parsed element
@@ -55,7 +62,7 @@ namespace Xsd
         static std::string
         parseElement(const Xml::Element * const xmlElement);
 
-        /*
+        /**
          * Check if the string value matches with the type regex
          *
          * @param str The string to match
