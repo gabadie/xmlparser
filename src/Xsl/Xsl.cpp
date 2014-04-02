@@ -14,11 +14,17 @@ Xsl::xslTransform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc, Xm
 
     if (resultNodes.size() == 0)
     {
+        xslLog.append("XSL transform returned empty document.");
         return result;
     }
 
+
     app_assert(resultNodes[0] != nullptr);
     app_assert(resultNodes[0]->isElement());
+
+    if (resultNodes.size() > 1) {
+        xslLog.append("XSL transform returned more than a root element.");
+    }
 
     auto root = static_cast<Xml::Element *>(resultNodes[0]);
     result->setRoot(root);
