@@ -77,10 +77,10 @@ namespace Xsd
         initDateType();
         initStringType();
 
-        Type * typeDate = new Type(dateRegex, std::list<Attribute *>());
+        Type * typeDate = new Type(dateRegex, std::map<std::string, Attribute *>());
         addType(mDateType, typeDate);
 
-        Type * typeString = new Type(stringRegex, std::list<Attribute *>());
+        Type * typeString = new Type(stringRegex, std::map<std::string, Attribute *>());
         addType(mStringType, typeString);
     }
 
@@ -119,10 +119,10 @@ namespace Xsd
 
         for (auto iterType : mTypes)
         {
-            std::list<Attribute *> attributes = iterType.second->attributes();
+            std::map<std::string, Attribute *> attributes = iterType.second->attributes();
             for (auto iterAttr : attributes)
             {
-                checkExistType(iterAttr->name());
+                checkExistType(iterAttr.second->name());
             }
         }
     }
@@ -149,11 +149,11 @@ namespace Xsd
     }
 
     bool
-    Checker::isValid(const Xml::Document * const xsdDoc, Checker * checker)
+    Checker::isValid(const Xml::Document * const xsdDoc)
     {
         try
         {
-            Xsd::Type::checkRootValidity(xsdDoc->root(), checker);
+            Xsd::Type::checkRootValidity(xsdDoc->root(), this);
             return true;
         }
         catch(XSDValidationException * e)
@@ -281,7 +281,7 @@ namespace Xsd
         {
             Checker * checker = new Checker(xsdDoc);
             //Building intermediary structure from xmlDoc
-            std::list<Attribute *> attributes;
+            std::map<std::string, Attribute *> attributes;
             std::string rootRegex = Xsd::Type::parseComplexType(xsdDoc->root(), OR_SEPARATOR, true, attributes, true, checker);
             checker->addType(ROOT + "Type", new Type(rootRegex, attributes));
             checker->addTypedElement(ROOT, ROOT + "Type");

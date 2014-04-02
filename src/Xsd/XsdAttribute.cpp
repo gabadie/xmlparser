@@ -16,28 +16,16 @@
 
 namespace Xsd
 {
-    Attribute::Attribute(const std::string & name, bool required, const std::string & typeName, bool ref, Checker * checker)
+    Attribute::Attribute(const std::string & name, bool required):
+        mName(name),
+        mRequired(required)
     {
-        init(name, required, typeName, ref, checker);
-    }
-
-    void
-    Attribute::init(const std::string & name, bool required, const std::string & typeName, bool ref, Checker * checker)
-    {
-        mName = name;
-        mRequired = required;
-        //Xsd::Checker::addAttribute(name, this);
-        if(!ref)
-        {
-            checker->addTypedAttribute(name, typeName);
-        }
-
     }
 
     Attribute *
     Attribute::parseAttribute(const Xml::Element * const xmlElement, Checker * checker)
     {
-        bool required = false, isRef = false;
+        bool required = false;
         std::string notFound = "";
         std::string name = xmlElement->attribute(checker->NAME_ATTR);
         std::string ref = xmlElement->attribute(checker->REF_ATTR);
@@ -59,7 +47,6 @@ namespace Xsd
         else if(ref != notFound)
         {
             name = ref;
-            isRef = true;
         }
         else
         {
@@ -78,7 +65,7 @@ namespace Xsd
             }
         }
 
-        return new Attribute(name, required, type, isRef, checker);
+        return new Attribute(name, required);
     }
 
     void

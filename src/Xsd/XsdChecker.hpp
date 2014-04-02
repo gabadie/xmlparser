@@ -73,12 +73,11 @@ namespace Xsd
          * Check if an xsd document is valid
          *
          * @param xsdDoc The xsd document
-         * @param typeName The type name
          *
          * @return True if the XML file respects the XML schema definition
          */
         bool
-        isValid(const Xml::Document * const xsdDoc, Checker * checker);
+        isValid(const Xml::Document * const xsdDoc);
 
         /**
          * Add the type to the type map

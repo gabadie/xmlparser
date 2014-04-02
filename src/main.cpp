@@ -73,7 +73,7 @@ appVerify(std::string const & xmlPath, std::string const & xsdPath)
     }
 
     // Validation process
-    if(checker->isValid(xmlDoc, checker))
+    if(checker->isValid(xmlDoc))
     {
         std::cout << xmlPath << " is valid according to the " << xsdPath << " schema" << std::endl;
     }

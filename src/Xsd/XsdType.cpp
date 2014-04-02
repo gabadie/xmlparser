@@ -26,7 +26,7 @@ namespace Xsd
     }
 
 
-    Type::Type(const std::string & regex, std::list<Attribute *> attrs):
+    Type::Type(const std::string & regex, std::map<std::string, Attribute *> attrs):
         mRegex(regex),
         mAttributes(attrs)
     {
@@ -36,7 +36,7 @@ namespace Xsd
     {
         for(auto iterator : mAttributes)
         {
-            delete iterator;
+            delete iterator.second;
         }
         mAttributes.clear();
     }
@@ -49,7 +49,7 @@ namespace Xsd
         std::string regex = checker->getElementType(checker->ROOT)->mRegex;
         if(!RE2::FullMatch(rootElement,  regex))
         {
-            throw new XSDValidationException("Error : invalid element " + root->name());
+            throw new XSDValidationException("Error: invalid element or missing children for element: " + root->name());
         }
 
         checker->getElementType(root->name())->checkValidity(root, checker);
@@ -66,28 +66,37 @@ namespace Xsd
     {
         std::map<std::string, std::string> attributeMapElement = element->attributes();
 
+        for (auto iterAttr : attributeMapElement)
+        {
+            auto iteratorFind = mAttributes.find(iterAttr.second);
+            if (iteratorFind == mAttributes.end())
+            {
+                throw new XSDValidationException("Error: Unexpected attribute " + iterAttr.second + "  in element " + element->name());
+            }
+        }
+
         for (auto iterAttr : mAttributes)
         {
-            auto iterMap = attributeMapElement.find(iterAttr->name());
-            if ((iterMap == attributeMapElement.end()))
+            auto iterMap = attributeMapElement.find(iterAttr.second->name());
+            if (iterMap == attributeMapElement.end())
             {
-                if (iterAttr->isRequired())
+                if (iterAttr.second->isRequired())
                 {
-                    throw new XSDValidationException("Error : attribute " + iterAttr->name() + "  in element " + element->name() + " is missing");
+                    throw new XSDValidationException("Error: attribute " + iterAttr.second->name() + "  in element " + element->name() + " is missing");
                 }
             }
             else
             {
                 if(!isValid(iterMap->second))
                 {
-                    throw new XSDValidationException("Error : invalid element " + element->name());
+                    throw new XSDValidationException("Error: Invalid element or missing children for element: " + element->name());
                 }
             }
         }
 
         if(!isValid(childrenToString(element->elements()) + element->text()))
         {
-            throw new XSDValidationException("Error: Invalid element: " + element->name());
+            throw new XSDValidationException("Error: Invalid element or missing children for element: " + element->name());
         }
 
         for (auto iter : element->elements())
@@ -111,7 +120,7 @@ namespace Xsd
 
     //Should work, still have to check the algorithm for choice or sequence inside choice or sequence
     std::string
-    Type::parseComplexType(const Xml::Element * const xmlElement, std::string separator, bool eltSeqChoice, std::list<Attribute *> attributes, bool acceptAttributes, Checker * checker)
+    Type::parseComplexType(const Xml::Element * const xmlElement, std::string separator, bool eltSeqChoice, std::map<std::string, Attribute *> attributes, bool acceptAttributes, Checker * checker)
     {
         std::string regex = "(";
 
@@ -147,7 +156,8 @@ namespace Xsd
                 {
                     checker->throwInvalidElementException(getNameOrRef(ci), checker->ELEMENT_ELT);
                 }
-                attributes.push_back(Xsd::Attribute::parseAttribute(ci, checker));
+                Attribute * attr = Xsd::Attribute::parseAttribute(ci, checker);
+                attributes.insert(std::make_pair(attr->name(), attr))x;
             }
             else
             {
@@ -339,7 +349,7 @@ namespace Xsd
         return regex;
     }
 
-    std::list<Attribute *>
+    std::map<std::string, Attribute *>
     Type::attributes() const
     {
         return mAttributes;

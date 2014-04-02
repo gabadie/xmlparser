@@ -17,7 +17,7 @@ namespace Xsd
             /**
              * Constructor
              */
-            Attribute(const std::string & name, bool required, const std::string & typeName, bool ref, Checker * checker);
+            Attribute(const std::string & name, bool required);
 
             /**
              * Creates an attribute with an xml parsed element
