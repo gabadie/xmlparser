@@ -37,34 +37,20 @@ namespace
     bool
     deeperMatch(Xml::Element const * xslTemplateA, Xml::Element const * xslTemplateB)
     {
+        app_assert(xslTemplateA != nullptr);
+        app_assert(xslTemplateB != nullptr);
+
         std::string matchA = xslTemplateA->attribute("match");
         std::string matchB = xslTemplateB->attribute("match");
         return std::count(matchA.begin(), matchA.end(), '/') >= std::count(matchB.begin(), matchB.end(), '/') ;
     }
 } // Anonymous namespace
 
-
-Xml::Element const *
-Xsl::getTemplate(Xml::Document const & xslDoc, Xml::Element const * element)
-{
-    Xml::Element const * curTemplate = nullptr;
-
-    for (Xml::Element const * xslTemplate : xslDoc.root()->elements())
-    {
-        // If the template has a "deeper match" than the currently selected template, we choose is instead
-        if (element->matches(xslTemplate->attribute("match")) &&
-            (curTemplate == nullptr || deeperMatch(xslTemplate, curTemplate)))
-        {
-            curTemplate = xslTemplate;
-        }
-    }
-
-    return curTemplate;
-}
-
 std::vector<Xml::Node *>
 Xsl::applyDefaultTemplate(Xml::Node const * context, Xml::Document const & xslDoc)
 {
+    app_assert(context != nullptr);
+
     std::vector<Xml::Node *> result;
     if (!context->isElement())
     {
@@ -77,10 +63,35 @@ Xsl::applyDefaultTemplate(Xml::Node const * context, Xml::Document const & xslDo
     }
 }
 
+Xml::Element const *
+Xsl::getTemplate(Xml::Document const & xslDoc, Xml::Element const * element)
+{
+    app_assert(element != nullptr);
+
+    Xml::Element const * curTemplate = nullptr;
+
+    for (Xml::Element const * xslTemplate : xslDoc.root()->elements())
+    {
+        app_assert(xslTemplate != nullptr);
+
+        // If the template has a "deeper match" than the currently selected template, we choose is instead
+        if (element->matches(xslTemplate->attribute("match")) &&
+            (curTemplate == nullptr || deeperMatch(xslTemplate, curTemplate)))
+        {
+            curTemplate = xslTemplate;
+        }
+    }
+
+    return curTemplate;
+}
+
 std::vector<Xml::Node *>
 Xsl::findAndApplyTemplate(Xml::Element const * context, Xml::Document const & xslDoc)
 {
+    app_assert(context != nullptr);
+
     Xml::Element const * contextTemplate = getTemplate(xslDoc, context);
+
     // if the context a template matches the context, we apply it
     if (contextTemplate != nullptr)
     {
@@ -91,8 +102,11 @@ Xsl::findAndApplyTemplate(Xml::Element const * context, Xml::Document const & xs
         std::vector<Xml::Node *> result;
         for (auto child : context->children())
         {
+            app_assert(child != nullptr);
+
             for (auto rNode : applyDefaultTemplate(child, xslDoc))
             {
+                app_assert(rNode != nullptr);
                 result.push_back(rNode);
             }
         }
@@ -103,11 +117,16 @@ Xsl::findAndApplyTemplate(Xml::Element const * context, Xml::Document const & xs
 std::vector<Xml::Node *>
 Xsl::applyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, Xml::Element const * xslTemplate)
 {
+    app_assert(context != nullptr);
+    app_assert(xslTemplate != nullptr);
+
     std::vector<Xml::Node *> result;
 
     // Attention, ici on parcourt des éléments XSL, et pas le document XML qu'on transforme
     for (Xml::Node * templateNode : xslTemplate->children())
     {
+        app_assert(templateNode != nullptr);
+
         if (!templateNode->isElement())
         {
             result.push_back(templateNode->clone());
@@ -129,9 +148,12 @@ Xsl::applyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, X
 
             Xsl::Instruction const * xslInstruction = instructionPair->second;
 
+            app_assert(xslInstruction != nullptr);
+
             std::vector <Xml::Node *> resultInstruction = (*xslInstruction)(context, xslDoc, xslElement);
             for (auto node : resultInstruction)
             {
+                app_assert(node != nullptr);
                 result.push_back(node);
             }
         }
@@ -140,7 +162,10 @@ Xsl::applyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, X
             auto clonedElement = static_cast<Xml::Element *>(templateElement->clone());
             auto resultNodes = applyTemplate(context, xslDoc, templateElement);
 
+            app_assert(clonedElement != nullptr);
+
             for (auto rNode : resultNodes) {
+                app_assert(rNode != nullptr);
                 clonedElement->appendNode(rNode);
             }
 
