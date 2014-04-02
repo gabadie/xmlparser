@@ -120,10 +120,13 @@ namespace Xsd
         for (auto iterType : mTypes)
         {
             std::map<std::string, Attribute *> * attributes = iterType.second->attributes();
-            for (auto iterAttr : *attributes)
+            if(attributes != NULL)
             {
-                checkExistType(iterAttr.second->name());
-            }
+				for (auto iterAttr : *attributes)
+				{
+					checkExistType(mAttributesTypes.find(iterAttr.second->name())->second);
+				}
+			}
         }
     }
 
@@ -281,9 +284,9 @@ namespace Xsd
         {
             Checker * checker = new Checker(xsdDoc);
             //Building intermediary structure from xmlDoc
-            std::map<std::string, Attribute *> attributes;
-            std::string rootRegex = Xsd::Type::parseComplexType(xsdDoc->root(), OR_SEPARATOR, true, &attributes, true, checker);
-            checker->addType(ROOT + "Type", new Type(rootRegex, &attributes));
+            std::map<std::string, Attribute *> * attributes = new std::map<std::string, Attribute *>();
+            std::string rootRegex = Xsd::Type::parseComplexType(xsdDoc->root(), OR_SEPARATOR, true, attributes, true, checker);
+            checker->addType(ROOT + "Type", new Type(rootRegex, attributes));
             checker->addTypedElement(ROOT, ROOT + "Type");
 
             checker->checkReferences();

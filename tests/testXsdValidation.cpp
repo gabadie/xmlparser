@@ -137,7 +137,9 @@ void testValidation(const std::string & xmlContent, const std::string & xmlWrong
         std::cerr << "Error: XSD document could not be built" << std::endl;
         return;
     }
+    std::cerr << "Checking right document" << std::endl;
     test_assert(checker->isValid(xmlDoc));
+    std::cerr << "Checking wrong document" << std::endl;
     test_assert(!checker->isValid(xmlWrongDoc));
 
     delete xmlDoc;
@@ -155,6 +157,7 @@ void testValidation(const std::string & xmlContent, const std::string & xsdConte
     test_assert(xmlDoc != nullptr && xsdDoc != nullptr);
     Xsd::Checker * checker = Xsd::Checker::parseXsd(xsdDoc);
     test_assert(checker != NULL);
+    std::cout << "Checking right document" << std::endl;
     test_assert(checker->isValid(xmlDoc));
 
     delete xmlDoc;
@@ -425,9 +428,9 @@ testRefAttribute()
     ));
 
     testValidation(xmlContent, xmlWrongContent, xsdContent);
-    //testValidation(xmlContent2, xmlWrongContent, xsdContent);
-    //testValidation(xmlContent2, xmlWrongContent2, xsdContent);
-    //testValidation(xmlContent2, xmlWrongContent3, xsdContent);
+    testValidation(xmlContent2, xmlWrongContent, xsdContent);
+    testValidation(xmlContent2, xmlWrongContent2, xsdContent);
+    testValidation(xmlContent2, xmlWrongContent3, xsdContent);
 }
 
 void
@@ -627,11 +630,33 @@ testWrongXsd()
         </xs:schema>
     ));
 
+    std::string xsdContent2 (xml_code(
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:element name="person">
+                <xs:complexType>
+                    <xs:choice>
+                    <xs:element name="address">
+                        <xs:complexType>
+                            <xs:attribute name="patate" type="xs:string"/>
+                            <xs:attribute ref="validity" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    ));
+
     Xml::Log log;
     Xml::Document * xsdDoc = Xml::parse(xsdContent, &log);
     Xsd::Checker * checker = Xsd::Checker::parseXsd(xsdDoc);
     test_assert(checker == NULL);
-
+    delete xsdDoc;
+    
+    xsdDoc = Xml::parse(xsdContent2, &log);
+    checker = Xsd::Checker::parseXsd(xsdDoc);
+    test_assert(checker == NULL);
     delete xsdDoc;
 }
 

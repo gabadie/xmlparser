@@ -35,11 +35,14 @@ namespace Xsd
 
     Type::~Type()
     {
-        for(auto iterator : *mAttributes)
-        {
-            delete iterator.second;
-        }
-        mAttributes->clear();
+		if(mAttributes != NULL)
+		{
+			for(auto iterator : *mAttributes)
+			{
+				delete iterator.second;
+			}
+			mAttributes->clear();
+		}
     }
 
 
@@ -67,44 +70,49 @@ namespace Xsd
     {
         std::map<std::string, std::string> attributeMapElement = element->attributes();
 
-        for (auto iterAttr : *mAttributes)
-        {
-            auto iterMap = attributeMapElement.find(iterAttr.second->name());
-            if (iterMap == attributeMapElement.end())
-            {
-                if (iterAttr.second->isRequired())
-                {
-                    throw new XSDValidationException("Error: attribute " + iterAttr.second->name() + "  in element " + element->name() + " is missing");
-                }
-            }
-            else
-            {
-                if(!isValid(iterMap->second))
-                {
-                    throw new XSDValidationException("Error: Invalid element or missing children for element: " + element->name());
-                }
-            }
-        }
+		if(mAttributes != NULL)
+		{
+			//Checking attributes
+			for (auto iterAttr : *mAttributes)
+			{
+				auto iterMap = attributeMapElement.find(iterAttr.second->name());
+				if (iterMap == attributeMapElement.end())
+				{
+					if (iterAttr.second->isRequired())
+					{
+						throw new XSDValidationException("Error: attribute " + iterAttr.second->name() + "  in element " + element->name() + " is missing");
+					}
+				}
+				else
+				{
+					if(!checker->getAttributeType(iterAttr.second->name())->isValid(iterMap->second))
+					{
+						throw new XSDValidationException("Error: Invalid attribute value for attribute " + iterAttr.second->name() + ": " + iterMap->second);
+					}
+				}
+			}
 
-        for (auto iterAttr : attributeMapElement)
-        {
-            auto iteratorFind = mAttributes->find(iterAttr.first);
-            if (iteratorFind == mAttributes->end())
-            {
-                if((iterAttr.first != "xmlns:xsi") && (iterAttr.first.substr(0,4) != "xsi:"))
-                {
-                    throw new XSDValidationException("Error: Unexpected attribute " + iterAttr.first + "  in element " + element->name());
-                }
-            }
-        }
+			for (auto iterAttr : attributeMapElement)
+			{
+				auto iteratorFind = mAttributes->find(iterAttr.first);
+				if (iteratorFind == mAttributes->end())
+				{
+					if((iterAttr.first != "xmlns:xsi") && (iterAttr.first.substr(0,4) != "xsi:"))
+					{
+						throw new XSDValidationException("Error: Unexpected attribute " + iterAttr.first + "  in element " + element->name());
+					}
+				}
+			}
+		}
 
 
-
+		//Checking children elements
         if(!isValid(childrenToString(element->elements()) + element->text()))
         {
             throw new XSDValidationException("Error: Invalid element or missing children for element: " + element->name());
         }
 
+		//Recursive call on every child element
         for (auto iter : element->elements())
         {
 

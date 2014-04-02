@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/3_recursive_complex_type.xsd">
-    <address validity="24-02-214">myAddress</address>
-</person>
