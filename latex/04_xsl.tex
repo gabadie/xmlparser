@@ -65,6 +65,9 @@ On dit qu'un template \textit{match} un élément si l'élément est compatible 
 
 Si un élément XML a comme nom "unautretag" et est le fils d'un élément qui a comme nom "untag", il match le template vu ci-dessus.
 
+Si un élément \textit{match} deux templates différents, on choisira celui qui est le plus spécifique.
+Par exemple~: s'il y a deux templates \textit{"catalog/cd"} et \textit{"cd"}, c'est le premier qui sera appliqué pour les éléments "cd" fils de "catalog".
+
 Quand on applique un template, on va renvoyer une liste de nœuds résultants (qui vont en général être ajoutés comme fils d'un document ou d'un élément). Cette liste est générée de la manière suivante :\\
 
 \begin{enumerate}
