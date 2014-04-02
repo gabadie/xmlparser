@@ -26,7 +26,7 @@ namespace Xsd
 
     bool
     Element::regex(
-        std::string,
+        std::string & regexOut,
         Xml::Element const * xmlElement,
         Xml::Document const * xsdDocument,
         Xml::Element const * xsdElement
@@ -37,7 +37,6 @@ namespace Xsd
         app_assert(xsdElement != nullptr);
         app_assert(xsdElement->tag() == "xsd:element");
 
-#if 0
         std::ostringstream s;
 
         for (auto child : xsdElement->elements())
@@ -49,10 +48,13 @@ namespace Xsd
                 return false;
             }*/
 
-        }
-#endif
+            (void)child;
 
-        // TODO CANTENOT
+            s << regex;
+        }
+
+        regexOut = s.str();
+
         return true;
     }
 

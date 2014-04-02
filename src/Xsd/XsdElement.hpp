@@ -20,7 +20,7 @@ namespace Xsd
 
         bool
         regex(
-            std::string regexOut,
+            std::string & regexOut,
             Xml::Element const * xmlElement,
             Xml::Document const * xsdDocument,
             Xml::Element const * xsdElement
