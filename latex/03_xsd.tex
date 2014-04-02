@@ -1,8 +1,34 @@
 \chapter{XSD}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Dans cette partie, nous expliquerons notre conception de la partie validation d'une document xml avec un document xsd. Voici les hypothèses simplificatrices dont nous avons tenu compte :
+\begin{itemize}
+    \item{les types de base seront uniquement de type string ou date}
+    \item{les types complexes seront uniquement de type sequence ou choice}
+\end{itemize}
+De plus, nous avons choisi de traiter les points optionnels suivants suivants :
+\begin{itemize}
+    \item{les éléments de types mixed sont autorisés}
+    \item{les attributs seront vérifiés}
+\end{itemize}
+
+\section{Conception}
+
+    \subsection{Diagramme de classe}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=1.1\linewidth]{images/xsd-uml.pdf}
+        \caption{Diagramme de classe de la validation xsd}
+        \label{classDiagram}
+    \end{figure}
+
+    \subsection{Classes}
+
+        \subsubsection{Checker}
+
+        \subsubsection{Type}
+
+        \subsubsection{Attribute}
+
+\section{Algorithme}
+
