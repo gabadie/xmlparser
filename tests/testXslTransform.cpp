@@ -135,7 +135,7 @@ testIgnoredXMLTags()
 
     auto xmlNewDoc = Xsl::transform(*xmlDoc, *xslDoc, log);
 
-    // std::cerr << xmlNewDoc->root()->children().size() << std::endl;
+    //std::cerr << *xmlNewDoc << std::endl;
     test_assert(xmlNewDoc->root() != nullptr);
     //test_assert(xmlNewDoc->root()->children().size() == 2);
     //test_assert(xmlNewDoc->root()->children()[0]->objectLabel() == Xml::ObjectLabel::Text);

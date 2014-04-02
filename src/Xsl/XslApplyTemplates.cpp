@@ -17,11 +17,11 @@ Xsl::ApplyTemplates::operator () (Xml::Element const * context,
 
     if (applyTemplatesElement->attribute("select") == "")
     {
-        for (auto element : context->elements())
+        for (auto node : context->children())
         {
-            app_assert(element != nullptr);
+            app_assert(node != nullptr);
 
-            for (auto appliedElement : findAndApplyTemplate(element, xslDoc, xslLog))
+            for (auto appliedElement : findAndApplyTemplate(node, xslDoc, xslLog))
             {
                 app_assert(appliedElement != nullptr);
                 resultNodes.push_back(appliedElement);

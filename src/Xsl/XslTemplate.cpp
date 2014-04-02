@@ -69,7 +69,7 @@ Xsl::applyDefaultTemplate(Xml::Node const * context, Xml::Document const & xslDo
     }
     else
     {
-        result = findAndApplyTemplate(static_cast<Xml::Element const *>(context), xslDoc, xslLog);
+        result = findAndApplyTemplate(context, xslDoc, xslLog);
     }
 
     return result;
@@ -98,21 +98,27 @@ Xsl::getTemplate(Xml::Document const & xslDoc, Xml::Element const * element)
 }
 
 std::vector<Xml::Node *>
-Xsl::findAndApplyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, Xml::Log & xslLog)
+Xsl::findAndApplyTemplate(Xml::Node const * context, Xml::Document const & xslDoc, Xml::Log & xslLog)
 {
     app_assert(context != nullptr);
 
-    Xml::Element const * contextTemplate = getTemplate(xslDoc, context);
+    if (!context->isElement()) {
+        return applyDefaultTemplate(context, xslDoc, xslLog);
+    }
+
+    auto contextElt = static_cast<Xml::Element const *>(context);
+
+    Xml::Element const * contextTemplate = getTemplate(xslDoc, contextElt);
 
     // if the context a template matches the context, we apply it
     if (contextTemplate != nullptr)
     {
-        return applyTemplate(context, xslDoc, contextTemplate, xslLog);
+        return applyTemplate(contextElt, xslDoc, contextTemplate, xslLog);
     }
     else
     {
         std::vector<Xml::Node *> result;
-        for (auto child : context->children())
+        for (auto child : contextElt->children())
         {
             app_assert(child != nullptr);
 
