@@ -13,6 +13,7 @@
 
 #include "../Xml/XmlDocument.hpp"
 #include "../Xml/XmlElement.hpp"
+#include "../Xml/XmlForward.hpp"
 #include "../Xml/XmlNode.hpp"
 #include "../Xml/XmlText.hpp"
 
@@ -58,15 +59,19 @@ Xsl::applyDefaultTemplate(Xml::Node const * context, Xml::Document const & xslDo
     app_assert(context != nullptr);
 
     std::vector<Xml::Node *> result;
-    if (!context->isElement())
+
+    Xml::ObjectLabel label = context->objectLabel();
+    if (label == Xml::ObjectLabel::Text || label == Xml::ObjectLabel::CharacterData ||
+        label == Xml::ObjectLabel::ProcessingInstruction)
     {
         result.push_back(context->clone());
-        return result;
     }
     else
     {
-        return findAndApplyTemplate(static_cast<Xml::Element const *>(context), xslDoc, xslLog);
+        result = findAndApplyTemplate(static_cast<Xml::Element const *>(context), xslDoc, xslLog);
     }
+
+    return result;
 }
 
 Xml::Element const *
@@ -135,7 +140,10 @@ Xsl::applyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, X
 
         if (!templateNode->isElement())
         {
-            result.push_back(templateNode->clone());
+            Xml::ObjectLabel label = context->objectLabel();
+            if (label == Xml::ObjectLabel::Text || label == Xml::ObjectLabel::CharacterData) {
+                result.push_back(templateNode->clone());
+            }
             continue;
         }
 
