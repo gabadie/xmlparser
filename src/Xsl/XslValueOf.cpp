@@ -18,12 +18,13 @@ Xsl::ValueOf::operator () (Xml::Element const * context,
     app_assert(context != nullptr);
     app_assert(xslElement != nullptr);
 
-    std::vector<Xml::Node *> resultNodes;
-    std::string resultText = xslElement->attribute("select");
+    std::string select = xslElement->attribute("select");
+    std::string value = context->valueOf(select);
 
-    resultText = context->valueOf(resultText);
-    Xml::Text * textValue = new Xml::Text(resultText);
+    if (value == "")
+    {
+        return {};
+    }
 
-    resultNodes.push_back(textValue);
-    return resultNodes;
+    return {new Xml::Text(value)};
 }
