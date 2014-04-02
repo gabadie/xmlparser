@@ -5,6 +5,7 @@
 
 #include "Xsd.hpp"
 #include "XsdElement.hpp"
+#include "XsdValidate.hpp"
 
 
 namespace Xsd
@@ -31,18 +32,20 @@ namespace Xsd
         auto elementContent = stringifyElement(xmlElement);
         std::ostringstream elementRegex;
 
-        for (auto instruction : xsdElement->elements())
+        for (auto instructionElement : xsdElement->elements())
         {
-            if (instruction->namespaceName() != "xsd")
+            if (instructionElement->namespaceName() != "xsd")
             {
                 // TODO: log
                 return false;
             }
 
-            std::string instructionName = instruction->name();
+            std::string instructionName = instructionElement->name();
             std::string instructionRegex;
 
-            if (false)
+            auto instruction = Xsd::instruction(instructionName);
+
+            if (instruction == nullptr)
             {
                 // TODO log
                 return false;
