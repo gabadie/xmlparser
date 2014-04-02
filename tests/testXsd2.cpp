@@ -21,6 +21,7 @@ testXsdBasics()
             <balise2 />
         </root>
     ));
+
     Xml::Log log;
 
     Xml::Document * doc = Xml::parse(content, &log);
