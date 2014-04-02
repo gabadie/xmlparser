@@ -20,6 +20,7 @@ Xsl::xslTransform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc)
         return result;
     }
 
+    app_assert(resultNodes[0] != nullptr);
     app_assert(resultNodes[0]->isElement());
 
     auto root = static_cast<Xml::Element *>(resultNodes[0]);
