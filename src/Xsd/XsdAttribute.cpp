@@ -44,10 +44,10 @@ namespace Xsd
         std::string type = xmlElement->attribute(Checker::TYPE_ATTR);
         std::string use = xmlElement->attribute(Checker::USE_ATTR);
 
-        if(!(name.compare(notFound) == 0))
+        if(name != notFound)
         {
             // Add an attribute to the attribute type map
-            if(!(type.compare(notFound) == 0) && Xsd::Type::isSimpleType(type))
+            if(type != notFound && Xsd::Type::isSimpleType(type))
             {
                     std::vector<std::string> tokens;
                     //throw new NotImplementedException("Not implemented yet");
@@ -59,7 +59,7 @@ namespace Xsd
                 Checker::throwInvalidAttributeValueException(name, Checker::TYPE_ATTR, type);
             }
         }
-        else if(ref.compare(notFound) != 0)
+        else if(ref != notFound)
         {
             name = ref;
             isRef = true;
@@ -69,9 +69,9 @@ namespace Xsd
             Checker::throwMissingAttributeException(name, Checker::TYPE_ATTR);
         }
 
-        if(!(use.compare(notFound) == 0))
+        if(use != notFound)
         {
-            if(use.compare(Checker::USE_REQUIRED_VALUE) == 0)
+            if(use == Checker::USE_REQUIRED_VALUE)
             {
                 required = true;
             }

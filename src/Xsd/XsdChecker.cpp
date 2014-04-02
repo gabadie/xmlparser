@@ -54,7 +54,7 @@ namespace Xsd
         const std::string dateRegex = "[0-9]{2}-[0-9]{2}-[0-9]{4}";
         const std::string stringRegex = "*";
 
-        if(!(xsdDoc->root()->name().compare(SCHEMA_ELT) == 0))
+        if(xsdDoc->root()->name() != SCHEMA_ELT)
         {
             throwInvalidElementException(xsdDoc->root()->name(), SCHEMA_ELT);
         }
@@ -63,7 +63,7 @@ namespace Xsd
         auto iterAttr = rootAttributesMap.begin();
         while (iterAttr != rootAttributesMap.end())
         {
-            if(iterAttr->second.compare("http://www.w3.org/2001/XMLSchema") == 0)
+            if(iterAttr->second == "http://www.w3.org/2001/XMLSchema")
             {
                 mNamespacePrefix = iterAttr->first;
                 break;

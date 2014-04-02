@@ -101,22 +101,22 @@ namespace Xsd
     {
         std::string regex = "(";
 
-        if(xmlElement->attribute(Checker::MIXED_ATTR).compare("true") == 0)
+        if(xmlElement->attribute(Checker::MIXED_ATTR) == "true")
         {
             separator += ".*";
         }
 
         for (auto ci : xmlElement->elements())
         {
-            if(ci->name().compare(Checker::SEQUENCE_ELT) == 0)
+            if(ci->name() == Checker::SEQUENCE_ELT)
             {
                 regex += getRegexFromOccurs(ci, parseComplexType(ci, Checker::AND_SEPARATOR, true, attributes, false)) + separator;
             }
-            else if(ci->name().compare(Checker::CHOICE_ELT) == 0)
+            else if(ci->name() == Checker::CHOICE_ELT)
             {
                 regex += getRegexFromOccurs(ci, parseComplexType(ci, Checker::OR_SEPARATOR, true, attributes, false)) + separator;
             }
-            else if(ci->name().compare(Checker::ELEMENT_ELT) == 0)
+            else if(ci->name() == Checker::ELEMENT_ELT)
             {
                 if(eltSeqChoice)
                 {
@@ -127,7 +127,7 @@ namespace Xsd
                     Checker::throwInvalidElementException(getNameOrRef(ci), Checker::ELEMENT_ELT);
                 }
             }
-            else if(ci->name().compare(Checker::ATTRIBUTE_ELT) == 0)
+            else if(ci->name() == Checker::ATTRIBUTE_ELT)
             {
                 if(!acceptAttributes)
                 {
@@ -153,14 +153,14 @@ namespace Xsd
     Type::isSimpleType(const std::string & type)
     {
         //throw new NotImplementedException("Not implemented yet");
-        return (type.compare(Checker::getInstance()->getStringType()) == 0)
-            || (type.compare(Checker::getInstance()->getDateType()) == 0);
+        return (type == Checker::getInstance()->getStringType())
+            || (type == Checker::getInstance()->getDateType());
     }
 
     std::string
     Type::getOccursFromElement(const Xml::Element & xmlElement, const std::string & occursAttrName, const std::string & occursAttrValue)
     {
-        if(occursAttrValue.compare(UNBOUNDED) == 0)
+        if(occursAttrValue == UNBOUNDED)
         {
             return UNBOUNDED_EXP_REG;
         }
@@ -199,11 +199,11 @@ namespace Xsd
         std::string ref = xmlElement->attribute(Checker::REF_ATTR);
 
         // Name and ref attributes
-        if(name.compare(notFound) != 0)
+        if(name != notFound)
         {
             return false;
         }
-        if(ref.compare(notFound) != 0)
+        if(ref != notFound)
         {
             return true;
         }
@@ -237,7 +237,7 @@ namespace Xsd
         {
             //Type manaement
             std::string type = xmlElement->attribute(Checker::TYPE_ATTR);
-            if(!type.compare("") && isSimpleType(type))
+            if(type != "" && isSimpleType(type))
             {
                 std::vector<std::string> tokens;
                 //throw new NotImplementedException("Not implemented yet"); tokens = NULL; //todo remove
@@ -248,7 +248,7 @@ namespace Xsd
             else if(xmlElement->elements().size() > 0)
             {
                 auto typeElement = xmlElement->elements().front();
-                if(typeElement->name().compare(Checker::COMPLEX_TYP_ELT) == 0)
+                if(typeElement->name() == Checker::COMPLEX_TYP_ELT)
                 {
                     std::string typeName = name + "Type";
                     Type * type = new Type(typeElement);
@@ -279,7 +279,7 @@ namespace Xsd
         std::string supOccurs = xmlElement->attribute(Checker::MAX_OCC_ATTR);
 
         // Min and max occurs attributes
-        if(!(minOccurs.compare(notFound) == 0))
+        if(minOccurs != notFound)
         {
             minOccurs = getOccursFromElement(*xmlElement, Checker::MIN_OCC_ATTR, minOccurs);
         }
@@ -288,7 +288,7 @@ namespace Xsd
             minOccurs = "1";
         }
 
-        if(!(supOccurs.compare(notFound) == 0))
+        if(supOccurs != notFound)
         {
             supOccurs = getOccursFromElement(*xmlElement, Checker::MAX_OCC_ATTR, supOccurs);
         }
@@ -297,12 +297,12 @@ namespace Xsd
             supOccurs = "1";
         }
 
-        if((minOccurs.compare(UNBOUNDED_EXP_REG) == 0 && supOccurs.compare(UNBOUNDED_EXP_REG) != 0)
-            || (supOccurs.compare(UNBOUNDED_EXP_REG) !=0 && std::stoi(supOccurs) < std::stoi(minOccurs)))
+        if((minOccurs == UNBOUNDED_EXP_REG && supOccurs != UNBOUNDED_EXP_REG)
+            || (supOccurs != UNBOUNDED_EXP_REG && std::stoi(supOccurs) < std::stoi(minOccurs)))
         {
             throw new XSDConstructionException("Error: " + Checker::MIN_OCC_ATTR + " attribute value is higher than " + Checker::MAX_OCC_ATTR + " value");
         }
-        if((minOccurs.compare(UNBOUNDED_EXP_REG) == 0) && (supOccurs.compare(UNBOUNDED_EXP_REG) == 0))
+        if(minOccurs == UNBOUNDED_EXP_REG && supOccurs == UNBOUNDED_EXP_REG)
         {
             std::stringstream out;
             out << (std::stoi(supOccurs) - std::stoi(minOccurs));
@@ -317,7 +317,7 @@ namespace Xsd
 
         // Create the regex
         regex = "(<" + eltRegex + ">){" + minOccurs + "}";
-        if(!(supOccurs.compare("0") == 0))
+        if(supOccurs != "0")
         {
             regex += "((<" + eltRegex + ">?){" + supOccurs + "})";
         }
