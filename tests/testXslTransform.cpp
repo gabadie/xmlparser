@@ -6,7 +6,7 @@
 
 
 void
-testXslSeveralsRoot()
+testXslSeveralRoot()
 {
     std::string xml = xml_code(
         <root />
@@ -103,12 +103,56 @@ testXslBadDocumentAppend()
     delete xmlNewDoc;
 }
 
+
+void
+testIgnoredXMLTags()
+{
+    std::string xml = xml_code(
+        <root>
+            Some text
+            <![CDATA[ Some cdata stuff ]]>
+            <?PITarget PIContent?>
+            <!-- a comment -->
+        </root>
+    );
+
+    std::string xsl = xml_code(
+        <xsl:stylesheet>
+            <xsl:template match="/">
+                <root>
+                    <xsl:apply-templates />
+                </root>
+            </xsl:template>
+        </xsl:stylesheet>
+    );
+
+    Xml::Log log;
+    auto xmlDoc = Xml::parse(xml);
+    auto xslDoc = Xml::parse(xsl);
+
+    test_assert(xmlDoc != nullptr);
+    test_assert(xslDoc != nullptr);
+
+    auto xmlNewDoc = Xsl::transform(*xmlDoc, *xslDoc, log);
+
+    test_assert(xmlNewDoc->root() != nullptr);
+    test_assert(xmlNewDoc->root()->children().size() == 2);
+    test_assert(xmlNewDoc->root()->children()[0]->objectLabel() == Xml::ObjectLabel::Text);
+    test_assert(xmlNewDoc->root()->children()[1]->objectLabel() == Xml::ObjectLabel::CharacterData);
+
+    delete xmlDoc;
+    delete xslDoc;
+    delete xmlNewDoc;
+}
+
+
 int
 main()
 {
-    testXslSeveralsRoot();
+    testXslSeveralRoot();
     testXslNoRoot();
     testXslBadDocumentAppend();
+    testIgnoredXMLTags();
 
     return 0;
 }

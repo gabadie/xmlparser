@@ -43,7 +43,7 @@ namespace Xsl
      * to be add to the new transformed document if no template matches.
      */
     std::vector<Xml::Node *>
-    findAndApplyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, Xml::Log & xslLog);
+    findAndApplyTemplate(Xml::Node const * context, Xml::Document const & xslDoc, Xml::Log & xslLog);
 
     /**
      * Applies a given XSL template in a given context (XML element) and returns a list of

@@ -25,6 +25,7 @@ Xsl::transform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc, Xml::
         return result;
     }
 
+
     for (auto node : resultNodes)
     {
         app_assert(node != nullptr);

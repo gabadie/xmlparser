@@ -4,6 +4,8 @@
 #include "XmlComment.hpp"
 #include "XmlProcessingInstruction.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 namespace Xml
 {
     Object::~Object()
@@ -77,3 +79,5 @@ namespace Xml
         return 0;
     }
 }
+
+#include "../MemoryLeakTrackerOff.hpp"
