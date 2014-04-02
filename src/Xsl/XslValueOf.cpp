@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 
-#include "ValueOf.hpp"
+#include "XslValueOf.hpp"
 
 #include "../Xml/XmlDocument.hpp"
 #include "../Xml/XmlElement.hpp"

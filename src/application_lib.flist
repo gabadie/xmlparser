@@ -19,6 +19,6 @@ Xml/XmlProcessingInstruction.cpp
 Xml/XmlText.cpp
 Xsl/ApplyTemplates.cpp
 Xsl/ForEach.cpp
-Xsl/ValueOf.cpp
 Xsl/Xsl.cpp
 Xsl/XslTemplate.cpp
+Xsl/XslValueOf.cpp
