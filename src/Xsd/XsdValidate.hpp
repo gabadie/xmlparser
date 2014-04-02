@@ -12,6 +12,9 @@ namespace Xsd
         Xml::Log * log
     );
 
+    Xsd::Instruction const *
+    instruction(std::string const & key);
+
 }
 
 #endif //_H_XSD_VALIDATE

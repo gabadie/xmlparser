@@ -15,7 +15,7 @@
 
 namespace
 {
-    std::map<std::string, Xsd::Instruction *> xsdInstructions =
+    std::map<std::string, Xsd::Instruction const *> xsdInstructions =
     {
         {"element", new Xsd::Element},
         //{"choice", new Xsd::Choice},
@@ -40,4 +40,10 @@ namespace Xsd
         return false;
     }
 
+    Xsd::Instruction const *
+    instruction(std::string const & key)
+    {
+        auto const it = xsdInstructions.find(key);
+        return it != std::end(xsdInstructions) ? it->second : nullptr;
+    }
 }
