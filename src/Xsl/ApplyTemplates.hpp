@@ -1,7 +1,7 @@
 #ifndef _H_XSL_APPLYTEMPLATES
 #define _H_XSL_APPLYTEMPLATES
 
-#include "Xsl.hpp"
+#include "XslInstruction.hpp"
 
 namespace Xsl
 {
@@ -14,4 +14,5 @@ namespace Xsl
             Xml::Element const * applyTemplatesElement) const override;
     };
 }
+
 #endif //_H_XSL_APPLYTEMPLATES

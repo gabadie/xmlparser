@@ -17,7 +17,8 @@ Xml/XmlParserError.cpp
 Xml/XmlParserInput.cpp
 Xml/XmlProcessingInstruction.cpp
 Xml/XmlText.cpp
-#Xsl/ApplyTemplates.cpp
+Xsl/ApplyTemplates.cpp
 Xsl/ForEach.cpp
 Xsl/ValueOf.cpp
 Xsl/Xsl.cpp
+Xsl/XslTemplate.cpp

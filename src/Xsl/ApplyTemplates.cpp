@@ -1,4 +1,6 @@
+
 #include "ApplyTemplates.hpp"
+#include "XslTemplate.hpp"
 
 #include "../Xml/XmlElement.hpp"
 #include "../Xml/XmlNode.hpp"

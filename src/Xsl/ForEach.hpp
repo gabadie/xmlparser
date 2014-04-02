@@ -1,7 +1,7 @@
 #ifndef _H_XSL_FOREACH
 #define _H_XSL_FOREACH
 
-#include "Xsl.hpp"
+#include "XslInstruction.hpp"
 
 namespace Xsl
 {

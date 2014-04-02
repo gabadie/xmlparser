@@ -2,6 +2,7 @@
 
 #include "../src/Xml/XmlParser.hpp"
 #include "../src/Xsl/Xsl.hpp"
+#include "../src/Xsl/XslTemplate.hpp"
 
 
 void

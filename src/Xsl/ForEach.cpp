@@ -1,3 +1,5 @@
+
+#include "XslTemplate.hpp"
 #include "ForEach.hpp"
 
 #include "../Xml/XmlDocument.hpp"

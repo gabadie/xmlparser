@@ -1,7 +1,7 @@
 #ifndef _H_XSL_VALUEOF
 #define _H_XSL_VALUEOF
 
-#include "Xsl.hpp"
+#include "XslInstruction.hpp"
 
 namespace Xsl
 {
