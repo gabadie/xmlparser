@@ -1,121 +1,101 @@
- //penser à garder la racine qqpart
-//demander si besoin de regex
-#include <vector>
-#include <map>
-#include <algorithm>
-#include <iostream>
 
-#include "./Xsl.hpp"
+#include <sstream>
 
-std::map<std::string, Xsl::Instruction*> xslInstructions;
+#include "Xsl.hpp"
+#include "XslTemplate.hpp"
 
-bool deeperMatch(const Xml::Element* xslTemplateA, const Xml::Element* xslTemplateB) {
-    std::string matchA = xslTemplateA->attribute("match");
-    std::string matchB = xslTemplateB->attribute("match");
-    return std::count(matchA.begin(), matchA.end(), '/') > std::count(matchB.begin(), matchB.end(), '/') ;
-}
+#include "../AppDebug.hpp"
+#include "../Xml/XmlDocument.hpp"
 
-const Xml::Element* Xsl::getTemplate(Xml::Document& xslDoc, const Xml::Element* element) {
-    const Xml::Element* curTemplate = nullptr;
 
-    for (const Xml::Element* xslTemplate : xslDoc.root()->elements()) {
-        // If the template has a "deeper match" than the currently selected template, we choose is instead
-        if (element->matches(xslTemplate->attribute("match"))
-            && (curTemplate == nullptr || deeperMatch(xslTemplate, curTemplate))) {
-            curTemplate = xslTemplate;
-        }
-    }
-
-    return curTemplate;
-}
-
-Xml::Document* Xsl::xslTransform(Xml::Document& xmlDoc, Xml::Document& xslDoc )
+Xml::Document *
+Xsl::transform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc, Xml::Log & xslLog)
 {
-    Xml::Document* result = new Xml::Document();
-    vector<Xml::Node*> resultNodes;
-
-    Xsl::applyDefaultTemplate(xmlDoc.root(), xslDoc, resultNodes);
-
-    try
+    auto result = new Xml::Document();
+    if (XslCheckValidity(xslDoc ,xslLog) != true)
     {
-        result->setRoot((Xml::Element*) resultNodes[0]);
+        xslLog.append("XSL format is not correct.");
         return result;
     }
-    catch(...)
-    {
-        throw; //A LOGGER
-    }
-}
+    auto resultNodes = findAndApplyTemplate(xmlDoc.root(), xslDoc, xslLog);
 
-void Xsl::applyDefaultTemplate(Xml::Node* context, Xml::Document& xslDoc, vector<Xml::Node*> &resultNodes)
-{
-    // Debug only
-
-    if (1==1)
+    if (resultNodes.size() == 0)
     {
-        resultNodes.push_back(context);
-        return;
+        xslLog.append("XSL transform returned empty document.");
+        return result;
     }
 
-    for (auto child : ((Xml::Element*)context)->children())
-    {
-        /*Xml::Element xslTemplate = xslDoc.getTemplate(child);
 
-        if (xslTemplate == 0)
+    for (auto node : resultNodes)
+    {
+        app_assert(node != nullptr);
+
+        if (node->isElement())
         {
-            applyDefaultTemplate(context, xslDoc, resultNodes);
-            return ;
+            if (result->root() != nullptr)
+            {
+                auto element = static_cast<Xml::Element *>(node);
+
+                std::ostringstream s;
+
+                s << "XSL transform failed to create root element <";
+                s << element->tag();
+                s << " />: an other element <";
+                s << result->root()->tag();
+                s <<" /> has already been inserted in the document";
+
+                xslLog.append(s.str());
+                delete node;
+
+                continue;
+            }
         }
-        else
+        else if (!Xml::Document::canAppend(node))
         {
-           applyTemplate(child, xslDoc, resultNodes, xslTemplate);
-           return ;
-        }*/
-        Xsl::applyDefaultTemplate(context, xslDoc, resultNodes);
-    }
-}
+            std::ostringstream s;
 
-void applyTemplate (Xml::Node* context, Xml::Document& xslDoc, vector<Xml::Node*> &resultNodes,    Xml::Element& xslTemplate)
-{
-    //To suppress ? Already in defaultTemplate
-    if (&xslTemplate == nullptr)
-    {
-        return Xsl::applyDefaultTemplate(context, xslDoc, resultNodes);
-    }
+            s << "XSL transform has failed to append node ";
+            s << *node;
+            s << " into the document";
 
-    // Attention, ici on parcours des éléments XSL, et pas le document XML qu'on transforme
-    for (Xml::Node* node : xslTemplate.children())
-    {
-       /* if (node->isElement() && node->namespace() == "xsl")
-        {
-            (*xslInstructions[((Xml::Element*) node)->name()])(context, xslDoc, resultNodes, node);
+            xslLog.append(s.str());
+            delete node;
+
+            continue;
         }
-        else
-        {*/
-            resultNodes.push_back(node);
-        /*}*/
+
+        result->appendNode(node);
     }
 
+    if (result->root() == nullptr)
+    {
+        xslLog.append("XSL transform has not created any root element");
+    }
+
+    return result;
 }
 
-void Xsl::ValueOf::operator () (Xml::Node* context, const Xml::Document& xslDoc,  vector <Xml::Node*> &resultNodes, const Xml::Element xslElement)
+bool 
+Xsl::XslCheckValidity(Xml::Document const & xslDoc, Xml::Log & xslLog)
 {
-   /* resultNodes.push_back(context.select(xslElement.attr("select").text()));*/
-}
+    app_assert(&xslDoc != nullptr);
+    app_assert(&xslLog != nullptr);
+    app_assert(xslDoc.root() != nullptr);
 
-void Xsl::ForEach::operator () (Xml::Node* context,const Xml::Document& xslDoc,  vector <Xml::Node*> &resultNodes,  const Xml::Element forEachElement)
- {
-   /* vector <Xml::Node*> matchingNodes = context.select(forEachElement.attr('select'));
-    for (auto node : matchingNodes) {
-        applyTemplate(forEachElement, node, resultNodes);
-    } */
-}
+    if (xslDoc.root()->tag() != "xsl:stylesheet")
+    {
+        xslLog.append("Document is not a real Xsl. Tag stylesheet does not exist.");
+        return false;
+    }
 
- void Xsl::ApplyTemplate::operator () (const Xml::Node* context,const Xml::Document& xslDoc, vector <Xml::Node*> &resultNodes, const Xml::Element applyTemplateElement)
-{
-    /*vector <Xml::Node*> matchingNodes = context.select(forEachElement.attr('select'));
-    for (auto node ; matchingNodes){
-        Xsl::Element xslTemplate = DOCUMENT.getTemplate(node);
-        applyTemplate(xslTemplate, node, resultNodes)
-    }*/
+    for ( auto rNodes : xslDoc.root()->elements())
+    {
+        if (rNodes->tag() != "xsl:template")
+        {
+            xslLog.append("Document is not a real Xsl. One of the children is not a template ");
+            return false;
+        }
+    }
+    
+    return true;
 }

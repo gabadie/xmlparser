@@ -2,6 +2,8 @@
 #include "../AppDebug.hpp"
 #include "../Utils.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 namespace Xml
 {
     Comment::Comment(std::string const & content):
@@ -16,8 +18,14 @@ namespace Xml
 
     }
 
+    ObjectLabel
+    Comment::objectLabel() const
+    {
+        return ObjectLabel::Comment;
+    }
+
     Node *
-    Comment::clone()
+    Comment::clone() const
     {
         return new Comment(this->mContent);
     }
@@ -28,3 +36,5 @@ namespace Xml
         stream << Utils::repeat(indent, level) << "<!--" << mContent << "-->";
     }
 }
+
+#include "../MemoryLeakTrackerOff.hpp"

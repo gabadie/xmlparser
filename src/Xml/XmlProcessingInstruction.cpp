@@ -11,6 +11,8 @@
 #include "XmlProcessingInstruction.hpp"
 #include "../Utils.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 namespace Xml
 {
 
@@ -25,8 +27,14 @@ namespace Xml
     {
     }
 
+    ObjectLabel
+    ProcessingInstruction::objectLabel() const
+    {
+        return ObjectLabel::ProcessingInstruction;
+    }
+
     Node *
-    ProcessingInstruction::clone()
+    ProcessingInstruction::clone() const
     {
         return new ProcessingInstruction(*this);
     }
@@ -64,3 +72,5 @@ namespace Xml
         stream << "?>";
     }
 }
+
+#include "../MemoryLeakTrackerOff.hpp"

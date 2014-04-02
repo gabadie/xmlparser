@@ -49,8 +49,8 @@ namespace Xml
         * @return A new Xml Node tha has the same attributes as the object that have been cloned
         */
         virtual
-        Node *
-        clone() = 0;
+        Node * 
+        clone() const = 0;
 
 
     protected:
@@ -77,6 +77,14 @@ namespace Xml
         friend class Xml::Element;
         friend class Xml::Text;
 
+        friend class Xsl::Instruction;
+        friend class Xsl::ForEach;
+        friend class Xsl::ApplyTemplate;
+        friend class Xsl::ValueOf;
+
+
+        /*friend XSL_APPLY_TEMPLATE();
+        friend XSL_APPLY_DEFAULT_TEMPLATE();*/
     };
 
 }

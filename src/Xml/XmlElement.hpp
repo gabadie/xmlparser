@@ -10,6 +10,7 @@
 #include "XmlForward.hpp"
 #include "XmlDocumentNode.hpp"
 
+
 namespace Xml
 {
 
@@ -19,11 +20,6 @@ namespace Xml
     class Element final : public DocumentNode
     {
     public:
-
-        // Type aliases
-        using AttributesMap = std::map<std::string, std::string>;
-        using NodeList      = std::vector<Node *>;
-        using ElementList   = std::vector<Element const *>;
 
         /**
          * Constructor
@@ -40,10 +36,16 @@ namespace Xml
         ~Element();
 
         /**
+         * Override of Xml::Object::objectLabel()
+         */
+        ObjectLabel
+        objectLabel() const override;
+
+        /**
          * Override of clone abstract method
          */
         Node *
-        clone();
+        clone() const override;
 
         /**
          * Gets the children nodes of the element.
@@ -241,6 +243,14 @@ namespace Xml
         std::string
         valueOf(std::string const & xPathQuery) const;
 
+        /**
+         * Appends a node
+         *
+         * @param node Node to append
+         */
+        void
+        appendNode(Node * node) override;
+
     protected:
         /**
          * Exports to a <stream> with a given <indent>
@@ -255,23 +265,6 @@ namespace Xml
             std::string const & indent) const override;
 
         /**
-         * Tells whether or not the node is an Element
-         *
-         * @return True if the node is an Element, false otherwise.
-         */
-        virtual
-        bool
-        isElement() const override;
-
-        /**
-         * Appends a node
-         *
-         * @param node Node to append
-         */
-        void
-        appendNode(Node * node) override;
-
-        /**
          * Tells whether or not the element has the given node in
          * its children recursively.
          *
@@ -281,6 +274,14 @@ namespace Xml
          */
         bool
         hasChild(Node const * node) const override;
+
+        /**
+         * Tests if can append this node to the document
+         *
+         * @return True if you can append the node
+         */
+        static bool
+        canAppend(Node const * node);
 
     protected:
         std::string mName;         ///< Name of the element
@@ -293,6 +294,10 @@ namespace Xml
         friend class Xsl::ValueOf;
         friend class Xsl::ForEach;
         friend class Xsl::ApplyTemplate;
+
+        /*
+        friend XSL_APPLY_TEMPLATE();
+        friend XSL_APPLY_DEFAULT_TEMPLATE();*/
     };
 }
 

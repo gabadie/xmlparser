@@ -16,6 +16,8 @@
 #include "XmlDocumentNode.hpp"
 #include "XmlElement.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 namespace Xml
 {
     Document::Document(Element * root):
@@ -43,6 +45,12 @@ namespace Xml
         mChildren.clear();
     }
 
+    ObjectLabel
+    Document::objectLabel() const
+    {
+        return ObjectLabel::Document;
+    }
+
     Document const *
     Document::document() const
     {
@@ -55,7 +63,7 @@ namespace Xml
         return nullptr;
     }
 
-    Document::NodesList const &
+    NodeList const &
     Document::children() const
     {
         return mChildren;
@@ -164,7 +172,7 @@ namespace Xml
     Document::appendNode(Node * documentNode)
     {
         app_assert(documentNode != nullptr);
-        app_assert(documentNode->contentText() == ""); // make sure we are not appending a Xml::Text
+        app_assert(canAppend(documentNode)); // make sure we are not appending a Xml::Text
 
         documentNode->detach();
 
@@ -207,4 +215,20 @@ namespace Xml
 
         return false;
     }
+
+    bool
+    Document::canAppend(Node const * node)
+    {
+        app_assert(node != nullptr);
+
+        auto objectLabel = node->objectLabel();
+
+        return objectLabel == ObjectLabel::Comment ||
+            objectLabel == ObjectLabel::Doctype ||
+            objectLabel == ObjectLabel::Element ||
+            objectLabel == ObjectLabel::ProcessingInstruction;
+    }
+
 }
+
+#include "../MemoryLeakTrackerOff.hpp"

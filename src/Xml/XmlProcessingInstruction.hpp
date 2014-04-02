@@ -28,14 +28,19 @@ namespace Xml
         /**
          * Copy constructor
          */
-         ProcessingInstruction(ProcessingInstruction const & piTocopy);
+        ProcessingInstruction(ProcessingInstruction const & piTocopy);
 
+        /**
+         * Override of Xml::Object::objectLabel()
+         */
+        ObjectLabel
+        objectLabel() const override;
 
         /**
          * Override of clone abstract method
          */
         Node *
-        clone();
+        clone() const override;
 
         /**
          * Gets the value of an attribute by name

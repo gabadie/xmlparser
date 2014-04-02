@@ -41,6 +41,27 @@ namespace Xml
         document() const = 0;
 
         /**
+         * Returns the object's type label
+         *
+         * @return The object's type label
+         */
+        virtual
+        ObjectLabel
+        objectLabel() const = 0;
+
+        /**
+         * Tells whether or not the node is an Element
+         *
+         * @return True if the node is an Element, false otherwise.
+         */
+        inline
+        bool
+        isElement() const
+        {
+            return objectLabel() == ObjectLabel::Element;
+        }
+
+        /**
          * Gets the object's parent
          *
          * @return The parent (either a Document or an Element)
@@ -117,15 +138,6 @@ namespace Xml
             std::string const & indent) const = 0;
 
         /**
-         * Tells whether or not the node is an Element
-         *
-         * @return True if the node is an Element, false otherwise.
-         */
-        virtual
-        bool
-        isElement() const;
-
-        /**
          * Appends a node
          *
          * @param node Node to append
@@ -150,6 +162,10 @@ namespace Xml
         friend class Xml::Document;
         friend class Xml::Element;
         friend class Xml::Node;
+
+
+       /* friend XSL_APPLY_TEMPLATE();
+        friend XSL_APPLY_DEFAULT_TEMPLATE();*/
     };
 
     /**

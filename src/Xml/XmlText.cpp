@@ -2,6 +2,8 @@
 #include "../AppDebug.hpp"
 #include "../Utils.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 namespace Xml
 {
     Text::Text(std::string const & content):
@@ -16,8 +18,14 @@ namespace Xml
 
     }
 
+    ObjectLabel
+    Text::objectLabel() const
+    {
+        return ObjectLabel::Text;
+    }
+
     Node *
-    Text::clone()
+    Text::clone() const
     {
         return new Text(this->mText);
     }
@@ -35,3 +43,5 @@ namespace Xml
         return mText;
     }
 }
+
+#include "../MemoryLeakTrackerOff.hpp"

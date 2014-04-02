@@ -4,7 +4,7 @@
 
 Dans un premier temps, nous avions choisi de suivre une conception orientée objet, et c'est donc
 naturellement que nous avons proposé une classe dédiée aux documents \textit{XSL}, proposant les
-fonctionnalités de transformation d'une feuille XSL, et de même pour les instructions \textit{XSL}.
+fonctionnalités de transformation d'une feuille \textit{XSL}, et de même pour les instructions \textit{XSL}.
 
 \begin{figure}[h!]
     \centering
@@ -13,9 +13,15 @@ fonctionnalités de transformation d'une feuille XSL, et de même pour les instr
     \label{oldXslClassDiagram}
 \end{figure}
 
-Néanmoins, cette conception présente de nombreux inconvénients : Elle nous forçait à parcourir tout le document XML afin de convertir les tags XSL en objets dédiés, ...
+Néanmoins, cette conception présente de nombreux inconvénients : En plus d'ajouter de nombreuses classe sans vraie valeur ajoutée, elle
+nous forçait à reconstruire l'arbre \textit{XML} afin de convertir les tags XSL en objets dédiés. On ne profitait pas réellement d'un quelconque
+polymorphisme non plus puisque cela demandait de toucher aux classes XML, alors que celles ci n'ont pas comme responsabilité de gérer toutes
+les applications possibles de ce langage de représentation de données. Il aurait aussi fallu tester le namespace des éléments \textit{XML} parcourus
+avant de les caster à la bonne classe, donc pas grand d’intérêt au "polymorphisme".
 
-\textbf{TODO : } rajouter d'autres raisons pour lesquelles l'ancienne conception est pas pratique
+Nous avons donc choisis de passer à une architecture plus simple : pas d'héritage, enfin si. Mais d'aucune classe du \lstinline$namespace Xml$.
+Simplement une map constante faisant officie de virtual table, la liaison entre le nom des instructions \textit{Xsl} et des foncteurs qui
+génèrent des nœuds \textit{XML} à partir d'un contexte donné.
 
 \begin{landscape}
 \begin{figure}[h!]
@@ -29,45 +35,84 @@ Néanmoins, cette conception présente de nombreux inconvénients : Elle nous fo
 
 \section{Vue globale de l'algorithme}
 
-\textbf{TODO :} rajouter des détails sur cette partie.
-
-L'algorithme de transformation XSL s’exécute de manière récursive et bascule continuellement entre le document XSL et le document XML à transformer.
+L'algorithme de transformation \textit{XSL} s’exécute de manière récursive et bascule continuellement entre le document \textit{XSL} et le
+document \textit{XML} à transformer.
 
 Un même algorithme s'exécute pour chaque nœud (à quelques exceptions citées ci-dessous) :
 
 \begin{enumerate}
     \item Si le nœud n'est pas un élément, on le rajoute directement au résultat.
-    \item Si un \textit{template} correspond à ce nœud, on l'applique (plus sur l'application des templates ci-dessous) en prenant ce nœud comme \textit{contexte} et on ajoute le résultat de cette application au nœud contexte.
-    \item Sinon, on clone l'élément, et on ré-applique le même algorithme sur tous ses enfants, en ayant comme contexte le nœud qu'on a cloné et en rajoutant tous les résultats comme fils du clone du nœud.
+    \item Si un \textit{template} correspond à ce nœud, on l'applique (plus sur l'application des templates ci-dessous) en prenant ce nœud comme \textit{contexte} et on ajoute le résultat de cette application au nœud en cours de génération.
+    \item Sinon, on ré-applique le même algorithme sur tous ses enfants, en ayant comme contexte l'élément actuel et en concaténant les résultats des applications de l'algorithme à tous le fils.
 \end{enumerate}
 
-La transformation XSL débute en appliquant cet algorithme à la racine du document XML à transformer, et se propage par récursion à la totalité du document.
-
+La transformation \textit{XSL} débute en appliquant cet algorithme à la racine du document \textit{XML} à transformer, et se propage par récursions successives
+à la totalité du document.
 
 \section{Templates}
 
-Les \textit{templates} sont les seuls fils de la racine (\textit{stylesheet}) d'un document XSL et se présentent de la manière suivante :
-\\
-\\
-\textbf{
-\lstinline$<xsl:template match="cd/title">$\\
-\indent \lstinline$<tagxml></tagxml>$\\
-\indent \lstinline$<xsl:uneinstruction select="untag/unautretag" />$\\
-\indent \lstinline$<encoreunautretagxml />$\\
-\lstinline$</xsl:template>$
-}
-\\
-\\
-Ils peuvent contenir des tags XML "normaux", ainsi que des instructions XSL.
+Les \textit{templates} sont les seuls fils de la racine (\textit{stylesheet}) d'un document \textit{XSL} et se présentent de la manière suivante :
+
+\begin{lstlisting}[frame=single]
+    <xsl:template match="cd/title">
+        <tagxml></tagxml>
+        <xsl:uneinstruction select="untag/unautretag"/>
+    </xsl:template>
+\end{lstlisting}
+
+Ils peuvent contenir des tags \textit{XML} "normaux", ainsi que des instructions XSL.
 On dit qu'un template \textit{match} un élément si l'élément est compatible avec la valeur de l'attribut \textit{match} du template, par exemple :
 
-Si un élément XML a comme nom "title" et est le fils d'un élément qui a comme nom "cd", il match le template vu ci-dessus.
+Si un élément XML a comme nom "unautretag" et est le fils d'un élément qui a comme nom "untag", il match le template vu ci-dessus.
+
+Si un élément \textit{match} deux templates différents, on choisira celui qui est le plus spécifique.
+Par exemple~: s'il y a deux templates \textit{"catalog/cd"} et \textit{"cd"}, c'est le premier qui sera appliqué pour les éléments "cd" fils de "catalog".
 
 Quand on applique un template, on va renvoyer une liste de nœuds résultants (qui vont en général être ajoutés comme fils d'un document ou d'un élément). Cette liste est générée de la manière suivante :\\
 
 \begin{enumerate}
-    \item Les nœuds qui ne sont pas des éléments XML sont rajoutés directement.
-    \item Les nœuds qui sont des éléments XML, mais pas XSL, sont considérés comme des templates (car pouvant contenir des instructions XSL) et appliqués avec comme contexte le nœud d'application de la transformation XSL.
-    \item Les éléments XSL sont appliqués avec comme contexte le nœud d'application de la transformation XSL. Tous les nœuds résultants de cette application sont ajoutés à la liste des nœuds générés par l'application du template.
+    \item Les nœuds qui ne sont pas des éléments \textit{XML} sont rajoutés directement.
+    \item Les nœuds qui sont des éléments \textit{XML}, mais pas \textit{XSL}, sont clonés. On applique alors  puis considérés comme des templates (car pouvant contenir des instructions \textit{XSL}) et appliqués avec comme contexte le nœud d'application de la transformation \textit{XSL}.
+    \item Les éléments \textit{XSL} sont appliqués avec comme contexte le nœud d'application de la transformation \textit{XSL}. Tous les nœuds résultants de cette application sont ajoutés à la liste des nœuds générés par l'application du template.
+\end{enumerate}
 
+\section{Instructions XSL}
+
+    \subsection{apply-template}
+        Apply-template consiste à appliquer un template au noeud correspondant au chemin indiqué par l'expression XPath de l'attribut "select". Ce template doit se trouver dans la feuille de style Xsl que l'on est en train de parcourir pour transformer le document Xml. Si l'attribut select vaut "X" et qu'il existe dans le Xml le noeud correspondant au chemin de X dans le contexte courant, il doit donc exister dans le Xsl :
+        \begin{lstlisting}[frame=single]
+            <xsl:template match="X">
+                ...........
+                ...........
+            </xsl:template>
+        \end{lstlisting}.
+         L'idée est alors de réappliquer le template trouvé à l'élément correspondant à X depuis le contexte courant de lecture du xml.
+         Le template est appliqué et relance le traitement du Xml par l'appel des fonctions d'application de template habituelles.
+         L'attribut "select" est optionnel, dans le cas de son absence, il faut alors chercher et appliquer les templates correspondants à tous les Noeuds Xml du contexte Xml courant, non récursivement. C'est à dire que si ces enfants ont des enfants, apply-templates ne forcera pas l'application des templates leurs correspondants
+
+    \subsection{value-of}
+        Value-of est une instruction Xsl permettant de retourner la valeur textuelle des éléments contenus au chemin indiqué par l'expression XPath requise comme paramêtre de "select". Cette instruction procède par récursion, c'est à dire que même les éléments textuels des éléments enfants sont affichés. Tout les textes retournés sont concatainés à l'emplacement de l'instruction Value-of.
+        Value-of permet également d'afficher la valeur d'un attribut d'un noeud. En effet, en précisant @nomdelattribut en bout de chemin de l'expression XPath, la valeur de l'attribut appartenant à l'élément correspondant à l'expression XPath sera affichée.
+
+    \subsection{for-each}
+        For-each permet d'appliquer le templates contenus dans l'élément "for-each" à tous les noeuds dont le chemin est celui de l'expression XPath indiqué dans l'attribut "select" de for-each. Pour cela, il faut récupérer dans le document Xml tous les noeuds correspondants au XPath, puis appliquer à chacun le template contenu entre les balises for-each, comme ci c'était un template normal dans le déroulement de nos algorithmes. On retourne ensuite tout cela pour que ce soit ajouté à notre document transformé.
+
+\section{Limites}
+
+Bien qu'elle couvre les instructions XSL les plus courantes, avec un support extensif de nombreux cas spéciaux,
+notre implémentation reste relativement limitée pour les raisons suivantes~:
+
+\begin{enumerate}
+    \item Spécifications assez massives et parfois ambiguës (sur le concept)
+    \item Grand nombre de cas particuliers / cas limites
+    \item Quelques incohérences (comme le pseudo-XPath utilisé pour l'attribut match)
+    \item Transformations complexes
+\end{enumerate}
+
+Parmi ces limitations~:
+
+\begin{enumerate}
+    \item Pas de support pour des instructions XSL assez utiles, comme xsl:copy-of
+    \item Algorithme faillible à des boucles infinies causées par des appels infinis d'apply-template
+    \item Mauvais support des opérations de sélection depuis la racine (parce que le pseudo-XPATH utilisé en XSL considère "/" comme le document XML, et non sa racine)
 \end{enumerate}

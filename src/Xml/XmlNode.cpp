@@ -1,6 +1,7 @@
-
 #include "../AppDebug.hpp"
 #include "XmlNode.hpp"
+
+#include "../MemoryLeakTrackerOn.hpp"
 
 namespace Xml
 {
@@ -50,3 +51,5 @@ namespace Xml
         return dummy;
     }
 }
+
+#include "../MemoryLeakTrackerOff.hpp"

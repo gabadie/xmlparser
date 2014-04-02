@@ -2,6 +2,8 @@
 #include "../AppDebug.hpp"
 #include "../Utils.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 namespace Xml
 {
     CharacterData::CharacterData(std::string const & content):
@@ -16,8 +18,14 @@ namespace Xml
 
     }
 
+    ObjectLabel
+    CharacterData::objectLabel() const
+    {
+        return ObjectLabel::CharacterData;
+    }
+
     Node *
-    CharacterData::clone()
+    CharacterData::clone() const
     {
         return new CharacterData(this->mContent);
     }
@@ -28,3 +36,5 @@ namespace Xml
         stream << Utils::repeat(indent, level) << "<![CDATA[" << mContent << "]]>";
     }
 }
+
+#include "../MemoryLeakTrackerOff.hpp"
