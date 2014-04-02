@@ -8,7 +8,10 @@ namespace Xsl
 {
 
     /**
-     * TODO: doc
+     * Charged to return the new Nodes to add to the new document XML, applying a template on <context> if it has one, 
+     * returning text elements if there are so.
+     * @param <context> the Node to examine to apply a template or return the content.
+     * @param <xslDoc> the document Xsl used for the transformation of document containing <context>
      */
     std::vector<Xml::Node *>
     applyDefaultTemplate(Xml::Node const * context, Xml::Document const & xslDoc);
@@ -26,13 +29,20 @@ namespace Xsl
     getTemplate(Xml::Document const & xslDoc, Xml::Element const * element);
 
     /**
-     * TODO: doc
+     * Search for a template to apply to <context> in <xslDoc> and apply it (if any). 
+     * @param <context> Element on which we try to apply a matching template
+     * @param <xslDoc> the document Xsl used for the transformation of the document containing <context>
+     * @return the Elements produced by the transformation of <context> with the template found, or the Nodes
+     * to be add to the new transformed document if no template matches.
      */
     std::vector<Xml::Node *>
     findAndApplyTemplate(Xml::Element const * context, Xml::Document const & xslDoc);
 
     /**
-     * TODO: doc
+     * Apply the template <xslTemplate> to <context> 
+     * @param <context> the Element Xml which has to be transformed
+     * @param <xslDoc> the Xsl document we are using to transformed <context>
+     * @param <xslTemplate> the template to apply to <context>
      */
     std::vector<Xml::Node *>
     applyTemplate(Xml::Element const * context, Xml::Document const & xslDoc, Xml::Element const * xslTemplate);
