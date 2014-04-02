@@ -97,8 +97,9 @@ Il s'agît d'un algorithme récursif, le parcours de l'arbre XML pouvant être a
 		\lstinline$SI ce n est pas une reference$\\
 		\indent \lstinline$SI l element a des enfants (c est un type complexe)$\\
 		\indent \indent \lstinline$Construction d un type avec le premier fils de l element$\\ \footnote{Le constructeur de type appelle \textit{parseComplexType}}
-		\indent \lstinline$Association du nom du type avec le type construit$\\
+		\indent \indent \lstinline$Association du nom du type avec le type construit$\\
 		\indent \lstinline$Association du nom de l element avec le nom du type construit$\\
+		\lstinline$On retourne la regex associee a l element$\\
 
 
 	\subsubsection{Parsing d'un élément \textit{attribute} : \textit{parseAttribute}}
