@@ -21,7 +21,7 @@
 namespace
 {
     /**
-     * The map of supporter XSL instructions. Keys are the names of the instruction's XML tag,
+     * The map of supported XSL instructions. Keys are the names of the instruction's XML tag,
      * value is a functor that applies the given template.
      */
     std::map<std::string, Xsl::Instruction const *> const xslInstructions
