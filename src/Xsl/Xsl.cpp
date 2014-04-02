@@ -2,11 +2,8 @@
 #include "Xsl.hpp"
 #include "XslTemplate.hpp"
 
-#include "../Xml/XmlDocument.hpp"
-#include "../Xml/XmlNode.hpp"
-#include "../Xml/XmlText.hpp"
-
 #include "../AppDebug.hpp"
+#include "../Xml/XmlDocument.hpp"
 
 
 Xml::Document *

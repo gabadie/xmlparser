@@ -32,7 +32,7 @@ namespace Xml
          * Override of clone abstract method
          */
         Node *
-        clone() const ;
+        clone() const override;
 
     protected:
         /**
