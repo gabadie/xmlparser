@@ -17,6 +17,8 @@ Xml/XmlParserError.cpp
 Xml/XmlParserInput.cpp
 Xml/XmlProcessingInstruction.cpp
 Xml/XmlText.cpp
+Xsd2/XsdElement.cpp
+Xsd2/XsdValidate.cpp
 Xsl/Xsl.cpp
 Xsl/XslApplyTemplates.cpp
 Xsl/XslForEach.cpp
