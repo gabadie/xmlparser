@@ -17,14 +17,21 @@ Xsl::ForEach::operator () (Xml::Element const * context,
     app_assert(forEachElement != nullptr);
 
     std::vector<Xml::Node *> resultNodes;
+
     auto matchingNodes = context->select(forEachElement->attribute("select"));
+
     for (auto node : matchingNodes)
     {
         app_assert(node != nullptr);
 
-        for (auto resultNode : Xsl::applyTemplate(node, xslDoc, forEachElement))
+        auto returnedNodes = Xsl::applyTemplate(node, xslDoc, forEachElement);
+
+        resultNodes.reserve(resultNodes.size() + returnedNodes.size());
+
+        for (auto resultNode : returnedNodes)
         {
             app_assert(resultNode != nullptr);
+
             resultNodes.push_back(resultNode);
         }
     }
