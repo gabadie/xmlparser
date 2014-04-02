@@ -137,6 +137,16 @@ namespace Xsd
         std::string
         childrenToString(std::vector<Xml::Element const *> childrenElt);
 
+         /**
+         * Returns the string given in parameter put between < and >
+         *
+         * @param name The name
+         *
+         * @return The string created
+         */
+        static std::string
+        getTagFromName(const std::string & name);
+
         /**
          * Modify and returns the element regex given in parameter in order to add
          * regex expression for the occurs attributes values

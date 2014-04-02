@@ -225,6 +225,16 @@ namespace Xsd
         return false;
     }
 
+    std::string
+    Type::getTagFromName(const std::string & name)
+    {
+        std::stringstream out;
+        out << "<";
+        out << name;
+        out << ">";
+        return out.str();
+    }
+
     /**
      * The regex does not contain the validation for the element children, it's only about the element name or ref itself
      */
@@ -245,7 +255,7 @@ namespace Xsd
             name = xmlElement->attribute(checker->NAME_ATTR);
         }
 
-        regex = getRegexFromOccurs(xmlElement, name, checker);
+        regex = getRegexFromOccurs(xmlElement, getTagFromName(name), checker);
 
         if(!ref)
         {
@@ -320,10 +330,10 @@ namespace Xsd
         }
 
         // Create the regex
-        regex = "(<" + eltRegex + ">){" + minOccurs + "}";
+        regex = "(" + eltRegex + "){" + minOccurs + "}";
         if(supOccurs != "0")
         {
-            regex += "((<" + eltRegex + ">)?){" + supOccurs + "}";
+            regex += "((" + eltRegex + ")?){" + supOccurs + "}";
         }
 
         return regex;

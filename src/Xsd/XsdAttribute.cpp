@@ -49,10 +49,7 @@ namespace Xsd
             // Add an attribute to the attribute type map
             if(type != notFound && Xsd::Type::isSimpleType(type, checker))
             {
-                    std::vector<std::string> tokens;
-                    //throw new NotImplementedException("Not implemented yet");
-                    //boost::algorithm::split(tokens, type, boost::algorithm::is_any_of(":"));
-                    checker->addTypedElement(name, tokens.back());
+                    checker->addTypedAttribute(name, type);
             }
             else
             {

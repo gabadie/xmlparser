@@ -623,8 +623,8 @@ int
 main()
 {
     //testOneElement();
-    testComplexType();
-    //testRecursiveComplexType();
+    //testComplexType();
+    testRecursiveComplexType();
     // testSequence();
     // testChoice();
     // testRefAttribute();
