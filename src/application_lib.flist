@@ -22,3 +22,4 @@ Xsl/XslApplyTemplates.cpp
 Xsl/XslForEach.cpp
 Xsl/XslTemplate.cpp
 Xsl/XslValueOf.cpp
+MemoryLeakTracker.cpp
