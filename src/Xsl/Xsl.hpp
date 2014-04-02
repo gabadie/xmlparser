@@ -7,6 +7,10 @@
 namespace Xsl
 {
 
+
+    bool 
+    XslCheckValidity(Xml::Document const & xslDoc, Xml::Log & xslLog);
+
     /**
      * Transform an <xmlDoc> into a new document Xml applying a style sheet <xslDoc>
      * @param <xmlDoc> The document Xml to transform

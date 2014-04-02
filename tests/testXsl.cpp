@@ -239,6 +239,7 @@ testApplyTemplates()
             <company>Columbia</company>
             <price>10.90</price>
             <year>1985</year>
+            <!-- dspodfdps -->
         </cd>
         <cd>
             <title>Hide your heart</title>
@@ -300,6 +301,7 @@ testApplyTemplates()
     Xml::Log transformLog;
     Xml::Document* result = Xsl::transform(*xmlDoc, *xslDoc, transformLog);
 
+    std::cerr << transformLog << std::endl;
     // TODO : add asserts
 
     delete xmlDoc;

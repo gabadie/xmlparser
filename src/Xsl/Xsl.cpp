@@ -12,6 +12,11 @@ Xml::Document *
 Xsl::transform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc, Xml::Log & xslLog)
 {
     auto result = new Xml::Document();
+    if (XslCheckValidity(xslDoc ,xslLog) != true)
+    {
+        xslLog.append("XSL format is not correct.");
+        return result;
+    }
     auto resultNodes = findAndApplyTemplate(xmlDoc.root(), xslDoc, xslLog);
 
     if (resultNodes.size() == 0)
@@ -67,4 +72,28 @@ Xsl::transform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc, Xml::
     }
 
     return result;
+}
+
+bool 
+Xsl::XslCheckValidity(Xml::Document const & xslDoc, Xml::Log & xslLog)
+{
+    app_assert(&xslDoc != nullptr);
+    app_assert(&xslLog != nullptr);
+    app_assert(xslDoc.root() != nullptr);
+
+    if (xslDoc.root()->tag() != "xsl:stylesheet")
+    {
+        xslLog.append("Document is not a real Xsl. Tag stylesheet does not exist.");
+        return false;
+    }
+
+    for ( auto rNodes : xslDoc.root()->elements())
+    {
+        if (rNodes->tag() != "xsl:template")
+        {
+            xslLog.append("Document is not a real Xsl. One of the children is not a template ");
+            return false;
+        }
+    }
+    return true;
 }
