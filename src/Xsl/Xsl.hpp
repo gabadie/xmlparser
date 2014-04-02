@@ -1,23 +1,15 @@
 #ifndef _H_XSL_XSL
 #define _H_XSL_XSL
 
-#include <vector>
+#include "XslInstruction.hpp"
 
-#include "../Xml/XmlForward.hpp"
 
 namespace Xsl
 {
-    /**
-     * Defines a XML document
-     */
-    class Instruction
-    {
-    public:
-        virtual std::vector <Xml::Node *>
-        operator () (Xml::Element const * context, Xml::Document const & xslDoc,
-            Xml::Element const * forEachElement) const = 0;
-    };
 
+    /**
+     * TODO: doc
+     */
     Xml::Document *
     xslTransform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc);
 
