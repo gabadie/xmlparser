@@ -11,8 +11,7 @@ namespace
     class MemoryLeakTracker
     {
     public:
-        MemoryLeakTracker() {
-        std::cerr << "MemoryLeakTracker creation" << std::endl; }
+        MemoryLeakTracker() = default;
         ~MemoryLeakTracker();
     } mlt;
 
@@ -91,7 +90,6 @@ namespace
 
     MemoryLeakTracker::~MemoryLeakTracker()
     {
-        std::cerr << "MemoryLeakTracker destruction" << std::endl;
         bool leaks = !memBlocks.empty();
 
         if(!leaks)
@@ -122,7 +120,7 @@ namespace
 
         if(leaks)
         {
-            //std::cerr << log.str();
+            std::cerr << log.str();
         }
     }
 }
