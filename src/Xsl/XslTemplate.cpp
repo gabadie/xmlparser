@@ -21,6 +21,10 @@
 
 namespace
 {
+
+    /**
+     * TODO: doc
+     */
     std::map<std::string, Xsl::Instruction const *> const xslInstructions
     {
        { "apply-templates", new Xsl::ApplyTemplates() },
@@ -28,7 +32,9 @@ namespace
        { "value-of", new Xsl::ValueOf() }
     };
 
-
+    /**
+     * TODO: doc
+     */
     bool
     deeperMatch(Xml::Element const * xslTemplateA, Xml::Element const * xslTemplateB)
     {

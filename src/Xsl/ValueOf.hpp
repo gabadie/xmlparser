@@ -5,14 +5,23 @@
 
 namespace Xsl
 {
+
+    /**
+     * TODO: doc
+     */
     class ValueOf : public Instruction
     {
     public:
+        /**
+         * Overloads Xsl::Instruction::operator ()
+         */
         virtual
         std::vector<Xml::Node *>
         operator () (Xml::Element const * context, Xml::Document const & xslDoc,
             Xml::Element const * xslElement) const override;
+
     };
+
 }
 
 #endif //_H_XSL_VALUEOF

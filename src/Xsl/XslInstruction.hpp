@@ -7,6 +7,7 @@
 
 namespace Xsl
 {
+
     /**
      * Defines a XSL instruction interface
      */
