@@ -11,6 +11,8 @@
 #include "XmlProcessingInstruction.hpp"
 #include "../Utils.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 namespace Xml
 {
 
@@ -70,3 +72,5 @@ namespace Xml
         stream << "?>";
     }
 }
+
+#include "../MemoryLeakTrackerOff.hpp"

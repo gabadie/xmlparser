@@ -16,6 +16,8 @@
 #include "XmlDocumentNode.hpp"
 #include "XmlElement.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 namespace Xml
 {
     Document::Document(Element * root):
@@ -228,3 +230,5 @@ namespace Xml
     }
 
 }
+
+#include "../MemoryLeakTrackerOff.hpp"

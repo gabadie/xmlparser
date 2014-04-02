@@ -2,6 +2,8 @@
 #include "../AppDebug.hpp"
 #include "../Utils.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 namespace Xml
 {
     Text::Text(std::string const & content):
@@ -41,3 +43,5 @@ namespace Xml
         return mText;
     }
 }
+
+#include "../MemoryLeakTrackerOff.hpp"
