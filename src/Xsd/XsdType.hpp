@@ -34,7 +34,7 @@ namespace Xsd
          * @param regex The regex
          * @param attrs The list of attributes
          */
-        Type(const std::string & regex, std::map<std::string, Attribute *> attrs);
+        Type(const std::string & regex, std::map<std::string, Attribute *> * attrs);
 
          /**
          * Destructor
@@ -54,7 +54,7 @@ namespace Xsd
          * @return The regex created
          */
         static std::string
-        parseComplexType(const Xml::Element * const xmlElement, std::string separator, bool eltSeqChoice, std::map<std::string, Attribute *> attributes, bool acceptAttributes, Checker * checker);
+        parseComplexType(const Xml::Element * const xmlElement, std::string separator, bool eltSeqChoice, std::map<std::string, Attribute *> * attributes, bool acceptAttributes, Checker * checker);
 
         /**
          * Returns the regex of an element, adds its type and type relation to the maps if it's not a ref
@@ -178,13 +178,13 @@ namespace Xsd
          *
          * @return The list of attributes
          */
-        std::map<std::string, Attribute *>
+        std::map<std::string, Attribute *> *
         attributes() const;
 
     protected:
 
         std::string mRegex;                             /// regex created for the type
-        std::map<std::string, Attribute *> mAttributes; /// the map of attributes
+        std::map<std::string, Attribute *> * mAttributes; /// the map of attributes
 
         static const std::string TYPE_SUFFIX;           /// the "TYPE" suffix
         static const std::string UNBOUNDED;             /// the "UNBOUNDED" value

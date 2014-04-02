@@ -376,17 +376,17 @@ testRefAttribute()
         </person>
     ));
 
-    std::string xmlWrongContent (xml_code(
-        <?xml version="1.0" encoding="UTF-8"?>
-        <person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/5_choice.xsd">
-            <address patate="potatoe"/>
-        </person>
-    ));
-
     std::string xmlContent2 (xml_code(
         <?xml version="1.0" encoding="UTF-8"?>
         <person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/5_choice.xsd">
             <address patate="potatoe" validity="12-05-2015"/>
+        </person>
+    ));
+
+    std::string xmlWrongContent (xml_code(
+        <?xml version="1.0" encoding="UTF-8"?>
+        <person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/5_choice.xsd">
+            <address patate="potatoe"/>
         </person>
     ));
 
@@ -425,7 +425,9 @@ testRefAttribute()
     ));
 
     testValidation(xmlContent, xmlWrongContent, xsdContent);
+    //testValidation(xmlContent2, xmlWrongContent, xsdContent);
     //testValidation(xmlContent2, xmlWrongContent2, xsdContent);
+    //testValidation(xmlContent2, xmlWrongContent3, xsdContent);
 }
 
 void

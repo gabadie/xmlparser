@@ -77,10 +77,10 @@ namespace Xsd
         initDateType();
         initStringType();
 
-        Type * typeDate = new Type(dateRegex, std::map<std::string, Attribute *>());
+        Type * typeDate = new Type(dateRegex, NULL);
         addType(mDateType, typeDate);
 
-        Type * typeString = new Type(stringRegex, std::map<std::string, Attribute *>());
+        Type * typeString = new Type(stringRegex, NULL);
         addType(mStringType, typeString);
     }
 
@@ -119,8 +119,8 @@ namespace Xsd
 
         for (auto iterType : mTypes)
         {
-            std::map<std::string, Attribute *> attributes = iterType.second->attributes();
-            for (auto iterAttr : attributes)
+            std::map<std::string, Attribute *> * attributes = iterType.second->attributes();
+            for (auto iterAttr : *attributes)
             {
                 checkExistType(iterAttr.second->name());
             }
@@ -282,8 +282,8 @@ namespace Xsd
             Checker * checker = new Checker(xsdDoc);
             //Building intermediary structure from xmlDoc
             std::map<std::string, Attribute *> attributes;
-            std::string rootRegex = Xsd::Type::parseComplexType(xsdDoc->root(), OR_SEPARATOR, true, attributes, true, checker);
-            checker->addType(ROOT + "Type", new Type(rootRegex, attributes));
+            std::string rootRegex = Xsd::Type::parseComplexType(xsdDoc->root(), OR_SEPARATOR, true, &attributes, true, checker);
+            checker->addType(ROOT + "Type", new Type(rootRegex, &attributes));
             checker->addTypedElement(ROOT, ROOT + "Type");
 
             checker->checkReferences();
