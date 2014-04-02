@@ -55,6 +55,11 @@ namespace Xsd
 
             std::string instructionRegex;
 
+            if (!instruction->regex(instructionRegex, xsdDocument, instructionElement, log))
+            {
+                return false;
+            }
+
             elementRegex << instructionRegex;
         }
 
