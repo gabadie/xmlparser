@@ -2,7 +2,6 @@
 #define _H_XSD_VALIDATE
 
 #include "../Xml/XmlForward.hpp"
-#include "XsdInstruction.hpp"
 
 namespace Xsd
 {
