@@ -1,4 +1,6 @@
 
+#include <sstream>
+
 #include "Xsl.hpp"
 #include "XslTemplate.hpp"
 
@@ -9,8 +11,8 @@
 Xml::Document *
 Xsl::xslTransform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc, Xml::Log & xslLog)
 {
-    Xml::Document * result = new Xml::Document();
-    std::vector<Xml::Node *> resultNodes = findAndApplyTemplate(xmlDoc.root(), xslDoc, xslLog);
+    auto result = new Xml::Document();
+    auto resultNodes = findAndApplyTemplate(xmlDoc.root(), xslDoc, xslLog);
 
     if (resultNodes.size() == 0)
     {
@@ -18,16 +20,51 @@ Xsl::xslTransform(Xml::Document const & xmlDoc, Xml::Document const & xslDoc, Xm
         return result;
     }
 
+    for (auto node : resultNodes)
+    {
+        app_assert(node != nullptr);
 
-    app_assert(resultNodes[0] != nullptr);
-    app_assert(resultNodes[0]->isElement());
+        if (node->isElement())
+        {
+            if (result->root() != nullptr)
+            {
+                auto element = static_cast<Xml::Element *>(node);
 
-    if (resultNodes.size() > 1) {
-        xslLog.append("XSL transform returned more than a root element.");
+                std::ostringstream s;
+
+                s << "XSL transform failed to create root element <";
+                s << element->tag();
+                s << " />: an other element <";
+                s << result->root()->tag();
+                s <<" /> has already been inserted in the document";
+
+                xslLog.append(s.str());
+                delete node;
+
+                continue;
+            }
+        }
+        else if (!Xml::Document::canAppend(node))
+        {
+            std::ostringstream s;
+
+            s << "XSL transform has failed to append node ";
+            s << *node;
+            s << " into the document";
+
+            xslLog.append(s.str());
+            delete node;
+
+            continue;
+        }
+
+        result->appendNode(node);
     }
 
-    auto root = static_cast<Xml::Element *>(resultNodes[0]);
-    result->setRoot(root);
+    if (result->root() == nullptr)
+    {
+        xslLog.append("XSL transform has not created any root element");
+    }
 
     return result;
 }
