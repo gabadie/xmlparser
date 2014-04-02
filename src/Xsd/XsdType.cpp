@@ -285,10 +285,10 @@ namespace Xsd
         {
             //Type management
             std::string type = xmlElement->attribute(checker->TYPE_ATTR);
-            if(type != "" && isSimpleType(type, checker))
+            if(type != "")
             {
-                checker->addTypedElement(name, type);
-            }
+				checker->addTypedElement(name, type);
+			}
             else if(xmlElement->elements().size() > 0)
             {
                 auto typeElement = xmlElement->elements().front();

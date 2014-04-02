@@ -157,6 +157,11 @@ void testValidation(const std::string & xmlContent, const std::string & xsdConte
     test_assert(xmlDoc != nullptr && xsdDoc != nullptr);
     Xsd::Checker * checker = Xsd::Checker::parseXsd(xsdDoc);
     test_assert(checker != NULL);
+    if(checker == nullptr)
+    {
+        std::cerr << "Error: XSD document could not be built" << std::endl;
+        return;
+    }
     std::cout << "Checking right document" << std::endl;
     test_assert(checker->isValid(xmlDoc));
 
@@ -668,8 +673,8 @@ main()
     // testRecursiveComplexType();
     // testSequence();
     // testChoice();
-    testRefAttribute();
-    // testRefType();
+    // testRefAttribute();
+    testRefType();
     // testRefElement();
     // testOccurs();
     //testWrongXsd();
