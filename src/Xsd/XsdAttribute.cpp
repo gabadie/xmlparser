@@ -1,5 +1,14 @@
+/**
+ * \file XsdAttribute.cpp
+ * \brief XSD Attribute
+ * \author jcourlet
+ * \version 0.1
+ * \date 18 mars 2014
+ */
+
 #include "XsdAttribute.hpp"
-#include "XsdDocument.hpp"
+#include "XsdException.hpp"
+#include "XsdChecker.hpp"
 
 #ifdef APP_DEBUG
 #include <cassert>
@@ -7,74 +16,81 @@
 
 namespace Xsd
 {
-    Attribute::Attribute(std::string const & name, bool required):
-    mName(name),
-    mRequired(required)
+    Attribute::Attribute(const std::string & name, bool required):
+        mName(name),
+        mRequired(required)
     {
-
     }
+
 
     Attribute::~Attribute()
     {
-
     }
 
-    Attribute::parseAttribute(Xml::XmlElement xmlElement):
+    Attribute *
+    Attribute::parseAttribute(const Xml::Element * const xmlElement, Checker * checker)
     {
         bool required = false;
-        std::string name;
-        map<std::string,std::string>::iterator itName = xmlElement.mAttributes.find('name');
-        map<std::string,std::string>::iterator itRef = xmlElement.mAttributes.find('ref');
-        map<std::string,std::string>::iterator itType = xmlElement.mAttributes.find('type');
-        map<std::string,std::string>::iterator itRequired = xmlElement.mAttributes.find('use');
+        std::string notFound = "";
+        std::string name = xmlElement->attribute(checker->NAME_ATTR);
+        std::string ref = xmlElement->attribute(checker->REF_ATTR);
+        std::string type = xmlElement->attribute(checker->TYPE_ATTR);
+        std::string use = xmlElement->attribute(checker->USE_ATTR);
 
-        bool hasName, hasRef, hasType, hasRequired;
-        hasName = (itName != xmlElement.mAttributes.end());
-        hasRef = (itRef != xmlElement.mAttributes.end());
-        hasType = (itType != xmlElement.mAttributes.end());
-        hasRequired = (itRequired != xmlElement.mAttributes.end());
-
-
-        if(hasName)
+        if(name != notFound)
         {
-            name = (*itName).second;
-            // Add attribute to attribute type map
-            if(hasType)
+            // Add an attribute to the attribute type map
+            if(type != notFound && Xsd::Type::isSimpleType(type, checker))
             {
-                Xsd::attributesTypesMap.insert(std::pair<std::string,std::string>(name, (*itType).second);
+                    checker->addTypedAttribute(name, type);
             }
             else
             {
-                // TODO Gestion exception
-                cout << "Error : Attribute element doesn't have any type attribute" << endl;
+                checker->throwInvalidAttributeValueException(name, checker->TYPE_ATTR, type);
             }
         }
-        else if(hasRef)
+        else if(ref != notFound)
         {
-            name = (*itRef).second;
+            name = ref;
         }
         else
         {
-            // TODO Gestion exception
-            name = "";
-            cout << "Error : Attribute element doesn't have any name attribute" << endl;
+            checker->throwMissingAttributeException(name, checker->TYPE_ATTR);
         }
 
-        if(hasRequired)
+        if(use != notFound)
         {
-            if((*itRequired).seconde == "required")
+            if(use == checker->USE_REQUIRED_VALUE)
             {
                 required = true;
             }
+            else
+            {
+                checker->throwInvalidAttributeValueException(name, checker->USE_ATTR, use);
+            }
         }
 
-        Attribute attr(name, required);
+        return new Attribute(name, required);
+    }
 
-        if(hasName) {
-            // Add attribute to the attribute map
-            Xsd::attributesMap.insert(std::pair<std::string, Attribute const *>(name,attr));
+    void
+    Attribute::checkValidity(const std::string & value, Checker * checker)
+    {
+        if(!checker->getAttributeType(mName)->isValid(value))
+        {
+            throw new XSDValidationException("Error: Invalid attribute: " + mName);
         }
+    }
 
-        return attr;
+    std::string
+    Attribute::name()
+    {
+        return mName;
+    }
+
+    bool
+    Attribute::isRequired()
+    {
+        return mRequired;
     }
 }

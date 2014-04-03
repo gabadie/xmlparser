@@ -6,6 +6,9 @@ testRE2.cpp
 testXmlCharacterData.cpp
 testXmlDoctype.cpp
 testXmlDocument.cpp
+testParsing.cpp
+testXsdValidation.cpp
+testXsl.cpp
 testXmlComment.cpp
 testXmlElement.cpp
 testXmlElementParsing.cpp
@@ -14,7 +17,7 @@ testXmlParser.cpp
 testXmlProcessingInstruction.cpp
 testXmlText.cpp
 testXPath.cpp
-testXsl.cpp
 testXslTransform.cpp
 testXslValueOf.cpp
 testXslForEach.cpp
+testXslApplyTemplate.cpp

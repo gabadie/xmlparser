@@ -23,3 +23,7 @@ Xsl/XslForEach.cpp
 Xsl/XslTemplate.cpp
 Xsl/XslValueOf.cpp
 MemoryLeakTracker.cpp
+Xsd/XsdException.cpp
+Xsd/XsdAttribute.cpp
+Xsd/XsdType.cpp
+Xsd/XsdChecker.cpp

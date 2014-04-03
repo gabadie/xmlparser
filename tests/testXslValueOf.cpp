@@ -31,8 +31,6 @@ testXslEmptyValue()
     auto xslDoc = Xml::parse(xsl);
 
     test_assert(xmlDoc != nullptr);
-    test_assert(xmlDoc != nullptr);
-    test_assert(xslDoc != nullptr);
     test_assert(xslDoc != nullptr);
 
     Xsl::ValueOf valueOf;
@@ -65,8 +63,6 @@ textXslHello()
     auto xslDoc = Xml::parse(xsl);
 
     test_assert(xmlDoc != nullptr);
-    test_assert(xmlDoc != nullptr);
-    test_assert(xslDoc != nullptr);
     test_assert(xslDoc != nullptr);
 
     Xsl::ValueOf valueOf;
@@ -99,8 +95,6 @@ textXslNonExist()
     auto xslDoc = Xml::parse(xsl);
 
     test_assert(xmlDoc != nullptr);
-    test_assert(xmlDoc != nullptr);
-    test_assert(xslDoc != nullptr);
     test_assert(xslDoc != nullptr);
 
     Xsl::ValueOf valueOf;
@@ -142,8 +136,6 @@ textXslRecursive()
     auto xslDoc = Xml::parse(xsl);
 
     test_assert(xmlDoc != nullptr);
-    test_assert(xmlDoc != nullptr);
-    test_assert(xslDoc != nullptr);
     test_assert(xslDoc != nullptr);
 
     Xsl::ValueOf valueOf;
@@ -153,7 +145,9 @@ textXslRecursive()
 
     // std::cerr << ((Xml::Element *)r[0])->contentText() << std::endl;
 
-    test_assert(((Xml::Element *)r[0])->contentText() == "First LevelSecond levelSecond level Bis");
+    test_assert(r.size() == 1);
+
+    test_assert(r[0]->contentText() == "First LevelSecond levelSecond level Bis");
 
 
     delete xmlDoc;
@@ -193,7 +187,6 @@ textXslAttributes()
     auto xslDoc3 = Xml::parse(xsl3);
 
     test_assert(xmlDoc != nullptr);
-    test_assert(xmlDoc != nullptr);
     test_assert(xslDoc1 != nullptr);
     test_assert(xslDoc2 != nullptr);
     test_assert(xslDoc3 != nullptr);
@@ -205,9 +198,9 @@ textXslAttributes()
     auto r2 = valueOf(xmlDoc->root(), *xslDoc2, xslDoc2->root(), transformLog);
     auto r3 = valueOf(xmlDoc->root(), *xslDoc3, xslDoc3->root(), transformLog);
 
-    test_assert(((Xml::Element *)r1[0])->contentText() == "First");
-    test_assert(((Xml::Element *)r2[0])->contentText() == "Second");
-    test_assert(((Xml::Element *)r3[0])->contentText() == "Third");
+    test_assert(r1[0]->contentText() == "First");
+    test_assert(r2[0]->contentText() == "Second");
+    test_assert(r3[0]->contentText() == "Third");
 
 
     delete xmlDoc;
