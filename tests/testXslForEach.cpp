@@ -53,7 +53,6 @@ testXslNormal()
 
     Xml::Log transformLog;
     auto r = foreach(xmlDoc->root(), *xslDoc, xslDoc->root(), transformLog);
-    //std::cerr << ((Xml::Element *)r[0])->contentText() << std::endl;
 
     test_assert(r.size() == 2);
     test_assert(r[0]->contentText() == "each");
@@ -104,7 +103,6 @@ testXslEmptySelect()
 
     Xml::Log transformLog;
     auto r = foreach(xmlDoc->root(), *xslDoc, xslDoc->root(), transformLog);
-    //std::cerr << ((Xml::Element *)r[0])->contentText() << std::endl;
 
     test_assert(r.size() == 0);
 
@@ -157,7 +155,6 @@ testXslOther()
 
     Xml::Log transformLog;
     auto r = foreach(xmlDoc->root(), *xslDoc, xslDoc->root(), transformLog);
-    //std::cerr << ((Xml::Element *)r[0])->contentText() << std::endl;
 
     test_assert(r.size() == 1);
     test_assert(r[0]->contentText() == "each");
@@ -169,6 +166,7 @@ testXslOther()
 
 void
 testXslParam()
+// This tests an unsupported behavior (for-each iterating on attributes instead of XML elements)
 {
     std::string xml = xml_code(
         <catalog>
@@ -222,8 +220,8 @@ testXslParam()
     auto r = foreach(xmlDoc->root(), *xslDoc, xslDoc->root(), transformLog);
     std::cerr << ((Xml::Element *)r[0])->contentText() << std::endl;
 
-    //test_assert(r.size() == 1);
-    //test_assert(r[0]->contentText() == "each");
+    test_assert(r.size() == 1);
+    test_assert(r[0]->contentText() == "each");
 
     delete xmlDoc;
     delete xslDoc;
@@ -270,7 +268,6 @@ testXslNoTemplate()
 
     Xml::Log transformLog;
     auto r = foreach(xmlDoc->root(), *xslDoc, xslDoc->root(), transformLog);
-    //std::cerr << ((Xml::Element *)r[0])->contentText() << std::endl;
 
     test_assert(r.size() == 0);
 
@@ -285,7 +282,6 @@ main()
     testXslNoTemplate();
     testXslEmptySelect();
     testXslOther();
-    //testXslParam();
 
     return 0;
 }
