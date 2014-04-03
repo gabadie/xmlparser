@@ -1,0 +1,1 @@
+ -t xml_files/catalog_small.xml xml_original_files/catalog_apply_templates.xsl

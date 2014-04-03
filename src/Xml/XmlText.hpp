@@ -22,6 +22,18 @@ namespace Xml
          */
         ~Text() override;
 
+        /**
+         * Override of Xml::Object::objectLabel()
+         */
+        ObjectLabel
+        objectLabel() const override;
+
+        /**
+         * Override of clone abstract method
+         */
+        Node *
+        clone() const override;
+
     protected:
         /**
          * Constructor
@@ -41,7 +53,6 @@ namespace Xml
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
 
-
         /**
          * Gets the content text
          *
@@ -50,10 +61,11 @@ namespace Xml
         std::string const &
         contentText() const override;
 
-    protected:
+    private:
         std::string const mText; ///< Text content
 
         friend class Xml::Element;
+        friend class Xsl::ValueOf;
         friend XML_BISON_MAIN();
     };
 }

@@ -40,12 +40,12 @@ namespace Xml
     parserSemanticError(std::string const & msg);
 
     /**
-     * Check if parsing has defenetly failed
+     * Check if parsing has definitely failed
      *
-     * @return if has defenetly failed by a syntax error
+     * @return if has definitely failed by a syntax error
      */
     bool
-    parserDefenetlyFailed();
+    parserDefinitelyFailed();
 
 }
 

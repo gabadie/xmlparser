@@ -14,21 +14,21 @@ TEST_TMP_STDERR_PATH="$2`basename $3`.stderr.log"
 
 ./$1 $TEST_PARAMS > $TEST_TMP_STDOUT_PATH 2> $TEST_TMP_STDERR_PATH
 
-if [ $? -ne $TEST_RETURNCODE ]
+if [ $? -ne $TEST_RETURNCODE ];
 then
     echo "$3: returned $? instead of $TEST_RETURNCODE";
     TEST_STATUS=1;
 fi;
 
 diff -wB $TEST_TMP_STDOUT_PATH $TEST_STDOUT_PATH > /dev/null
-if [ $? -ne 0 ]
+if [ $? -ne 0 ];
 then
     echo "$3: stdout doesn't match";
     TEST_STATUS=1;
 fi;
 
 diff -wB $TEST_TMP_STDERR_PATH $TEST_STDERR_PATH > /dev/null
-if [ $? -ne 0 ]
+if [ $? -ne 0 ];
 then
     echo "$3: stderr doesn't match";
     TEST_STATUS=1;

@@ -40,8 +40,8 @@
 \renewcommand{\lstlistingname}{Code source}
 \lstset
 {
-	language=Prolog,
-	basicstyle=\ttfamily\scriptsize,
+	language=C++,
+	basicstyle=\ttfamily,
 	keywordstyle=\color{blue}\ttfamily,
 	stringstyle=\color{red}\ttfamily,
 	commentstyle=\color[RGB]{0,100,0}\ttfamily,
@@ -52,13 +52,13 @@
 % ================== SOULIGNEMENT ================== %
 \usepackage[normalem]{ulem} %Package gérant le soulignement
 %Définition de commandes pour souligner en tirets
-\def\dashuline{\bgroup 
+\def\dashuline{\bgroup
   \ifdim\ULdepth=\maxdimen  % Set depth based on font, if not set already
    \settodepth\ULdepth{(j}\advance\ULdepth.4pt\fi
   \markoverwith{\kern.15em
   \vtop{\kern\ULdepth \hrule width .3em}%
   \kern.15em}\ULon}
-\def\dotuline{\bgroup 
+\def\dotuline{\bgroup
   \ifdim\ULdepth=\maxdimen  % Set depth based on font, if not set already
    \settodepth\ULdepth{(j}\advance\ULdepth.4pt\fi
   \markoverwith{\begingroup

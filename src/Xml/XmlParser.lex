@@ -43,9 +43,10 @@ static char * enleveGuillemets(char *s) {
 
 // enlève les caractères en début et fin d'un commentaire
 static char * nettoieCommentaire(char *s) {
-   s += 5;
-   s[strlen(s)-3] = '\0';
-   return s;
+    s = supprimeEspaces(s);
+    s += 4;
+    s[strlen(s)-3] = '\0';
+    return s;
 }
 
 
@@ -54,6 +55,8 @@ static char * nettoieCommentaire(char *s) {
 /* we don't have yywrap() */
 %option 8bit noyywrap
 %option yylineno
+%option nounput
+%option noinput
 
 
 /* ----------------------------------------------------------------------------- Terminals' definitions */
@@ -74,8 +77,8 @@ chaine      \"([^"&]|{esc})*\"|\'([^'&]|{esc})*\'
 doctype     {esp}?"<!DOCTYPE"{esp}
 infspecial {esp}?"<?"
 supspecial "?>"{nl}?
-cdata      "<![CDATA["
-endcdata   "]]>"
+cdata      {inf}"![CDATA["
+endcdata   "]]"{sup}
 
 /*
  * Le mode CONTENU est utilisé entre les balises ouvrantes et fermantes

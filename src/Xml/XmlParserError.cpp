@@ -3,6 +3,7 @@
 
 #include "XmlParserError.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
 
 namespace
 {
@@ -68,9 +69,11 @@ namespace Xml
     }
 
     bool
-    parserDefenetlyFailed()
+    parserDefinitelyFailed()
     {
         return syntaxErrors;
     }
 
 }
+
+#include "../MemoryLeakTrackerOff.hpp"

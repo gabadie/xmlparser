@@ -16,9 +16,7 @@
 #include "XmlDocumentNode.hpp"
 #include "XmlElement.hpp"
 
-#ifdef APP_DEBUG
-#include <cassert>
-#endif
+#include "../MemoryLeakTrackerOn.hpp"
 
 namespace Xml
 {
@@ -28,7 +26,11 @@ namespace Xml
     {
         if(root != nullptr)
         {
+            app_assert(root->mParent == nullptr);
+
             mChildren.push_back(root);
+
+            root->mParent = this;
         }
     }
 
@@ -43,6 +45,12 @@ namespace Xml
         mChildren.clear();
     }
 
+    ObjectLabel
+    Document::objectLabel() const
+    {
+        return ObjectLabel::Document;
+    }
+
     Document const *
     Document::document() const
     {
@@ -55,10 +63,38 @@ namespace Xml
         return nullptr;
     }
 
-    Document::NodesList const &
+    NodeList const &
     Document::children() const
     {
         return mChildren;
+    }
+
+    bool
+    Document::remove(Node * node)
+    {
+        app_assert(node != nullptr);
+
+        if (node->mParent != this)
+        {
+            return false;
+        }
+
+        {
+            auto it = std::find(std::begin(mChildren), std::end(mChildren), node);
+
+            app_assert(it != std::end(mChildren));
+
+            mChildren.erase(it);
+        }
+
+        if (node == (Node *) mRoot)
+        {
+            mRoot = nullptr;
+        }
+
+        node->mParent = nullptr;
+
+        return true;
     }
 
     void
@@ -69,35 +105,32 @@ namespace Xml
             return;
         }
 
-        if(root != nullptr)
+        if(root == nullptr)
         {
-            // If there is already a root node...
-            if(mRoot != nullptr)
-            {
-                auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
+            delete mRoot;
 
-                app_assert(it != std::end(mChildren));
+            return;
+        }
 
-                // ...we delete it
-                delete mRoot;
+        // If there is already a root node...
+        if(mRoot != nullptr)
+        {
+            auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
 
-                // and replaces it by the new one
-                *it = root;
-                root->mParent = this;
-            }
-            else
-            {
-                this->appendNode(root);
-            }
+            app_assert(it != std::end(mChildren));
+
+            // ...we delete it
+            mRoot->mParent = nullptr;
+            delete mRoot;
+
+            // and replaces it by the new one
+            *it = root;
+            root->mParent = this;
         }
         else
         {
-            auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
-            mChildren.erase(it);
-            delete mRoot;
+            this->appendNode(root);
         }
-
-        mRoot = root;
     }
 
     bool
@@ -119,15 +152,19 @@ namespace Xml
     void
     Document::exportToStream(std::ostream & stream, std::size_t level, std::string const & indent) const
     {
-        for(auto i = 0u; i < mChildren.size(); ++i)
+        for(size_t i = 0u; i < mChildren.size(); ++i)
         {
             auto const & c = mChildren[i];
 
             app_assert(c != nullptr);
+            app_assert(c->mParent == this);
 
             c->exportToStream(stream, level, indent);
 
-            stream << (i == mChildren.size() - 1 ? "" : "\n");
+            if (i != (mChildren.size() - 1))
+            {
+                stream << "\n";
+            }
         }
     }
 
@@ -135,25 +172,63 @@ namespace Xml
     Document::appendNode(Node * documentNode)
     {
         app_assert(documentNode != nullptr);
-        app_assert(documentNode->contentText() == ""); // make sure we are not appending a Xml::Text
+        app_assert(canAppend(documentNode)); // make sure we are not appending a Xml::Text
 
-        app_assert(
-            std::find(std::begin(mChildren), std::end(mChildren), documentNode)
-            == std::end(mChildren)
-        );
-
-        app_assert(mRoot == nullptr || !mRoot->hasChild(documentNode));
+        documentNode->detach();
 
         // A document has only one Xml::Element
-        if(documentNode->isElement() && mRoot != nullptr)
+        if (documentNode->isElement())
         {
-            auto it = std::find(std::begin(mChildren), std::end(mChildren), mRoot);
-            mChildren.erase(it);
-            delete mRoot;
+            if (mRoot != nullptr)
+            {
+                delete mRoot;
+            }
+
+            mRoot = (Element *) documentNode;
         }
 
         mChildren.push_back((DocumentNode *) documentNode);
         documentNode->mParent = this;
     }
 
+    bool
+    Document::hasChild(Node const * node) const
+    {
+        for(auto const & c : mChildren)
+        {
+            app_assert(c != nullptr);
+            app_assert(c->mParent == this);
+
+            if(c == node)
+            {
+                return true;
+            }
+
+            if(c->isElement())
+            {
+                if(c->hasChild(node))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    bool
+    Document::canAppend(Node const * node)
+    {
+        app_assert(node != nullptr);
+
+        auto objectLabel = node->objectLabel();
+
+        return objectLabel == ObjectLabel::Comment ||
+            objectLabel == ObjectLabel::Doctype ||
+            objectLabel == ObjectLabel::Element ||
+            objectLabel == ObjectLabel::ProcessingInstruction;
+    }
+
 }
+
+#include "../MemoryLeakTrackerOff.hpp"

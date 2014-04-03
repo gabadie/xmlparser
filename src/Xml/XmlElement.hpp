@@ -3,10 +3,13 @@
 
 #include <map>
 #include <string>
+#include <utility>
 #include <vector>
+#include <re2/re2.h>
 
 #include "XmlForward.hpp"
 #include "XmlDocumentNode.hpp"
+
 
 namespace Xml
 {
@@ -18,17 +21,13 @@ namespace Xml
     {
     public:
 
-        // Type aliases
-        using AttributesMap = std::map<std::string, std::string>;
-        using NodeList      = std::vector<Node *>;
-        using ElementList   = std::vector<Element const *>;
-
         /**
          * Constructor
          *
          * @param name Name of the element
+         * @param namespace Name of the namespace
          */
-        Element(std::string const & name);
+        Element(std::string const & name, std::string const & namespaceName = std::string());
 
         /**
          * Destructor
@@ -37,22 +36,23 @@ namespace Xml
         ~Element();
 
         /**
-         * Tells whether or not the element has the given node in
-         * its children recursively.
-         *
-         * @param node Node to find
-         *
-         * @return True if found, false otherwise.
+         * Override of Xml::Object::objectLabel()
          */
-        bool
-        hasChild(Node * node) const;
+        ObjectLabel
+        objectLabel() const override;
+
+        /**
+         * Override of clone abstract method
+         */
+        Node *
+        clone() const override;
 
         /**
          * Gets the children nodes of the element.
          *
          * @return The children nodes of the element
          */
-        NodeList const  &
+        NodeList const &
         children() const;
 
         /**
@@ -75,20 +75,20 @@ namespace Xml
         elements(std::string const & tag) const;
 
         /**
-         * Get the parent element of the element
-         *
-         * @return The parent element if found, nullptr otherwise.
-         */
-        Element const *
-        parentElement() const;
-
-        /**
          * Get the text content of the element
          *
          * @return The text content of the element
          */
         std::string
         text() const;
+
+        /**
+         * Get the text content of the element recursively
+         *
+         * @return The full text content of the element
+         */
+        std::string
+        fullText() const;
 
         /**
          * Set the content of the element
@@ -126,12 +126,12 @@ namespace Xml
         appendText(std::string const & text);
 
         /**
-         * Deletes a child node.
+         * Removes a child node.
          *
          * @return True is the element has been removed, false otherwise.
          */
         bool
-        remove(Node * node);
+        remove(Node * node) override;
 
         /**
          * Gets the name of the element
@@ -150,6 +150,30 @@ namespace Xml
         setName(std::string const & name);
 
         /**
+         * Gets the namespace of the element
+         *
+         * @return The namespace of the element
+         */
+        std::string const &
+        namespaceName() const;
+
+        /**
+         * Set the namespace of the element
+         *
+         * @param namespace Namespace to set
+         */
+        void
+        setNamespaceName(std::string const & namespaceName);
+
+        /**
+         * Gest the namespace name and the name of the element
+         *
+         * @return the namespace name and the name
+         */
+        std::string
+        tag() const;
+
+        /**
          * Gets the value of an attribute by name
          *
          * @param name Name of the attribute to get.
@@ -157,7 +181,25 @@ namespace Xml
          * @return The value of the attribute if found, an empty string otherwise.
          */
         std::string const &
-        attribute(std::string const & name) const;
+        attribute(std::string const & namespaceName) const;
+
+        /**
+         * Gets all attributes
+         *
+         * @return The map of all attributes
+         */
+        AttributesMap const &
+        attributes() const;
+
+        /**
+         * Lists namespace's attributes
+         *
+         * @param namespaceName is the namespace.
+         *
+         * @return The map of attributes.
+         */
+        AttributesMap
+        namespaceAttributes(std::string const & name) const;
 
         /**
          * Sets the value of an attribute.
@@ -180,6 +222,35 @@ namespace Xml
         std::list<Element const *>
         select(std::string const & xPathQuery) const;
 
+        /**
+         * Tells whether or not the element matches a given (XPath-like) pattern, typically
+         * the "matches" attribute of an XSL template.
+         *
+         * @param pattern an XPath-like pattern.
+         *
+         * @return True if the element matches the given pattern, False otherwise.
+         */
+        bool
+        matches(std::string const & pattern) const;
+
+        /**
+         * Gets the value of the result of the XPath query
+         *
+         * @param xPathQuery XPath query
+         *
+         * @return The value of the result of the XPath query
+         */
+        std::string
+        valueOf(std::string const & xPathQuery) const;
+
+        /**
+         * Appends a node
+         *
+         * @param node Node to append
+         */
+        void
+        appendNode(Node * node) override;
+
     protected:
         /**
          * Exports to a <stream> with a given <indent>
@@ -193,31 +264,40 @@ namespace Xml
         exportToStream(std::ostream & stream, std::size_t level,
             std::string const & indent) const override;
 
-    private:
-
         /**
-         * Tells whether or not the node is an Element
+         * Tells whether or not the element has the given node in
+         * its children recursively.
          *
-         * @return True if the node is an Element, false otherwise.
+         * @param node Node to find
+         *
+         * @return True if found, false otherwise.
          */
-        virtual
         bool
-        isElement() const override;
+        hasChild(Node const * node) const override;
 
         /**
-         * Appends a node
+         * Tests if can append this node to the document
          *
-         * @param node Node to append
+         * @return True if you can append the node
          */
-        void
-        appendNode(Node * node) override;
+        static bool
+        canAppend(Node const * node);
 
     protected:
         std::string mName;         ///< Name of the element
+        std::string mNamespaceName;    ///< Namespace of the element
         AttributesMap mAttributes; ///< Attributes of the element
         NodeList mChildren;        ///< Children elements
 
         friend XML_BISON_MAIN();
+        friend class Xsl::Instruction;
+        friend class Xsl::ValueOf;
+        friend class Xsl::ForEach;
+        friend class Xsl::ApplyTemplate;
+
+        /*
+        friend XSL_APPLY_TEMPLATE();
+        friend XSL_APPLY_DEFAULT_TEMPLATE();*/
     };
 }
 

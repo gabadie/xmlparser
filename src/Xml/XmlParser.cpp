@@ -5,6 +5,8 @@
 #include "XmlParser.hpp"
 
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 Xml::Document *
 Xml::load(std::string const & path, Xml::Log * log)
 {
@@ -31,3 +33,5 @@ Xml::parse(std::string const & xmlContent, Xml::Log * log)
 
     return Xml::parse(f, log);
 }
+
+#include "../MemoryLeakTrackerOff.hpp"

@@ -1,4 +1,7 @@
+#include "../AppDebug.hpp"
 #include "XmlNode.hpp"
+
+#include "../MemoryLeakTrackerOn.hpp"
 
 namespace Xml
 {
@@ -11,7 +14,7 @@ namespace Xml
 
     Node::~Node()
     {
-
+        detach();
     }
 
     Document const *
@@ -26,6 +29,21 @@ namespace Xml
         return mParent;
     }
 
+    void
+    Node::detach()
+    {
+        if (mParent == nullptr)
+        {
+            return;
+        }
+
+#ifdef APP_DEBUG
+        app_assert(mParent->remove(this) == true);
+#else
+        mParent->remove(this);
+#endif
+    }
+
     std::string const &
     Node::contentText() const
     {
@@ -33,3 +51,5 @@ namespace Xml
         return dummy;
     }
 }
+
+#include "../MemoryLeakTrackerOff.hpp"

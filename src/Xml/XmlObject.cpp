@@ -4,6 +4,8 @@
 #include "XmlComment.hpp"
 #include "XmlProcessingInstruction.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 namespace Xml
 {
     Object::~Object()
@@ -26,6 +28,11 @@ namespace Xml
     void
     Object::appendComment(std::string const & comment)
     {
+        if (comment == "")
+        {
+            return;
+        }
+
         this->appendNode(new Comment(comment));
     }
 
@@ -36,8 +43,15 @@ namespace Xml
     }
 
     bool
-    Object::isElement() const
+    Object::remove(Node *)
     {
+        /*
+         * Object::remove is overloaded in Xml::Document and Xml::Element.
+         * but other classes don't because they are not supposed to have
+         * children elements
+         */
+        app_unreachable();
+
         return false;
     }
 
@@ -51,4 +65,19 @@ namespace Xml
          */
         app_unreachable();
     }
+
+    bool
+    Object::hasChild(Node const *) const
+    {
+        /*
+         * Object::hasChild is overloaded in Xml::Document and Xml::Element.
+         * but other classes don't because they are not supposed to have
+         * children elements
+         */
+        app_unreachable();
+
+        return 0;
+    }
 }
+
+#include "../MemoryLeakTrackerOff.hpp"

@@ -15,11 +15,6 @@ namespace Xml
     {
     public:
         /**
-         * Constructor
-         */
-        Object() = default;
-
-        /**
          * Destructor
          */
         virtual
@@ -44,6 +39,27 @@ namespace Xml
         virtual
         Document const *
         document() const = 0;
+
+        /**
+         * Returns the object's type label
+         *
+         * @return The object's type label
+         */
+        virtual
+        ObjectLabel
+        objectLabel() const = 0;
+
+        /**
+         * Tells whether or not the node is an Element
+         *
+         * @return True if the node is an Element, false otherwise.
+         */
+        inline
+        bool
+        isElement() const
+        {
+            return objectLabel() == ObjectLabel::Element;
+        }
 
         /**
          * Gets the object's parent
@@ -94,8 +110,20 @@ namespace Xml
         void
         appendProcessingInstruction(ProcessingInstruction * pi);
 
+        /**
+         * Removes a child node.
+         *
+         * @return True is the element has been removed, false otherwise.
+         */
+        virtual
+        bool
+        remove(Node * node);
+
     protected:
-        friend class Xml::Element;
+        /**
+         * Constructor
+         */
+        Object() = default;
 
         /**
          * Exports to a <stream> with a given <indent>
@@ -110,15 +138,6 @@ namespace Xml
             std::string const & indent) const = 0;
 
         /**
-         * Tells whether or not the node is an Element
-         *
-         * @return True if the node is an Element, false otherwise.
-         */
-        virtual
-        bool
-        isElement() const;
-
-        /**
          * Appends a node
          *
          * @param node Node to append
@@ -126,6 +145,27 @@ namespace Xml
         virtual
         void
         appendNode(Node * node);
+
+        /**
+         * Tells whether or not the element has the given node in
+         * its children recursively.
+         *
+         * @param node Node to find
+         *
+         * @return True if found, false otherwise.
+         */
+        virtual
+        bool
+        hasChild(Node const * node) const;
+
+
+        friend class Xml::Document;
+        friend class Xml::Element;
+        friend class Xml::Node;
+
+
+       /* friend XSL_APPLY_TEMPLATE();
+        friend XSL_APPLY_DEFAULT_TEMPLATE();*/
     };
 
     /**

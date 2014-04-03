@@ -4,26 +4,17 @@
 #include <list>
 #include <string>
 
+#include "XmlForward.hpp"
 #include "XmlObject.hpp"
 
 namespace Xml
 {
-    // Forward decalarations
-    class Document;
-    class Element;
-
     /**
      * Defines the abstract class of a node for interface purpose
      */
     class Node : public Object
     {
     public:
-
-        /**
-         * Constructor
-         */
-        Node();
-
         /**
          * Destructor
          */
@@ -46,13 +37,31 @@ namespace Xml
         Object const *
         parent() const override final;
 
+        /**
+         * Detaches the node from his parent if one
+         */
+        void
+        detach();
+
+        /**
+        * Clones the Xml Node
+        *
+        * @return A new Xml Node tha has the same attributes as the object that have been cloned
+        */
+        virtual
+        Node * 
+        clone() const = 0;
+
 
     protected:
         // Pointer to the parent object
         Object * mParent;
 
-        friend class Xml::Document;
-        friend class Xml::Element;
+
+        /**
+         * Constructor
+         */
+        Node();
 
         /**
          * Gets the content text if is a Xml::Text
@@ -60,6 +69,22 @@ namespace Xml
         virtual
         std::string const &
         contentText() const;
+
+
+        friend class Xml::CharacterData;
+        friend class Xml::Document;
+        friend class Xml::DocumentNode;
+        friend class Xml::Element;
+        friend class Xml::Text;
+
+        friend class Xsl::Instruction;
+        friend class Xsl::ForEach;
+        friend class Xsl::ApplyTemplate;
+        friend class Xsl::ValueOf;
+
+
+        /*friend XSL_APPLY_TEMPLATE();
+        friend XSL_APPLY_DEFAULT_TEMPLATE();*/
     };
 
 }

@@ -2,6 +2,10 @@
 #define _H_UTILS
 
 #include <string>
+#include <vector>
+#include <sstream>
+#include <iterator>
+#include <algorithm>
 
 namespace Utils
 {

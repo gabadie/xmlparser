@@ -3,7 +3,6 @@
 
 #include <iosfwd>
 #include <string>
-#include <vector>
 
 #include "XmlForward.hpp"
 #include "XmlObject.hpp"
@@ -19,8 +18,6 @@ namespace Xml
     {
     public:
 
-        using NodesList = std::vector<DocumentNode *>;
-
         /**
          * Constructor
          *
@@ -32,6 +29,12 @@ namespace Xml
          * Destructor
          */
         ~Document() override;
+
+        /**
+         * Override of Xml::Object::objectLabel()
+         */
+        ObjectLabel
+        objectLabel() const override;
 
         /**
          * Gets the itself document (const version)
@@ -54,17 +57,25 @@ namespace Xml
          *
          * @return The document root
          */
-        Element *
+       /* Element *
         root()
         {
             return mRoot;
         }
-
+*/
         Element const *
         root() const
         {
             return mRoot;
         }
+
+        /**
+         * Removes a child node.
+         *
+         * @return True is the element has been removed, false otherwise.
+         */
+        bool
+        remove(Node * node) override;
 
         /**
          * Sets the root element of the document
@@ -79,7 +90,7 @@ namespace Xml
          *
          * @return The children nodes of the document
          */
-        NodesList const &
+        NodeList const &
         children() const;
 
         /**
@@ -112,10 +123,33 @@ namespace Xml
         void
         appendNode(Node * node) override;
 
-    protected:
+        /**
+         * Tells whether or not the element has the given node in
+         * its children recursively.
+         *
+         * @param node Node to find
+         *
+         * @return True if found, false otherwise.
+         */
+        bool
+        hasChild(Node const * node) const override;
+
+        /**
+         * Tests if can append this node to the document
+         *
+         * @return True if you can append the node
+         */
+        static bool
+        canAppend(Node const * node);
+
+    private:
         Element * mRoot;     ///< Root of the XML document
-        NodesList mChildren; ///< Children nodes
-        //DocType mDocType;  ///< DocType of the XML document //TODO
+        NodeList mChildren; ///< Children nodes
+
+        friend
+        Xml::Document *
+        Xsl::transform(Xml::Document const &, Xml::Document const &, Xml::Log &);
+        friend XML_BISON_MAIN();
     };
 
 }

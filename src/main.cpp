@@ -1,6 +1,8 @@
 #include <utility>
 
 #include "Xml/XmlParser.hpp"
+#include "Xsd/XsdChecker.hpp"
+#include "Xsl/Xsl.hpp"
 
 static int const SUCCESS = 0x0000;
 static int const INVALID_COMMAND = 0x0001;
@@ -44,18 +46,83 @@ appVerify(std::string const & xmlPath, std::string const & xsdPath)
 {
     (void) xmlPath;
     (void) xsdPath;
-    std::cerr << __func__ << " : not implemented yet" << std::endl;
-    __builtin_trap();
+
+    // Parsing XSD Document
+    Xml::Log xmlLog;
+    Xml::Document * xsdDoc = Xml::load(xsdPath, &xmlLog);
+    Xml::Document * xmlDoc = Xml::load(xmlPath, &xmlLog);
+
+    if(xsdDoc == nullptr)
+    {
+        std::cerr << "Failed to parse XSD file: " << xmlPath << std::endl;
+        std::cerr << xmlLog;
+        return PARSE_ERROR;
+    }
+
+    if(xmlDoc == nullptr)
+    {
+        std::cerr << "Failed to parse XML file: " << xmlPath << std::endl;
+        std::cerr << xmlLog;
+        return PARSE_ERROR;
+    }
+
+    // Building XSD Checker
+    Xsd::Checker * checker = Xsd::Checker::parseXsd(xsdDoc);
+    if(checker == NULL)
+    {
+        return PARSE_ERROR;
+    }
+
+    // Validation process
+    if(checker->isValid(xmlDoc))
+    {
+        std::cout << xmlPath << " is valid according to the " << xsdPath << " schema" << std::endl;
+    }
+    else
+    {
+        std::cerr << xmlPath << " does not respect the " << xsdPath << " schema" << std::endl;
+    }
+
+    delete xmlDoc;
+    delete checker;
+
     return SUCCESS;
 }
 
 int
 appTransform(std::string const & xmlPath, std::string const & xslPath)
 {
-    (void) xmlPath;
-    (void) xslPath;
-    std::cerr << __func__ << " : not implemented yet" << std::endl;
-    __builtin_trap();
+    Xml::Log xmlLog;
+    Xml::Document * xmlDoc = Xml::load(xmlPath, &xmlLog);
+
+    if(xmlDoc == nullptr)
+    {
+        std::cerr << "Failed to parse XML file: " << xmlPath << std::endl;
+        std::cerr << xmlLog;
+        return PARSE_ERROR;
+    }
+
+
+    Xml::Log xslLoadLog;
+    Xml::Document * xslDoc = Xml::load(xslPath, &xslLoadLog);
+
+    if(xmlDoc == nullptr)
+    {
+        std::cerr << "Failed to parse XSL file: " << xmlPath << std::endl;
+        std::cerr << xslLoadLog;
+        return PARSE_ERROR;
+    }
+
+    Xml::Log transformLog;
+    Xml::Document * transformedDoc = Xsl::transform(*xmlDoc, *xslDoc, transformLog);
+
+    std::cout << (*transformedDoc) << std::endl;
+    std::cerr << transformLog;
+
+    delete xmlDoc;
+    delete xslDoc;
+    delete transformedDoc;
+
     return SUCCESS;
 }
 
@@ -66,7 +133,7 @@ checkArgsAndCall(std::string const & option, int argc, R(* func)(FArgs ...), Arg
 {
     static_assert(sizeof...(FArgs) == sizeof...(Args), "Wrong number of parameters");
 
-    auto nbCmdParams  = argc - 2; // -1 for executable name, -1 for the option
+    auto nbCmdParams  = argc - 2u; // -1 for executable name, -1 for the option
     auto nbFuncParams = sizeof...(FArgs);
 
     if(nbCmdParams != nbFuncParams)

@@ -1,5 +1,8 @@
 #include "XmlComment.hpp"
+#include "../AppDebug.hpp"
 #include "../Utils.hpp"
+
+#include "../MemoryLeakTrackerOn.hpp"
 
 namespace Xml
 {
@@ -7,12 +10,24 @@ namespace Xml
         DocumentNode(),
         mContent(content)
     {
-
+        app_assert(content != "");
     }
 
     Comment::~Comment()
     {
 
+    }
+
+    ObjectLabel
+    Comment::objectLabel() const
+    {
+        return ObjectLabel::Comment;
+    }
+
+    Node *
+    Comment::clone() const
+    {
+        return new Comment(this->mContent);
     }
 
     void
@@ -21,3 +36,5 @@ namespace Xml
         stream << Utils::repeat(indent, level) << "<!--" << mContent << "-->";
     }
 }
+
+#include "../MemoryLeakTrackerOff.hpp"

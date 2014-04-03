@@ -11,12 +11,32 @@
 #include "XmlProcessingInstruction.hpp"
 #include "../Utils.hpp"
 
+#include "../MemoryLeakTrackerOn.hpp"
+
 namespace Xml
 {
 
     ProcessingInstruction::~ProcessingInstruction()
     {
 
+    }
+
+    ProcessingInstruction::ProcessingInstruction(ProcessingInstruction const & piTocopy) :
+        DocumentNode(),
+        mAttributes(piTocopy.mAttributes)
+    {
+    }
+
+    ObjectLabel
+    ProcessingInstruction::objectLabel() const
+    {
+        return ObjectLabel::ProcessingInstruction;
+    }
+
+    Node *
+    ProcessingInstruction::clone() const
+    {
+        return new ProcessingInstruction(*this);
     }
 
     std::string const &
@@ -52,3 +72,5 @@ namespace Xml
         stream << "?>";
     }
 }
+
+#include "../MemoryLeakTrackerOff.hpp"
