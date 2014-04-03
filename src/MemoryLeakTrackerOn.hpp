@@ -1,7 +1,7 @@
 #include "MemoryLeakTracker.hpp"
 #include "AppDebug.hpp"
 
-#if 0
+#if APP_DEBUG
 
 inline void * operator new(std::size_t size, char const * file, int line)
 {
