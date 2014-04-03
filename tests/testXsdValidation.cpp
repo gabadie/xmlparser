@@ -130,9 +130,9 @@ void testValidation(const std::string & xmlContent, const std::string & xmlWrong
         return;
     }
     test_assert(checker != NULL);
-    std::cerr << "Checking right document" << std::endl;
+    std::cout << "Checking right document" << std::endl;
     test_assert(checker->isValid(xmlDoc));
-    std::cerr << "Checking wrong document" << std::endl;
+    std::cout << "Checking wrong document" << std::endl;
     test_assert(!checker->isValid(xmlWrongDoc));
 
     delete xmlDoc;
