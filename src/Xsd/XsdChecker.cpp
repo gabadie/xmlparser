@@ -10,10 +10,6 @@
 #include "XsdException.hpp"
 #include "../Xml/XmlParser.hpp"
 
-#ifdef APP_DEBUG
-#include <cassert>
-#endif
-
 namespace Xsd
 {
     //TODO: ctrl + f : "TODO"
@@ -155,7 +151,7 @@ namespace Xsd
         }
         catch(XSDValidationException * e)
         {
-            std::cerr << e->what() << std::endl;
+            //std::cerr << e->what() << std::endl;
             delete e;
             return false;
         }
@@ -257,7 +253,7 @@ namespace Xsd
     {
         if(xsdDoc == NULL)
         {
-            std::cerr << "Error: The document received has not been initialized" << std::endl;
+            //std::cerr << "Error: The document received has not been initialized" << std::endl;
             return NULL;
         }
         try
@@ -274,7 +270,7 @@ namespace Xsd
         }
         catch(XSDConstructionException * e)
         {
-            std::cerr << e->what() << std::endl;
+            //std::cerr << e->what() << std::endl;
             delete e;
             return NULL;
         }

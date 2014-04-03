@@ -68,10 +68,10 @@ namespace
             #ifdef APP_MEMORY_TRACE
             printInfo("Leak", ptr, block.size, block.file, block.line);
             #else
-            std::cerr << "MEMORY LEAK OF " << ptr << std::endl;// << " AT " << block.file << ":" << block.line << std::endl;
+            std::cerr << "MEMORY LEAK OF " << ptr << std::endl << " AT " << block.file << ":" << block.line << std::endl;
             #endif
 
-            std::free(ptr);
+            //std::free(ptr);
         }
 
 
