@@ -56,7 +56,7 @@ namespace Xsd
          * @return True if the validation is of, false otherwise
          */
         static Checker *
-        parseXsd(const Xml::Document * const xsdDoc);
+        parseXsd(Xml::Document const * const xsdDoc);
 
         /**
          * Destructor
@@ -77,7 +77,7 @@ namespace Xsd
          * @return True if the XML file respects the XML schema definition
          */
         bool
-        isValid(const Xml::Document * const xsdDoc);
+        isValid(Xml::Document const * const xsdDoc);
 
         /**
          * Add the type to the type map
@@ -86,7 +86,7 @@ namespace Xsd
          * @param type The type
          */
         void
-        addType(const std::string & typeName, Type * const type);
+        addType(std::string const & typeName, Type * const type);
 
         /**
          * Add the element to the element map
@@ -95,7 +95,7 @@ namespace Xsd
          * @param typeName The type name
          */
         void
-        addTypedElement(const std::string & elementName, const std::string & typeName);
+        addTypedElement(std::string const & elementName, std::string const & typeName);
 
         /**
          * Add the attribute to the attribute map
@@ -104,7 +104,7 @@ namespace Xsd
          * @param typeName The type name
          */
         void
-        addTypedAttribute(const std::string & attributeName, const std::string & typeName);
+        addTypedAttribute(std::string const & attributeName, std::string const & typeName);
 
         /**
          * Checks if the type exists in the type map
@@ -112,7 +112,7 @@ namespace Xsd
          * @param typeName The type name
          */
         void
-        checkExistType(const std::string & typeName);
+        checkExistType(std::string const & typeName);
 
         /**
          * Checks if the type exists in the type map
@@ -122,7 +122,7 @@ namespace Xsd
          * @return True if the type exists, false otherwise
          */
         bool
-        existType(const std::string & typeName);
+        existType(std::string const & typeName);
 
         /**
          * Gets the type associated to the type name
@@ -132,7 +132,7 @@ namespace Xsd
          * @return The type
          */
         Type *
-        getType(const std::string & typeName);
+        getType(std::string const & typeName);
 
         /**
          * Initialize the date type value for the type attribute
@@ -170,7 +170,7 @@ namespace Xsd
          * @return The type
          */
         Type *
-        getElementType(const std::string & elementName);
+        getElementType(std::string const & elementName);
 
         /**
          * Get the type associated to an attribute
@@ -180,7 +180,7 @@ namespace Xsd
          * @return The type
          */
         Type *
-        getAttributeType(const std::string & attributeName);
+        getAttributeType(std::string const & attributeName);
 
         /**
          * Throw an invalid element exception
@@ -189,7 +189,7 @@ namespace Xsd
          * @param expected The string expected
          */
         static void
-        throwInvalidElementException(const std::string & received, const std::string & expected);
+        throwInvalidElementException(std::string const & received, std::string const & expected);
 
         /**
          * Throw a missing attribute exception
@@ -198,7 +198,7 @@ namespace Xsd
          * @param missingAttr The missing attribute
          */
         static void
-        throwMissingAttributeException(const std::string & element, const std::string & missingAttr);
+        throwMissingAttributeException(std::string const & element, std::string const & missingAttr);
 
         /**
          * Throw an invalid attribute value exception
@@ -208,20 +208,21 @@ namespace Xsd
          * @param invalidValue The invalid value of the attribute
          */
         static void
-        throwInvalidAttributeValueException(const std::string & element, const std::string & attr, const std::string & invalidValue);
+        throwInvalidAttributeValueException(std::string const & element,
+            std::string const & attr, std::string const & invalidValue);
 
 
     protected:
         /**
          * Constructor
          */
-        Checker(const Xml::Document * const xmlDoc);
+        Checker(Xml::Document const * const xmlDoc);
 
         std::string mNamespacePrefix;           /// the namespace of the xsd document
         std::string mDateType;                  /// the string associated to the date type
         std::string mStringType;                /// the string associated to the string type
 
-        const Xml::Document * const mXsdDoc;    /// the xsd document
+        Xml::Document const * const mXsdDoc;    /// the xsd document
 
         typesMap mTypes;                        /// the type map
         elementsTypesMap mElementsTypes;        /// the element/type map

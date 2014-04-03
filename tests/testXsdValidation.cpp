@@ -46,6 +46,8 @@ getXsdFileNameFromXmlError(std::string fileName)
     return start + getFileNameNoExt(end) + ".xsd";
 }
 
+#if 0
+
 void
 test_validation()
 {
@@ -58,13 +60,13 @@ test_validation()
 
     dir = opendir (xmlFolder.c_str());
 
-    if(dir == NULL)
+    if(dir == nullptr)
     {
         std::cerr << "Error: Cannot find " << xmlFolder << " folder" << std::endl;
         return;
     }
 
-    while ((ent = readdir (dir)) != NULL)
+    while ((ent = readdir (dir)) != nullptr)
     {
         xmlFilePath = getFilePath(xmlFolder, ent->d_name);
 
@@ -87,8 +89,9 @@ test_validation()
 
         // Building XSD Checker
         Xsd::Checker * checker = Xsd::Checker::parseXsd(xsdDoc);
-        if(Xsd::Checker::parseXsd(xsdDoc) == NULL)
+        if(checker == nullptr)
         {
+            if(xmlDoc != nullptr) delete xmlDoc;
             return;
         }
 
@@ -108,6 +111,8 @@ test_validation()
     closedir (dir);
 }
 
+#endif
+
 //=============================================================================
 void testValidation(const std::string & xmlContent, const std::string & xmlWrongContent, const std::string & xsdContent)
 {
@@ -116,23 +121,14 @@ void testValidation(const std::string & xmlContent, const std::string & xmlWrong
     Xml::Document * xmlWrongDoc = Xml::parse(xmlWrongContent, &log);
     Xml::Document * xsdDoc = Xml::parse(xsdContent, &log);
 
-    if(xmlDoc == nullptr || xmlWrongDoc == nullptr || xsdDoc == nullptr)
-    {
-        std::cerr << "Error: A document could not be parsed" << std::endl;
-        return;
-    }
+    test_assert(xmlDoc != nullptr);
+    test_assert(xmlWrongDoc != nullptr);
+    test_assert(xsdDoc != nullptr);
 
     Xsd::Checker * checker = Xsd::Checker::parseXsd(xsdDoc);
 
-    if(checker == nullptr)
-    {
-        std::cerr << "Error: XSD document could not be built" << std::endl;
-        return;
-    }
-    test_assert(checker != NULL);
-    std::cout << "Checking right document" << std::endl;
+    test_assert(checker != nullptr);
     test_assert(checker->isValid(xmlDoc));
-    std::cout << "Checking wrong document" << std::endl;
     test_assert(!checker->isValid(xmlWrongDoc));
 
     delete xmlDoc;
@@ -149,13 +145,7 @@ void testValidation(const std::string & xmlContent, const std::string & xsdConte
 
     test_assert(xmlDoc != nullptr && xsdDoc != nullptr);
     Xsd::Checker * checker = Xsd::Checker::parseXsd(xsdDoc);
-    if(checker == nullptr)
-    {
-        std::cerr << "Error: XSD document could not be built" << std::endl;
-        return;
-    }
-    test_assert(checker != NULL);
-    std::cout << "Checking right document" << std::endl;
+    test_assert(checker != nullptr);
     test_assert(checker->isValid(xmlDoc));
 
     delete xmlDoc;
@@ -644,12 +634,12 @@ testWrongXsd()
     Xml::Log log;
     Xml::Document * xsdDoc = Xml::parse(xsdContent, &log);
     Xsd::Checker * checker = Xsd::Checker::parseXsd(xsdDoc);
-    test_assert(checker == NULL);
+    test_assert(checker == nullptr);
     delete xsdDoc;
 
     xsdDoc = Xml::parse(xsdContent2, &log);
     checker = Xsd::Checker::parseXsd(xsdDoc);
-    test_assert(checker == NULL);
+    test_assert(checker == nullptr);
     delete xsdDoc;
 }
 

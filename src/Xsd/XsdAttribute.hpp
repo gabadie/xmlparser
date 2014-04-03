@@ -17,7 +17,7 @@ namespace Xsd
             /**
              * Constructor
              */
-            Attribute(const std::string & name, bool required);
+            Attribute(std::string const & name, bool required);
 
             /**
              * Creates an attribute with an xml parsed element
@@ -28,7 +28,7 @@ namespace Xsd
              * @return The attribute created
              */
             static Attribute *
-            parseAttribute(const Xml::Element * const xmlElement, Checker * checker);
+            parseAttribute(Xml::Element const * const xmlElement, Checker * checker);
 
             /**
              * Destructor
@@ -65,7 +65,7 @@ namespace Xsd
              * @param checker The checker
              */
             void
-            init(const std::string & name, bool required, const std::string & typeName, bool ref, Checker * checker);
+            init(std::string const & name, bool required, std::string const & typeName, bool ref, Checker * checker);
 
             /**
              * Checks the validity of the value of an attribute
@@ -74,7 +74,7 @@ namespace Xsd
              * @param checker The checker
              */
             void
-            checkValidity(const std::string & value, Checker * checker);
+            checkValidity(std::string const & value, Checker * checker);
 
     };
 }
