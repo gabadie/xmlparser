@@ -47,10 +47,9 @@ namespace Xsd
         mXsdDoc(xsdDoc),
         mTypes(),
         mElementsTypes(),
-        // mAttributes(),
         mAttributesTypes()
     {
-        const std::string dateRegex = "[0-9]{2}-[0-9]{2}-[0-9]{4}";
+        const std::string dateRegex = "[0-9]{4}-[0-9]{2}-[0-9]{2}";
         const std::string stringRegex = ".*";
 
         if(xsdDoc->root()->name() != SCHEMA_ELT)
@@ -94,23 +93,14 @@ namespace Xsd
 
         mElementsTypes.clear();
 
-        // for(auto iterator = mAttributes.begin(); iterator != mAttributes.end(); iterator++)
-        // {
-        //     delete iterator->second;
-        // }
-        // mAttributes.clear();
-
         mAttributesTypes.clear();
     }
 
     void
     Checker::checkReferences()
     {
-        //Check types, attributes and elements
         //Check that every type from attributesTypesMap and elementsTypesMap are in typesMap
         //Check that every attribute in every type has its type in elementsTypesMap
-        //Type const * type;
-
 
         for (auto iterEltType : mElementsTypes)
         {
@@ -124,6 +114,10 @@ namespace Xsd
             {
 				for (auto iterAttr : *attributes)
 				{
+                    if(mAttributesTypes.find(iterAttr.second->name()) == mAttributesTypes.end())
+                    {
+                        throw new XSDConstructionException("Error: Attribute reference cannot be resolved: " + iterAttr.second->name());
+                    }
 					checkExistType(mAttributesTypes.find(iterAttr.second->name())->second);
 				}
 			}
@@ -135,7 +129,7 @@ namespace Xsd
     {
         if(!existType(typeName))
         {
-            throw new XSDConstructionException("Error: Reference cannot be resolved: " + typeName);
+            throw new XSDConstructionException("Error: Type reference cannot be resolved: " + typeName);
         }
     }
 
@@ -222,7 +216,6 @@ namespace Xsd
         }
     }
 
-
     std::string
     Checker::getDateType()
     {
@@ -246,19 +239,6 @@ namespace Xsd
         std::string typeName = iterType->second;
         return getType(typeName);
     }
-
-/*
-    Attribute * const
-    Checker::getAttribute(const std::string Checker::& attributeName)
-    {
-        Attribute * att = *(attributesMap.find(attributeName)).second;
-        if(att == attributesMap.end())
-        {
-            return NULL;
-        }
-        return att;
-    }
-*/
 
     Type *
     Checker::getAttributeType(const std::string & attributeName)
@@ -285,7 +265,7 @@ namespace Xsd
             Checker * checker = new Checker(xsdDoc);
             //Building intermediary structure from xmlDoc
             std::map<std::string, Attribute *> * attributes = new std::map<std::string, Attribute *>();
-            std::string rootRegex = Xsd::Type::parseComplexType(xsdDoc->root(), OR_SEPARATOR, true, attributes, true, checker);
+            std::string rootRegex = Xsd::Type::parseComplexType(xsdDoc->root(), OR_SEPARATOR, true, attributes, true, checker, true);
             checker->addType(ROOT + "Type", new Type(rootRegex, attributes));
             checker->addTypedElement(ROOT, ROOT + "Type");
 

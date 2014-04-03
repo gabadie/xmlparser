@@ -33,7 +33,7 @@ namespace Xsd
             /**
              * Destructor
              */
-            virtual ~Attribute() {}
+            virtual ~Attribute();
 
             /**
              * Gets the name of the attribute

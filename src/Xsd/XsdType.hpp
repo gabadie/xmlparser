@@ -54,7 +54,7 @@ namespace Xsd
          * @return The regex created
          */
         static std::string
-        parseComplexType(const Xml::Element * const xmlElement, std::string separator, bool eltSeqChoice, std::map<std::string, Attribute *> * attributes, bool acceptAttributes, Checker * checker);
+        parseComplexType(const Xml::Element * const xmlElement, std::string separator, bool eltSeqChoice, std::map<std::string, Attribute *> * attributes, bool acceptAttributes, Checker * checker, bool root);
 
         /**
          * Returns the regex of an element, adds its type and type relation to the maps if it's not a ref

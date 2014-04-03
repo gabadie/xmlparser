@@ -22,6 +22,11 @@ namespace Xsd
     {
     }
 
+
+    Attribute::~Attribute()
+    {
+    }
+
     Attribute *
     Attribute::parseAttribute(const Xml::Element * const xmlElement, Checker * checker)
     {

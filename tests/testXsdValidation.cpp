@@ -47,13 +47,6 @@ getXsdFileNameFromXmlError(std::string fileName)
 }
 
 void
-test_construction()
-{
-    //TODO test the construction of the intermediary XSD structure
-    //Example: test_assert(doc->root()->name() == "hello");
-}
-
-void
 test_validation()
 {
     DIR * dir;
@@ -130,13 +123,13 @@ void testValidation(const std::string & xmlContent, const std::string & xmlWrong
     }
 
     Xsd::Checker * checker = Xsd::Checker::parseXsd(xsdDoc);
-    test_assert(checker != NULL);
 
     if(checker == nullptr)
     {
         std::cerr << "Error: XSD document could not be built" << std::endl;
         return;
     }
+    test_assert(checker != NULL);
     std::cerr << "Checking right document" << std::endl;
     test_assert(checker->isValid(xmlDoc));
     std::cerr << "Checking wrong document" << std::endl;
@@ -156,12 +149,12 @@ void testValidation(const std::string & xmlContent, const std::string & xsdConte
 
     test_assert(xmlDoc != nullptr && xsdDoc != nullptr);
     Xsd::Checker * checker = Xsd::Checker::parseXsd(xsdDoc);
-    test_assert(checker != NULL);
     if(checker == nullptr)
     {
         std::cerr << "Error: XSD document could not be built" << std::endl;
         return;
     }
+    test_assert(checker != NULL);
     std::cout << "Checking right document" << std::endl;
     test_assert(checker->isValid(xmlDoc));
 
@@ -237,14 +230,14 @@ testRecursiveComplexType()
     std::string xmlContent (xml_code(
         <?xml version="1.0" encoding="UTF-8"?>
         <person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/3_recursive_complex_type.xsd">
-            <address validity="24-02-2014"/>
+            <address validity="2014-02-24"/>
         </person>
     ));
 
     std::string xmlWrongContent (xml_code(
         <?xml version="1.0" encoding="UTF-8"?>
         <person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/3_recursive_complex_type.xsd">
-            <address validity="24-02-214">myAddress</address>
+            <address validity="214-02-24">myAddress</address>
         </person>
     ));
 
@@ -277,7 +270,7 @@ testSequence()
             <infos>
                 <surname>King</surname>
                 <name>Julian</name>
-                <birth>02-04-2022</birth>
+                <birth>2014-02-24</birth>
             </infos>
         </person>
     ));
@@ -287,7 +280,7 @@ testSequence()
         <person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/4_sequence.xsd">
             <infos>
                 <surname>King</surname>
-                <birth>02-04-2022</birth>
+                <birth>2014-02-24</birth>
             </infos>
         </person>
     ));
@@ -325,7 +318,7 @@ testChoice()
             <infos>
                 <surname>King</surname>
                 <name>Julian</name>
-                <birth>02-04-2022</birth>
+                <birth>2014-02-24</birth>
                 <mobile>lalala</mobile>
             </infos>
         </person>
@@ -337,7 +330,7 @@ testChoice()
             <infos>
                 <surname>King</surname>
                 <name>Julian</name>
-                <birth>02-04-2022</birth>
+                <birth>2014-02-24</birth>
                 <mobile>lalala</mobile>
                 <tel>lalala</tel>
             </infos>
@@ -380,14 +373,14 @@ testRefAttribute()
     std::string xmlContent (xml_code(
         <?xml version="1.0" encoding="UTF-8"?>
         <person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/5_choice.xsd">
-            <address validity="12-05-2015"/>
+            <address validity="2014-02-24"/>
         </person>
     ));
 
     std::string xmlContent2 (xml_code(
         <?xml version="1.0" encoding="UTF-8"?>
         <person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/5_choice.xsd">
-            <address patate="potatoe" validity="12-05-2015"/>
+            <address patate="potatoe" validity="2014-02-24"/>
         </person>
     ));
 
@@ -408,7 +401,7 @@ testRefAttribute()
     std::string xmlWrongContent3 (xml_code(
         <?xml version="1.0" encoding="UTF-8"?>
         <person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/5_choice.xsd">
-            <address patate="potatoe" validity="12-05-2015" test="false"/>
+            <address patate="potatoe" validity="2014-02-24" test="false"/>
         </person>
     ));
 
@@ -444,12 +437,7 @@ testRefType()
     std::string xmlContent (xml_code(
         <?xml version="1.0" encoding="UTF-8"?>
         <person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/5_choice.xsd">
-            <infos>
-                <surname>King</surname>
-                <name>Julian</name>
-                <birth>02-04-2022</birth>
-                <mobile>lalala</mobile>
-            </infos>
+            <address validity="2014-02-24"/>
         </person>
     ));
 
@@ -481,12 +469,7 @@ testRefElement()
     std::string xmlContent (xml_code(
         <?xml version="1.0" encoding="UTF-8"?>
         <person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/5_choice.xsd">
-            <infos>
-                <surname>King</surname>
-                <name>Julian</name>
-                <birth>02-04-2022</birth>
-                <mobile>lalala</mobile>
-            </infos>
+            <address validity="2014-02-24"/>
         </person>
     ));
 
@@ -497,7 +480,7 @@ testRefElement()
                 <xs:complexType>
                     <xs:choice>
                         <xs:element ref="address"/>
-                    <xs:choice>
+                    </xs:choice>
                 </xs:complexType>
             </xs:element>
 
@@ -520,15 +503,20 @@ testOccurs()
     std::string xmlContent (xml_code(
         <?xml version="1.0" encoding="UTF-8"?>
         <person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/9_occurs.xsd">
-            <infos validity="02-05-2014" invalidity="02-05-2018" test="patate">
+            <infos validity="2014-02-24" invalidity="2015-02-24" test="patate">
                 <surname>Kin1</surname>
                 <surname>King2</surname>
                 <surname>King3</surname>
                 <surname>King4</surname>
+                <surname>King4</surname>
+                <surname>King4</surname>
                 <name>Julian</name>
+                <birth>2014-02-24</birth>
+                <mobile>lalala</mobile>
                 <mobile>lalala</mobile>
                 <patate>lalala</patate>
                 <pomme>lalala</pomme>
+                <mobile>lalala</mobile>
             </infos>
         </person>
     ));
@@ -536,7 +524,7 @@ testOccurs()
     std::string xmlWrongContent (xml_code(
         <?xml version="1.0" encoding="UTF-8"?>
         <person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd_files/9_occurs.xsd">
-            <infos validity="02-05-2014" invalidity="02-05-2018" test="patate">
+            <infos validity="2014-02-24" invalidity="2014-02-24" test="patate">
                 <surname>Kin1</surname>
                 <surname>King2</surname>
                 <surname>King3</surname>
@@ -546,9 +534,9 @@ testOccurs()
                 <name>Julian</name>
                 <mobile>lalala</mobile>
                 <mobile>lalala</mobile>
-                <mobile>lalala</mobile>
                 <patate>lalala</patate>
                 <pomme>lalala</pomme>
+                <mobile>lalala</mobile>
             </infos>
         </person>
     ));
@@ -561,7 +549,7 @@ testOccurs()
             <xs:complexType name="personType">
                 <xs:choice>
                     <xs:element ref="infos"/>
-                <xs:choice>
+                </xs:choice>
             </xs:complexType>
 
             <xs:element name="infos">
@@ -572,10 +560,10 @@ testOccurs()
                         <xs:element name="birth" type="xs:date"/>
                         <xs:choice minOccurs="2" maxOccurs="5">
                             <xs:element name="tel" type="xs:string"/>
-                            <xs:choice>
+                            <xs:sequence>
                                 <xs:element name="patate" type="xs:string"/>
                                 <xs:element name="pomme" type="xs:string"/>
-                            </xs:choice>
+                            </xs:sequence>
                             <xs:element name="mobile" type="xs:string"/>
                         </xs:choice>
                     </xs:sequence>
@@ -658,7 +646,7 @@ testWrongXsd()
     Xsd::Checker * checker = Xsd::Checker::parseXsd(xsdDoc);
     test_assert(checker == NULL);
     delete xsdDoc;
-    
+
     xsdDoc = Xml::parse(xsdContent2, &log);
     checker = Xsd::Checker::parseXsd(xsdDoc);
     test_assert(checker == NULL);
@@ -668,18 +656,17 @@ testWrongXsd()
 int
 main()
 {
-    // testOneElement();
-    // testComplexType();
-    // testRecursiveComplexType();
-    // testSequence();
-    // testChoice();
-    // testRefAttribute();
+    testOneElement();
+    testComplexType();
+    testRecursiveComplexType();
+    testSequence();
+    testChoice();
+    testRefAttribute();
     testRefType();
-    // testRefElement();
-    // testOccurs();
-    //testWrongXsd();
+    testRefElement();
+    testOccurs();
+    testWrongXsd();
 
-    test_construction();    //TODO
     //test_validation();
 
     return 0;
