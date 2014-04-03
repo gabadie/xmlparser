@@ -16,7 +16,7 @@
 
 namespace Xsd
 {
-    Attribute::Attribute(const std::string & name, bool required):
+    Attribute::Attribute(std::string const & name, bool required):
         mName(name),
         mRequired(required)
     {
@@ -28,7 +28,7 @@ namespace Xsd
     }
 
     Attribute *
-    Attribute::parseAttribute(const Xml::Element * const xmlElement, Checker * checker)
+    Attribute::parseAttribute(Xml::Element const * const xmlElement, Checker * checker)
     {
         bool required = false;
         std::string notFound = "";
@@ -74,7 +74,7 @@ namespace Xsd
     }
 
     void
-    Attribute::checkValidity(const std::string & value, Checker * checker)
+    Attribute::checkValidity(std::string const & value, Checker * checker)
     {
         if(!checker->getAttributeType(mName)->isValid(value))
         {

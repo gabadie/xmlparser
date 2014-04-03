@@ -43,13 +43,13 @@ namespace Xsd
     const std::string Checker::AND_SEPARATOR = "";
 
 
-    Checker::Checker(const Xml::Document * const xsdDoc):
+    Checker::Checker(Xml::Document const * const xsdDoc):
         mXsdDoc(xsdDoc),
         mTypes(),
         mElementsTypes(),
         mAttributesTypes()
     {
-        const std::string dateRegex = "[0-9]{4}-[0-9]{2}-[0-9]{2}";
+        const std::string dateRegex = "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$";
         const std::string stringRegex = ".*";
 
         if(xsdDoc->root()->name() != SCHEMA_ELT)
@@ -125,7 +125,7 @@ namespace Xsd
     }
 
     void
-    Checker::checkExistType(const std::string & typeName)
+    Checker::checkExistType(std::string const & typeName)
     {
         if(!existType(typeName))
         {
@@ -136,7 +136,7 @@ namespace Xsd
 
 
     bool
-    Checker::existType(const std::string & typeName)
+    Checker::existType(std::string const & typeName)
     {
         if(mTypes.find(typeName) == mTypes.end())
         {
@@ -146,7 +146,7 @@ namespace Xsd
     }
 
     bool
-    Checker::isValid(const Xml::Document * const xsdDoc)
+    Checker::isValid(Xml::Document const * const xsdDoc)
     {
         try
         {
@@ -162,25 +162,25 @@ namespace Xsd
     }
 
     void
-    Checker::addType(const std::string & typeName, Type * const type)
+    Checker::addType(std::string const & typeName, Type * const type)
     {
-        mTypes.insert(std::pair<std::string, Type * const>(typeName, type));
+        mTypes.insert(std::make_pair(typeName, type));
     }
 
     void
-    Checker::addTypedElement(const std::string & elementName, const std::string & typeName)
+    Checker::addTypedElement(std::string const & elementName, std::string const & typeName)
     {
-        mElementsTypes.insert(std::pair<std::string, std::string>(elementName, typeName));
+        mElementsTypes.insert(std::make_pair(elementName, typeName));
     }
 
     void
-    Checker::addTypedAttribute(const std::string & attributeName, const std::string & typeName)
+    Checker::addTypedAttribute(std::string const & attributeName, std::string const & typeName)
     {
-        mAttributesTypes.insert(std::pair<std::string, std::string>(attributeName, typeName));
+        mAttributesTypes.insert(std::make_pair(attributeName, typeName));
     }
 
     Type *
-    Checker::getType(const std::string & typeName)
+    Checker::getType(std::string const & typeName)
     {
         auto iterType = mTypes.find(typeName);
         if(iterType == mTypes.end())
@@ -229,7 +229,7 @@ namespace Xsd
     }
 
     Type *
-    Checker::getElementType(const std::string & elementName)
+    Checker::getElementType(std::string const & elementName)
     {
         auto iterType = mElementsTypes.find(elementName);
         if(iterType == mElementsTypes.end())
@@ -241,7 +241,7 @@ namespace Xsd
     }
 
     Type *
-    Checker::getAttributeType(const std::string & attributeName)
+    Checker::getAttributeType(std::string const & attributeName)
     {
         auto iterType = mAttributesTypes.find(attributeName);
         if(iterType == mAttributesTypes.end())
@@ -253,7 +253,7 @@ namespace Xsd
     }
 
     Checker *
-    Checker::parseXsd(const Xml::Document * const xsdDoc)
+    Checker::parseXsd(Xml::Document const * const xsdDoc)
     {
         if(xsdDoc == NULL)
         {
@@ -283,19 +283,20 @@ namespace Xsd
     }
 
     void
-    Checker::throwInvalidElementException(const std::string & received, const std::string & expected)
+    Checker::throwInvalidElementException(std::string const & received, std::string const & expected)
     {
         throw new XSDConstructionException("Error: Invalid XSD element received: " + received + " (" + expected + " expected)");
     }
 
     void
-    Checker::throwMissingAttributeException(const std::string & element, const std::string & missingAttr)
+    Checker::throwMissingAttributeException(std::string const & element, std::string const & missingAttr)
     {
         throw new XSDConstructionException("Error: Missing attribute for " + element + " element: " + missingAttr);
     }
 
     void
-    Checker::throwInvalidAttributeValueException(const std::string & element, const std::string & attr, const std::string & invalidValue)
+    Checker::throwInvalidAttributeValueException(std::string const & element,
+        std::string const & attr, std::string const & invalidValue)
     {
         throw new XSDConstructionException("Error: Invalid " + attr + " attribute value for " + element + " element: " + invalidValue);
     }
